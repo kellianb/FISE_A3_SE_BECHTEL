@@ -1,1 +1,7 @@
-# FISE_A3_SE_BECHTEL
+# Software engineering project
+
+| Project Members |
+|-----------------|
+| Laura GIESE     |
+| Kellian BECHTEL |
+| Evan Caumartin  |
