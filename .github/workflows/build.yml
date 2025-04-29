@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -23,11 +23,10 @@ jobs:
       run: dotnet restore FISE_A3_SE_BECHTEL.sln
 
     - name: Build solution
-      run: dotnet build FISE_A3_SE_BECHTEL.sln --configuration Release --no-restore
+      run: dotnet publish FISE_A3_SE_BECHTEL.sln --configuration Release --no-restore
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: WPF-Build
-        path: |
-          **/bin/Release/net9.0-windows/
+        path: 'bin/Release/net9.0-windows/win-x64/publish/'
