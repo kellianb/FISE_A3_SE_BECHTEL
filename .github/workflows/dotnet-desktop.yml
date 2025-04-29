@@ -1,0 +1,33 @@
+name: Build WPF App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install .NET 9 SDK (preview)
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore FISE_A3_SE_BECHTEL.sln
+
+    - name: Build solution
+      run: dotnet build FISE_A3_SE_BECHTEL.sln --configuration Release --no-restore
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: WPF-Build
+        path: |
+          **/bin/Release/net9.0-windows/
