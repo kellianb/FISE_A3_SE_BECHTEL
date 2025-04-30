@@ -5,5 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid />
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="40">
+            Hello World!
+        </TextBlock>
+    </Grid>
 </Window>
