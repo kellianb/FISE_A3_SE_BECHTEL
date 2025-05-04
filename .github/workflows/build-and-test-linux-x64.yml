@@ -1,4 +1,4 @@
-name: Build and test (win-x64)
+name: Build and test (linux-x64)
 
 on:
   push:
