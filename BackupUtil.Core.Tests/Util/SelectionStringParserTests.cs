@@ -38,7 +38,7 @@ public class SelectionStringParserTests
     [Test]
     public void Parse_NullInput_ThrowsArgumentNullException()
     {
-        Assert.Throws<ArgumentNullException>(() => SelectionStringParser.Parse(null));
+        Assert.Throws<ArgumentNullException>(() => SelectionStringParser.Parse(null!));
     }
 
     [Test]
