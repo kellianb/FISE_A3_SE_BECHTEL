@@ -6,12 +6,13 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  Solution_Name: BackupUtil.sln
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      Solution_Name: BackupUtil.sln
 
     steps:
     - name: Checkout code
@@ -23,14 +24,14 @@ jobs:
         dotnet-version: '9.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore $env:Solution_Name
+      run: dotnet restore $Solution_Name
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
       run: dotnet test
 
     - name: Build solution
-      run: dotnet publish $env:Solution_Name -r win-x64 --configuration Release --no-restore
+      run: dotnet publish $Solution_Name -r win-x64 --configuration Release --no-restore
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
