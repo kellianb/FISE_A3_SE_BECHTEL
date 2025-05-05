@@ -18,6 +18,13 @@ public class SingleFileHandler : ICopyHandler
 
     public void Run()
     {
-        _sourceFile.CopyTo(_targetFilePath, true);
+        string? targetDirectoryName = Path.GetDirectoryName(_targetFilePath);
+
+        if (!string.IsNullOrEmpty(targetDirectoryName) && !Directory.Exists(targetDirectoryName))
+        {
+            Directory.CreateDirectory(targetDirectoryName);
+        }
+
+        _sourceFile.CopyTo(_targetFilePath, true).Attributes = _sourceFile.Attributes;
     }
 }
