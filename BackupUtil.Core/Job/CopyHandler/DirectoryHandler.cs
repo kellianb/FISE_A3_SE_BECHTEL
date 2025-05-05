@@ -39,7 +39,7 @@ public class DirectoryHandler : ICopyHandler
 
         foreach (FileInfo file in source.GetFiles())
         {
-            file.CopyTo(Path.Combine(target.FullName, file.Name));
+            file.CopyTo(Path.Combine(target.FullName, file.Name)).Attributes = file.Attributes;
         }
     }
 
@@ -47,7 +47,7 @@ public class DirectoryHandler : ICopyHandler
     {
         foreach (FileInfo file in source.GetFiles())
         {
-            file.CopyTo(Path.Combine(target.FullName, file.Name));
+            file.CopyTo(Path.Combine(target.FullName, file.Name)).Attributes = file.Attributes;
         }
     }
 }

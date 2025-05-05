@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using BackupUtil.Core.Job;
+using BackupUtil.Core.Job.CopyHandler;
 
-namespace BackupUtil.Core.Tests.Job.Handler;
+namespace BackupUtil.Core.Tests.Job.CopyHandler;
 
 [TestFixture]
 public class SingleFileHandlerTest
@@ -46,19 +46,20 @@ public class SingleFileHandlerTest
     private string _destinationFolder;
 
     [Test]
-    public void CopyFile_ValidFile_CopiesSuccessfully()
+    public void Run_ValidFile_CopiesSuccessfully()
     {
+        const string fileContent = "Test content";
+
         // Arrange
         string sourceFile = Path.Combine(_sourceFolder, "test.txt");
         string destFile = Path.Combine(_destinationFolder, "test.txt");
-        const string fileContent = "Test content";
 
         File.WriteAllText(sourceFile, fileContent);
 
-        Core.Job.Job job = new(sourceFile, destFile);
+        SingleFileHandler handler = new(new FileInfo(sourceFile), destFile);
 
         // Act
-        JobHandlerFactory.GetHandler(job).Run();
+        handler.Run();
 
         // Assert
         Assert.Multiple(() =>
@@ -70,54 +71,55 @@ public class SingleFileHandlerTest
 
 
     [Test]
-    public void CopyFile_NonExistentSource_ThrowsFileNotFoundException()
+    public void Run_NonExistentSource_ThrowsFileNotFoundException()
     {
         // Arrange
         string sourceFile = Path.Combine(_sourceFolder, "nonexistent.txt");
         string destFile = Path.Combine(_destinationFolder, "output.txt");
 
-        Core.Job.Job job = new(sourceFile, destFile);
+        SingleFileHandler handler = new(new FileInfo(sourceFile), destFile);
 
         // Act & Assert
-        Assert.Throws<FileNotFoundException>(() => JobHandlerFactory.GetHandler(job).Run());
+        Assert.Throws<FileNotFoundException>(() => handler.Run());
     }
 
     [Test]
-    public void CopyFile_DestinationFileExists_OverwritesFile()
+    public void Run_DestinationFileExists_OverwritesFile()
     {
         // Arrange
         string sourceFile = Path.Combine(_sourceFolder, "test.txt");
         string destFile = Path.Combine(_destinationFolder, "test.txt");
-        string initialContent = "Initial content";
-        string newContent = "New content";
+        const string initialContent = "Initial content";
+        const string newContent = "New content";
 
         File.WriteAllText(sourceFile, newContent);
         File.WriteAllText(destFile, initialContent);
 
-        Core.Job.Job job = new(sourceFile, destFile);
+        SingleFileHandler handler = new(new FileInfo(sourceFile), destFile);
 
         // Act
-        JobHandlerFactory.GetHandler(job).Run();
+        handler.Run();
 
         // Assert
         Assert.That(File.ReadAllText(destFile), Is.EqualTo(newContent), "File should be overwritten");
     }
 
     [Test]
-    public void Job_DestinationFolderDoesNotExist_CreatesFolder()
+    public void Run_DestinationFolderDoesNotExist_CreatesFolder()
     {
+        const string fileContent = "Test content";
+
         // Arrange
         string sourceFile = Path.Combine(_sourceFolder, "test.txt");
         string newFolder = Path.Combine(_destinationFolder, "newfolder");
         string destFile = Path.Combine(newFolder, "test.txt");
-        string fileContent = "Test content";
 
         File.WriteAllText(sourceFile, fileContent);
 
-        Core.Job.Job job = new(sourceFile, destFile);
+        SingleFileHandler handler = new(new FileInfo(sourceFile), destFile);
 
         // Act
-        JobHandlerFactory.GetHandler(job).Run();
+        handler.Run();
 
         // Assert
         Assert.Multiple(() =>
@@ -129,24 +131,27 @@ public class SingleFileHandlerTest
     }
 
     [Test]
-    public void Job_PreservesAttributes()
+    public void Run_PreservesAttributes()
     {
+        const string fileContent = "Test content";
+
         // Arrange
         string sourceFile = Path.Combine(_sourceFolder, "test.txt");
         string destFile = Path.Combine(_destinationFolder, "test.txt");
-        File.WriteAllText(sourceFile, "Test content");
+        File.WriteAllText(sourceFile, fileContent);
 
         // Set attributes on source file
         File.SetAttributes(sourceFile, FileAttributes.Hidden | FileAttributes.ReadOnly);
 
-        Core.Job.Job job = new(sourceFile, destFile);
+        SingleFileHandler handler = new(new FileInfo(sourceFile), destFile);
 
         // Act
-        JobHandlerFactory.GetHandler(job).Run();
+        handler.Run();
 
         // Assert
         FileAttributes destAttributes = File.GetAttributes(destFile);
-        // Check ReadOnly attribute on all platforms
+
+        // Check "ReadOnly" attribute on all platforms
         Assert.That(destAttributes.HasFlag(FileAttributes.ReadOnly), Is.True,
             "ReadOnly attribute should be preserved");
 
@@ -159,7 +164,7 @@ public class SingleFileHandlerTest
         else
         {
             // Skip hidden attribute check on non-Windows platforms or log it
-            TestContext.Out.WriteLine("Hidden attribute test skipped on non-Windows platform");
+            TestContext.Out.WriteLine("Readonly attribute test skipped on non-Windows platform");
         }
     }
 }
