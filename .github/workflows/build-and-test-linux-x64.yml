@@ -1,4 +1,4 @@
-name: Build WPF App
+name: Build and test (linux-x64)
 
 on:
   push:
@@ -6,9 +6,13 @@ on:
   pull_request:
     branches: [ main ]
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      Solution_Name: BackupUtil.sln
 
     steps:
     - name: Checkout code
@@ -20,13 +24,17 @@ jobs:
         dotnet-version: '9.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore FISE_A3_SE_BECHTEL.sln
+      run: dotnet restore $Solution_Name
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test
 
     - name: Build solution
-      run: dotnet publish FISE_A3_SE_BECHTEL.sln --configuration Release --no-restore
+      run: dotnet publish $Solution_Name -r linux-x64 --configuration Release --no-restore
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: WPF-Build
-        path: 'bin/Release/net9.0-windows/win-x64/publish/'
+        name: Build and test (linux-x64)
+        path: 'BackupUtil.Core/bin/Release/net9.0/linux-64/publish/'
