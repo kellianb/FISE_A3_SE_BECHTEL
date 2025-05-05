@@ -20,6 +20,10 @@ public class SingleFileHandlerTest
     [TearDown]
     public void TearDown()
     {
+        // Make sure we release any file handles
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+
         // Clean up test directories
         if (Directory.Exists(_sourceFolder))
         {
