@@ -1,5 +1,3 @@
-using BackupUtil.Core.Transaction.ChangeType;
-
 namespace BackupUtil.Core.Transaction.Compare;
 
 public interface ICompare

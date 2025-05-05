@@ -1,5 +1,3 @@
-using BackupUtil.Core.Transaction.ChangeType;
-
 namespace BackupUtil.Core.Transaction.Compare;
 
 public class DirectoryCompare(DirectoryInfo sourceDirectory, string targetDirectoryPath, bool recursive)

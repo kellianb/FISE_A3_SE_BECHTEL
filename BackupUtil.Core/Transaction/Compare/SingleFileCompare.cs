@@ -1,4 +1,3 @@
-using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.Compare;
@@ -39,7 +38,6 @@ public class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool 
 
         // Create the file
         return diff.AddFileCreation(_sourceFile, _targetFilePath);
-        ;
     }
 
     private BackupTransaction Full()
@@ -53,7 +51,5 @@ public class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool 
         }
 
         return full.AddFileCreation(_sourceFile, _targetFilePath);
-
-        return full;
     }
 }
