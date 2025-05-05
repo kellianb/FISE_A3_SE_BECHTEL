@@ -1,4 +1,4 @@
-name: Build and test (linux-x64)
+name: Build and test (win-x64)
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     env:
       Solution_Name: BackupUtil.sln
@@ -31,10 +31,10 @@ jobs:
       run: dotnet test
 
     - name: Build solution
-      run: dotnet publish $Solution_Name -r linux-x64 --configuration Release --no-restore
+      run: dotnet publish $Solution_Name -r win-x64 --configuration Release --no-restore
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Build and test (linux-x64)
-        path: 'BackupUtil.Core/bin/Release/net9.0/linux-x64/publish'
+        name: Build and test (win-x64)
+        path: 'BackupUtil.Core/bin/Release/net9.0/win-x64/publish'
