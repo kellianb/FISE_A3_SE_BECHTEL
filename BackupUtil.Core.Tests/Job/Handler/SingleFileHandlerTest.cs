@@ -93,7 +93,6 @@ public class SingleFileHandlerTest
         Assert.That(File.ReadAllText(destFile), Is.EqualTo(newContent), "File should be overwritten");
     }
 
-
     [Test]
     public void Job_DestinationFolderDoesNotExist_CreatesFolder()
     {
