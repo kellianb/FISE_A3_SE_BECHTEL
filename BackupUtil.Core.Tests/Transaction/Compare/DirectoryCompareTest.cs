@@ -1,0 +1,86 @@
+using BackupUtil.Core.Transaction;
+using BackupUtil.Core.Transaction.ChangeType;
+using BackupUtil.Core.Transaction.Compare;
+
+namespace BackupUtil.Core.Tests.Transaction.Compare;
+
+public class DirectoryCompareTest
+{
+
+    private string _sourceFolder;
+    private string _targetFolder;
+
+    [SetUp]
+    public void Setup()
+    {
+        // Create temporary directories for testing
+        _sourceFolder = Path.Combine(Path.GetTempPath(), "NUnitSourceTest_" + Guid.NewGuid());
+        _targetFolder = Path.Combine(Path.GetTempPath(), "NUnitDestTest_" + Guid.NewGuid());
+
+        Directory.CreateDirectory(_sourceFolder);
+        Directory.CreateDirectory(_targetFolder);
+    }
+
+    [TearDown]
+    public void Cleanup()
+    {
+        // Clean up test directories
+        if (Directory.Exists(_sourceFolder))
+        {
+            foreach (string file in Directory.GetFiles(_sourceFolder))
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+            }
+
+            Directory.Delete(_sourceFolder, true);
+        }
+
+        if (Directory.Exists(_targetFolder))
+        {
+            // Remove ReadOnly attributes
+            foreach (string file in Directory.GetFiles(_targetFolder))
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+            }
+
+            Directory.Delete(_targetFolder, true);
+        }
+    }
+
+    [TestCase(true, TestName = "Test_Diff", Description = "Test differential compare")]
+    [TestCase(false, TestName = "Test_Full", Description = "Test non differential compare")]
+    public void Compare_TargetDirectoryExists_ShouldCreateFile(bool differential)
+    {
+        const string fileContent = "Test content";
+
+        // Arrange
+        string sourceFilePath = Path.Combine(_sourceFolder, "test.txt");
+        string targetFilePath = Path.Combine(_targetFolder, "test.txt");
+
+        File.WriteAllText(sourceFilePath, fileContent);
+
+        // Expected file change
+        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
+            new FileInfo(sourceFilePath).Length);
+
+        // Create compare object
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, differential);
+
+        // Act
+        BackupTransaction transaction = compare.Compare();
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(transaction.GetTotalCreatedFiles(), Is.EqualTo(1),
+                "Transaction should contain exactly one created file");
+
+            Assert.That(transaction.FileChanges, Has.Count.EqualTo(1),
+                "Transaction should contain exactly one file change");
+
+            Assert.That(transaction.FileChanges[0], Is.EqualTo(expectedFileChange),
+                "File change does not match expected value");
+        });
+    }
+
+}
