@@ -1,6 +1,7 @@
 using System.Text.Json;
+using BackupUtil.Core.Job.FileLoader;
 
-namespace BackupUtil.Core.Job.FileLoader;
+namespace BackupUtil.Core.Job.Loader;
 
 public class JsonLoader(string path) : IJobLoader
 {

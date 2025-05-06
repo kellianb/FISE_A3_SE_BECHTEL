@@ -18,8 +18,8 @@ public class DirectoryCompare(
     public BackupTransaction Compare()
     {
         return _differential
-            ? Full(_sourceDirectory, _targetDirectoryPath, _recursive)
-            : Differential(_sourceDirectory, _targetDirectoryPath, _recursive);
+            ? Differential(_sourceDirectory, _targetDirectoryPath, _recursive)
+            : Full(_sourceDirectory, _targetDirectoryPath, _recursive);
     }
 
     /// <summary>
@@ -83,24 +83,26 @@ public class DirectoryCompare(
             transaction = FullDirectoryFiles(sourceDirectory, targetDirectoryPath, transaction);
         }
 
-        if (!recursive)
-        {
-            return transaction;
-        }
-
         // Handle subdirectories
         foreach (DirectoryInfo sourceSubDirectory in sourceDirectory.GetDirectories())
         {
             string targetSubDirectoryPath = Path.Combine(targetDirectoryPath, sourceSubDirectory.Name);
 
-            transaction = Full(sourceSubDirectory, targetSubDirectoryPath, recursive, transaction);
+            if (recursive)
+            {
+                transaction = Differential(sourceSubDirectory, targetSubDirectoryPath, recursive, transaction);
+            }
+            else if (!Directory.Exists(targetSubDirectoryPath))
+            {
+                transaction.AddDirectoryCreation(targetSubDirectoryPath);
+            }
         }
 
         return transaction;
     }
 
     /// <summary>
-    ///     Make a differential backup of a directory's files'
+    ///     Make a differential backup of a directory's files
     /// </summary>
     private static BackupTransaction DiffDirectoryFiles(DirectoryInfo sourceDirectory,
         DirectoryInfo targetDirectory, BackupTransaction transaction)
@@ -147,7 +149,7 @@ public class DirectoryCompare(
 
 
     /// <summary>
-    ///     Make a full backup of a directory's files'
+    ///     Make a full backup of a directory's files
     /// </summary>
     private static BackupTransaction FullDirectoryFiles(DirectoryInfo sourceDirectory,
         string targetDirectoryPath, BackupTransaction transaction)

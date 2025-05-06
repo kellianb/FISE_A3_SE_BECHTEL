@@ -29,15 +29,19 @@ public class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool 
                 : diff.AddFileUpdate(_sourceFile, targetFile);
         }
 
-        // If the target directory doesn't exist, create it
+        // Create the file
+        diff.AddFileCreation(_sourceFile, _targetFilePath);
+
         string? targetDirectoryName = Path.GetDirectoryName(_targetFilePath);
-        if (!string.IsNullOrEmpty(targetDirectoryName) && !Directory.Exists(targetDirectoryName))
+
+        // If the target directory is the filesystem root or exists, return the diff
+        if (string.IsNullOrEmpty(targetDirectoryName) || Directory.Exists(targetDirectoryName))
         {
-            diff.AddDirectoryCreation(targetDirectoryName);
+            return diff;
         }
 
-        // Create the file
-        return diff.AddFileCreation(_sourceFile, _targetFilePath);
+        // Else create the target directory
+        return diff.AddDirectoryCreation(targetDirectoryName);
     }
 
     private BackupTransaction Full()
