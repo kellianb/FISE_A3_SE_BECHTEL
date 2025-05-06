@@ -2,9 +2,9 @@ using BackupUtil.Core.Transaction.Compare;
 
 namespace BackupUtil.Core.Transaction;
 
-public class TransactionComputer
+public static class BackupTransactionBuilder
 {
-    public static BackupTransaction Compute(Job.Job job)
+    public static BackupTransaction Build(Job.Job job)
     {
         if (File.Exists(job.SourcePath))
         {
@@ -18,7 +18,8 @@ public class TransactionComputer
 
         if (Directory.Exists(job.SourcePath))
         {
-            return new DirectoryCompare(new DirectoryInfo(job.SourcePath), job.TargetPath, job.Recursive).Compare();
+            return new DirectoryCompare(new DirectoryInfo(job.SourcePath), job.TargetPath, job.Recursive,
+                job.Differential).Compare();
         }
 
         throw new FileNotFoundException("Source file or directory not found");

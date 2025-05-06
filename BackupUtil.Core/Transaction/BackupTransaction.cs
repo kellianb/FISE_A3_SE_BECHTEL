@@ -5,20 +5,33 @@ namespace BackupUtil.Core.Transaction;
 // Class to hold all the changes that need to be applied
 public class BackupTransaction
 {
-    private List<FileChange> FileChanges { get; } = [];
-    private List<DirectoryChange> DirectoryChanges { get; } = [];
+    public List<FileChange> FileChanges { get; } = [];
+    public List<DirectoryChange> DirectoryChanges { get; } = [];
 
+
+    #region Get info about file changes
     public long GetTotalFileSize()
     {
         return FileChanges.Sum(x => x.ChangeType == FileChangeType.Delete ? 0 : x.FileSize);
+    }
+
+    public long GetTotalCreatedFiles()
+    {
+        return FileChanges.Count(x => x.ChangeType == FileChangeType.Create);
+    }
+
+    public long GetTotalModifiedFiles()
+    {
+        return FileChanges.Count(x => x.ChangeType == FileChangeType.Modify);
     }
 
     public long GetTotalDeletedFiles()
     {
         return FileChanges.Count(x => x.ChangeType == FileChangeType.Delete);
     }
+    #endregion
 
-    #region File Changes
+    #region Add file Changes
 
     private BackupTransaction AddFileChange(FileChange change)
     {
@@ -47,7 +60,19 @@ public class BackupTransaction
 
     #endregion
 
-    #region Directory Changes
+    #region Get info about directory changes
+    public long GetTotalCreatedDirectories()
+    {
+        return DirectoryChanges.Count(x => x.ChangeType == DirectoryChangeType.Create);
+    }
+
+    public long GetTotalDeletedDirectories()
+    {
+        return DirectoryChanges.Count(x => x.ChangeType == DirectoryChangeType.Delete);
+    }
+    #endregion
+
+    #region Add directory Changes
 
     private BackupTransaction AddDirectoryChange(DirectoryChange change)
     {
@@ -55,9 +80,9 @@ public class BackupTransaction
         return this;
     }
 
-    public BackupTransaction AddDirectoryCreation(string targetDirectoryPath)
+    public BackupTransaction AddDirectoryCreation(string path)
     {
-        DirectoryChange change = new(targetDirectoryPath, DirectoryChangeType.Create);
+        DirectoryChange change = new(path, DirectoryChangeType.Create);
         return AddDirectoryChange(change);
     }
 
@@ -68,4 +93,5 @@ public class BackupTransaction
     }
 
     #endregion
+
 }
