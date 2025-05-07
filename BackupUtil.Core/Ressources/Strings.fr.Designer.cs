@@ -114,7 +114,7 @@ namespace BackupUtil.Core.Ressources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Le chemin d&apos;accès cible ne peut pas être un sous-répertoire du chemin d&apos;accès spurce.
+        ///   Looks up a localized string similar to Le chemin d&apos;accès cible ne peut pas être un sous-répertoire du chemin d&apos;accès source.
         /// </summary>
         internal static string errorTargetInSource {
             get {
@@ -132,7 +132,7 @@ namespace BackupUtil.Core.Ressources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Le chemin d&apos;accès cible ne peut pas se terminer par &apos;\\&apos;.
+        ///   Looks up a localized string similar to Le chemin d&apos;accès cible ne peut pas se terminer par &apos;\&apos;.
         /// </summary>
         internal static string errorTargetPathEnd {
             get {

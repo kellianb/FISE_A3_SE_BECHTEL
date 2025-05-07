@@ -43,6 +43,6 @@
         <value>Le chemin d'accès cible n'est pas valide</value>
     </data>
     <data name="errorTargetPathEnd" xml:space="preserve">
-        <value>Le chemin d'accès cible ne peut pas se terminer par '\\'</value>
+        <value>Le chemin d'accès cible ne peut pas se terminer par '\'</value>
     </data>
 </root>
