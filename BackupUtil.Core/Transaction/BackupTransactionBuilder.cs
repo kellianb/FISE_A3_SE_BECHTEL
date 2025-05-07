@@ -4,7 +4,7 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction;
 
-public static class BackupTransactionBuilder
+public class BackupTransactionBuilder : IBackupTransactionBuilder
 {
     public static BackupTransaction Build(Job.Job job)
     {
