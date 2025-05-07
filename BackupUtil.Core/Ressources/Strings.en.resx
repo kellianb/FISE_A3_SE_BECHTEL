@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="errorSourcePath" xml:space="preserve">
+        <value>Source path is not valid</value>
+    </data>
+    <data name="errorTargetPath" xml:space="preserve">
+        <value>Target path is not valid</value>
+    </data>
+    <data name="errorSameSourceTarget" xml:space="preserve">
+        <value>Source and target paths must not be the same</value>
+    </data>
+    <data name="errorSourceInTarget" xml:space="preserve">
+        <value>Source path must not be a subdirectory of target path</value>
+    </data>
+    <data name="errorTargetPathEnd" xml:space="preserve">
+        <value>Target file path must not end with a '\\'</value>
+    </data>
+    <data name="errorSourceFileTargetDir" xml:space="preserve">
+        <value>Source path is a file, target path must not be a directory</value>
+    </data>
+    <data name="errorSourceDirTargetFile" xml:space="preserve">
+        <value>Source path is a directory, target path must not be a file</value>
+    </data>
+    <data name="errorSourceNotFound" xml:space="preserve">
+        <value>Source file or directory not found</value>
+    </data>
+    <data name="errorTargetInSource" xml:space="preserve">
+        <value>Target path must not be a subdirectory of source path</value>
+    </data>
+</root>
