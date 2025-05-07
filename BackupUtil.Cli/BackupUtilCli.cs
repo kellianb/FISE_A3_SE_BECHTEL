@@ -36,12 +36,27 @@ internal class BackupUtilCli
     {
         Job job = new(sourcePath, targetPath, recursive, differential);
 
-        Console.WriteLine(JsonSerializer.Serialize(job));
+        try
+        {
+            BackupTransaction transaction = BackupTransactionBuilder.Build(job);
 
-        BackupTransaction transaction = BackupTransactionBuilder.Build(job);
+            Console.WriteLine("Making these changes");
+            Console.WriteLine(JsonSerializer.Serialize(transaction, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine("Is this ok [Y/n]");
 
-        Console.WriteLine(JsonSerializer.Serialize(transaction));
+            if (new List<string>(["Y", "y", ""]).Contains(Console.ReadLine() ?? "n"))
+            {
+                BackupTransactionExecutor.Execute(transaction);
+                Console.WriteLine("Done");
+            }
 
-        BackupTransactionExecutor.Execute(transaction);
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return;
+        }
+
     }
 }
