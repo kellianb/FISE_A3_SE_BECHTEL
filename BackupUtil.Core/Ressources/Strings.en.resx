@@ -31,7 +31,7 @@
         <value>Source path must not be a subdirectory of target path</value>
     </data>
     <data name="errorTargetPathEnd" xml:space="preserve">
-        <value>Target file path must not end with a '\\'</value>
+        <value>Target file path must not end with a '\'</value>
     </data>
     <data name="errorSourceFileTargetDir" xml:space="preserve">
         <value>Source path is a file, target path must not be a directory</value>

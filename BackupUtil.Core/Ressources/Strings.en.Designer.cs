@@ -132,7 +132,7 @@ namespace BackupUtil.Core.Ressources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Target file path must not end with a &apos;\\&apos;.
+        ///   Looks up a localized string similar to Target file path must not end with a &apos;\&apos;.
         /// </summary>
         internal static string errorTargetPathEnd {
             get {
