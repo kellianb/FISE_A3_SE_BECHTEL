@@ -168,7 +168,7 @@ public class DirectoryHandlerTests
         else
         {
             // Skip hidden attribute check on non-Windows platforms or log it
-            TestContext.Out.WriteLine("Readonly attribute test skipped on non-Windows platform");
+            TestContext.Out.WriteLine("Hidden attribute test skipped on non-Windows platform");
         }
     }
 }
