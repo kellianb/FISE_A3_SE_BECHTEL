@@ -1,4 +1,6 @@
+using System.Globalization;
 using BackupUtil.Core.Transaction.Compare;
+using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction;
 
@@ -12,7 +14,7 @@ public static class BackupTransactionBuilder
         }
         catch (Exception e)
         {
-            throw new ArgumentException("Source path is not valid", e);
+            throw new ArgumentException(I18N.GetLocalizedMessage("errorSourcePath"), e);
         }
 
         try
@@ -21,34 +23,34 @@ public static class BackupTransactionBuilder
         }
         catch (Exception e)
         {
-            throw new ArgumentException("Target path is not valid", e);
+            throw new ArgumentException(I18N.GetLocalizedMessage("errorTargetPath"), e);
         }
 
         if (job.SourcePath == job.TargetPath)
         {
-            throw new ArgumentException("Source and target paths must not be the same");
+            throw new ArgumentException(I18N.GetLocalizedMessage("errorSameSourceTarget"));
         }
 
         if (job.TargetPath.StartsWith(job.SourcePath))
         {
-            throw new ArgumentException("Target path must not be a subdirectory of source path");
+            throw new ArgumentException(I18N.GetLocalizedMessage("errorTargetInSource"));
         }
 
         if (job.SourcePath.StartsWith(job.TargetPath))
         {
-            throw new ArgumentException("Source path must not be a subdirectory of target path");
+            throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceInTarget"));
         }
 
         if (File.Exists(job.SourcePath))
         {
             if (job.TargetPath.EndsWith('\\'))
             {
-                throw new ArgumentException("Target file path must not end with a '\\'");
+                throw new ArgumentException(I18N.GetLocalizedMessage("errorTargetPathEnd"));
             }
 
             if (Directory.Exists(job.TargetPath))
             {
-                throw new ArgumentException("Source path is a file, target path must not be a directory");
+            throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceFileTargetDir"));
             }
 
             return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential).Compare();
@@ -58,13 +60,13 @@ public static class BackupTransactionBuilder
         {
             if (File.Exists(job.TargetPath))
             {
-                throw new ArgumentException("Source path is a directory, target path must not be a file");
+                throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceDirTargetFile"));
             }
 
             return new DirectoryCompare(new DirectoryInfo(job.SourcePath), job.TargetPath, job.Recursive,
                 job.Differential).Compare();
         }
 
-        throw new FileNotFoundException("Source file or directory not found");
+        throw new FileNotFoundException(I18N.GetLocalizedMessage("errorSourceNotFound"));
     }
 }
