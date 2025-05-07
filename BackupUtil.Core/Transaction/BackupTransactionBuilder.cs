@@ -1,6 +1,5 @@
-using System.Globalization;
 using BackupUtil.Core.Transaction.Compare;
-using BackupUtil.Core.Util;
+using BackupUtil.I18n;
 
 namespace BackupUtil.Core.Transaction;
 

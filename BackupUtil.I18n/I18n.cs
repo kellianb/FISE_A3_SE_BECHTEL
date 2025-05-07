@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
-using System.Reflection;
 using System.Resources;
 
-namespace BackupUtil.Core.Util;
+namespace BackupUtil.I18n;
 
 public static class I18N
 {
