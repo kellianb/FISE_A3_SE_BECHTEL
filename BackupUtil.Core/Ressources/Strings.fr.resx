@@ -37,7 +37,7 @@
         <value>Le chemin d'accès source n'est pas valide</value>
     </data>
     <data name="errorTargetInSource" xml:space="preserve">
-        <value>Le chemin d'accès cible ne peut pas être un sous-répertoire du chemin d'accès spurce</value>
+        <value>Le chemin d'accès cible ne peut pas être un sous-répertoire du chemin d'accès source</value>
     </data>
     <data name="errorTargetPath" xml:space="preserve">
         <value>Le chemin d'accès cible n'est pas valide</value>
