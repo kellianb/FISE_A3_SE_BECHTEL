@@ -4,12 +4,12 @@
 |-----------------|
 | Laura GIESE     |
 | Kellian BECHTEL |
-| Evan Caumartin  |
+| Evan CAUMARTIN  |
 
 ## How to make changes
 
 - Clone the project: `git pull <repo url>`
-- Create a new feature branch: `git checkout -b 'feature/<name of your feature>'`
+- Create a new feature branch: `git checkout -b 'feature/<name-of-your-feature>'`
 - Commit your changes: `git commit -m '<Tell us what you did and why here>'`
 - Push you changes: `git push`
 - Open a PR on github
