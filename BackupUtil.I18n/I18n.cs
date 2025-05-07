@@ -6,7 +6,7 @@ namespace BackupUtil.I18n;
 public static class I18N
 {
     private static readonly ResourceManager s_resourceManager =
-        new ResourceManager("BackupUtil.Core.Resources.Strings", typeof(I18N).Assembly);
+        new ResourceManager("BackupUtil.I18n.Resources.Strings", typeof(I18N).Assembly);
 
     public static string GetLocalizedMessage(string key)
     {
