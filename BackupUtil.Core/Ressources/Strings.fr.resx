@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="errorSameSourceTarget" xml:space="preserve">
+        <value>Les chemins d'accès source et cible ne peuvent pas être identiques</value>
+    </data>
+    <data name="errorSourceDirTargetFile" xml:space="preserve">
+        <value>Le chemin d'accès source est un dossier, le chemin d'accès cible ne peut pas être un fichier</value>
+    </data>
+    <data name="errorSourceFileTargetDir" xml:space="preserve">
+        <value>Le chemin d'accès source est un fichier, le chemin d'accès cible ne peut pas être un dossier</value>
+    </data>
+    <data name="errorSourceInTarget" xml:space="preserve">
+        <value>Le chemin d'accès source ne peut pas être un sous-répertoire du chemin d'accès cible</value>
+    </data>
+    <data name="errorSourceNotFound" xml:space="preserve">
+        <value>Fichier ou dossier source introuvable</value>
+    </data>
+    <data name="errorSourcePath" xml:space="preserve">
+        <value>Le chemin d'accès source n'est pas valide</value>
+    </data>
+    <data name="errorTargetInSource" xml:space="preserve">
+        <value>Le chemin d'accès cible ne peut pas être un sous-répertoire du chemin d'accès spurce</value>
+    </data>
+    <data name="errorTargetPath" xml:space="preserve">
+        <value>Le chemin d'accès cible n'est pas valide</value>
+    </data>
+    <data name="errorTargetPathEnd" xml:space="preserve">
+        <value>Le chemin d'accès cible ne peut pas se terminer par '\\'</value>
+    </data>
+</root>
