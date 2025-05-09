@@ -46,7 +46,7 @@ internal class BackupUtilCli
 
             if (new List<string>(["Y", "y", ""]).Contains(Console.ReadLine() ?? "n"))
             {
-                BackupTransactionExecutor.Execute(transaction);
+                new BackupTransactionExecutor().Execute(transaction);
                 Console.WriteLine("Done");
             }
 

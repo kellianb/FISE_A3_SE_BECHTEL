@@ -8,27 +8,45 @@ public class BackupTransaction
     public List<FileChange> FileChanges { get; } = [];
     public List<DirectoryChange> DirectoryChanges { get; } = [];
 
+    #region Get info about directory changes
+
+    /// <summary>
+    ///     Get the list of folders that will undergo a certain type of change
+    /// </summary>
+    /// <param name="changeType"></param>
+    /// <returns></returns>
+    public string[] GetConcernedFolders(DirectoryChangeType changeType)
+    {
+        return DirectoryChanges.FindAll(x => x.ChangeType == changeType)
+            .Select(x => x.TargetPath)
+            .ToArray();
+    }
+
+    #endregion
 
     #region Get info about file changes
-    public long GetTotalFileSize()
+
+    /// <summary>
+    ///     Get the total size of the files that will be copied
+    /// </summary>
+    /// <returns></returns>
+    public long GetTotalCopiedFileSize()
     {
         return FileChanges.Sum(x => x.ChangeType == FileChangeType.Delete ? 0 : x.FileSize);
     }
 
-    public long GetTotalCreatedFiles()
+    /// <summary>
+    ///     Get the list of files that will undergo a certain type of change
+    /// </summary>
+    /// <param name="changeType"></param>
+    /// <returns></returns>
+    public string[] GetConcernedFiles(FileChangeType changeType)
     {
-        return FileChanges.Count(x => x.ChangeType == FileChangeType.Create);
+        return FileChanges.FindAll(x => x.ChangeType == changeType)
+            .Select(x => x.TargetPath)
+            .ToArray();
     }
 
-    public long GetTotalModifiedFiles()
-    {
-        return FileChanges.Count(x => x.ChangeType == FileChangeType.Modify);
-    }
-
-    public long GetTotalDeletedFiles()
-    {
-        return FileChanges.Count(x => x.ChangeType == FileChangeType.Delete);
-    }
     #endregion
 
     #region Add file Changes
@@ -54,22 +72,10 @@ public class BackupTransaction
 
     public BackupTransaction AddFileDeletion(FileInfo targetFile)
     {
-        FileChange change = new(targetFile.FullName, FileChangeType.Delete);
+        FileChange change = new(targetFile.FullName, FileChangeType.Delete, fileSize: targetFile.Length);
         return AddFileChange(change);
     }
 
-    #endregion
-
-    #region Get info about directory changes
-    public long GetTotalCreatedDirectories()
-    {
-        return DirectoryChanges.Count(x => x.ChangeType == DirectoryChangeType.Create);
-    }
-
-    public long GetTotalDeletedDirectories()
-    {
-        return DirectoryChanges.Count(x => x.ChangeType == DirectoryChangeType.Delete);
-    }
     #endregion
 
     #region Add directory Changes
@@ -93,5 +99,4 @@ public class BackupTransaction
     }
 
     #endregion
-
 }

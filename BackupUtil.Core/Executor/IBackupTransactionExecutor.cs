@@ -4,5 +4,5 @@ namespace BackupUtil.Core.Executor;
 
 public interface IBackupTransactionExecutor
 {
-    static abstract void Execute(BackupTransaction transaction);
+    void Execute(BackupTransaction transaction);
 }
