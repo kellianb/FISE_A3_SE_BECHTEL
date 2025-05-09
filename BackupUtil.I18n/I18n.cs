@@ -15,7 +15,7 @@ public static class I18N
 
     public static string GetLocalizedMessage(string key)
     {
-        return s_resourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? key;
+        return s_resourceManager.GetString(key, Thread.CurrentThread.CurrentUICulture) ?? key;
     }
 
     public static void SetCulture(CultureInfo culture)
