@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupUtil.Core.Tests", "Ba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupUtil.Cli", "BackupUtil.Cli\BackupUtil.Cli.csproj", "{8FA7032B-1E98-4B68-BAB2-1E5BA9940E1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupUtil.I18n", "BackupUtil.I18n\BackupUtil.I18n.csproj", "{586B33C6-52D2-418F-A624-54E427EE4B03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{8FA7032B-1E98-4B68-BAB2-1E5BA9940E1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FA7032B-1E98-4B68-BAB2-1E5BA9940E1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FA7032B-1E98-4B68-BAB2-1E5BA9940E1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{586B33C6-52D2-418F-A624-54E427EE4B03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{586B33C6-52D2-418F-A624-54E427EE4B03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{586B33C6-52D2-418F-A624-54E427EE4B03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{586B33C6-52D2-418F-A624-54E427EE4B03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
