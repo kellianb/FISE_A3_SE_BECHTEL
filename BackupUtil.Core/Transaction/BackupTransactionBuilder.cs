@@ -13,7 +13,7 @@ public class BackupTransactionBuilder : IBackupTransactionBuilder
         }
         catch (Exception e)
         {
-            throw new ArgumentException(I18N.GetLocalizedMessage("errorSourcePath"), e);
+            throw new ArgumentException("errorSourcePath", e);
         }
 
         try
@@ -22,34 +22,34 @@ public class BackupTransactionBuilder : IBackupTransactionBuilder
         }
         catch (Exception e)
         {
-            throw new ArgumentException(I18N.GetLocalizedMessage("errorTargetPath"), e);
+            throw new ArgumentException("errorTargetPath", e);
         }
 
         if (job.SourcePath == job.TargetPath)
         {
-            throw new ArgumentException(I18N.GetLocalizedMessage("errorSameSourceTarget"));
+            throw new ArgumentException("errorSameSourceTarget");
         }
 
         if (job.TargetPath.StartsWith(job.SourcePath))
         {
-            throw new ArgumentException(I18N.GetLocalizedMessage("errorTargetInSource"));
+            throw new ArgumentException("errorTargetInSource");
         }
 
         if (job.SourcePath.StartsWith(job.TargetPath))
         {
-            throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceInTarget"));
+            throw new ArgumentException("errorSourceInTarget");
         }
 
         if (File.Exists(job.SourcePath))
         {
             if (job.TargetPath.EndsWith('\\'))
             {
-                throw new ArgumentException(I18N.GetLocalizedMessage("errorTargetPathEnd"));
+                throw new ArgumentException("errorTargetPathEnd");
             }
 
             if (Directory.Exists(job.TargetPath))
             {
-                throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceFileTargetDir"));
+                throw new ArgumentException("errorSourceFileTargetDir");
             }
 
             return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential).Compare();
@@ -59,13 +59,13 @@ public class BackupTransactionBuilder : IBackupTransactionBuilder
         {
             if (File.Exists(job.TargetPath))
             {
-                throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceDirTargetFile"));
+                throw new ArgumentException("errorSourceDirTargetFile");
             }
 
             return new DirectoryCompare(new DirectoryInfo(job.SourcePath), job.TargetPath, job.Recursive,
                 job.Differential).Compare();
         }
 
-        throw new FileNotFoundException(I18N.GetLocalizedMessage("errorSourceNotFound"));
+        throw new FileNotFoundException("errorSourceNotFound");
     }
 }

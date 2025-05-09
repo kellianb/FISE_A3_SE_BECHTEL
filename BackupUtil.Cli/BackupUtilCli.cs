@@ -3,6 +3,7 @@ using System.Text.Json;
 using BackupUtil.Core.Executor;
 using BackupUtil.Core.Job;
 using BackupUtil.Core.Transaction;
+using BackupUtil.I18n;
 
 namespace BackupUtil.Cli;
 
@@ -41,7 +42,8 @@ internal class BackupUtilCli
             BackupTransaction transaction = BackupTransactionBuilder.Build(job);
 
             Console.WriteLine("Making these changes");
-            Console.WriteLine(JsonSerializer.Serialize(transaction, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine(JsonSerializer.Serialize(transaction,
+                new JsonSerializerOptions { WriteIndented = true }));
             Console.WriteLine("Is this ok [Y/n]");
 
             if (new List<string>(["Y", "y", ""]).Contains(Console.ReadLine() ?? "n"))
@@ -49,14 +51,10 @@ internal class BackupUtilCli
                 new BackupTransactionExecutor().Execute(transaction);
                 Console.WriteLine("Done");
             }
-
-
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
-            return;
+            Console.WriteLine(I18N.GetLocalizedMessage(e.Message));
         }
-
     }
 }
