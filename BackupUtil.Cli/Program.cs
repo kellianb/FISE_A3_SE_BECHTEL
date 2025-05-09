@@ -1,9 +1,17 @@
-﻿namespace BackupUtil.Cli;
+﻿using System.CommandLine;
+using BackupUtil.Cli.Command;
+
+namespace BackupUtil.Cli;
 
 internal class Program
 {
     private static int Main(string[] args)
     {
-        return new BackupUtilCli().Invoke(args);
+        RootCommand rootCommand =
+        [
+            SingleJobCommand.Build()
+        ];
+
+        return rootCommand.Invoke(args);
     }
 }
