@@ -5,7 +5,7 @@ namespace BackupUtil.Core.Executor;
 
 public class BackupTransactionExecutor : IBackupTransactionExecutor
 {
-    public static void Execute(BackupTransaction transaction)
+    public void Execute(BackupTransaction transaction)
     {
         foreach (DirectoryChange change in transaction.DirectoryChanges)
         {
