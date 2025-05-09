@@ -20,17 +20,3 @@
 Prefer git rebases over merges
 
 Note: When done rebasing, you have to push using `git push --force`
-
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant GitHub
-    participant LocalRepo
-
-    User->>GitHub: Push changes to remote repository
-    GitHub->>LocalRepo: Notify of new changes
-    LocalRepo->>User: Pull changes from remote repository
-    User->>LocalRepo: Resolve merge conflicts
-    LocalRepo->>GitHub: Push resolved changes
-```
