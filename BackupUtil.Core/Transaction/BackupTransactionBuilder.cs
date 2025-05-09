@@ -1,6 +1,5 @@
-using System.Globalization;
 using BackupUtil.Core.Transaction.Compare;
-using BackupUtil.Core.Util;
+using BackupUtil.I18n;
 
 namespace BackupUtil.Core.Transaction;
 
@@ -50,7 +49,7 @@ public class BackupTransactionBuilder : IBackupTransactionBuilder
 
             if (Directory.Exists(job.TargetPath))
             {
-            throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceFileTargetDir"));
+                throw new ArgumentException(I18N.GetLocalizedMessage("errorSourceFileTargetDir"));
             }
 
             return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential).Compare();
