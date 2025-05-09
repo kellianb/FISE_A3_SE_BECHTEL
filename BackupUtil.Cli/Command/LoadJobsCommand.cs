@@ -5,32 +5,32 @@ using BackupUtil.Core.Job;
 using BackupUtil.Core.Transaction;
 using BackupUtil.I18n;
 
-namespace BackupUtil.Cli;
+namespace BackupUtil.Cli.Command;
 
-internal class BackupUtilCli
+public class LoadJobsCommand
 {
-    private readonly RootCommand _command;
-
-    public BackupUtilCli()
+    public static System.CommandLine.Command Build()
     {
         Argument<string> sourcePath = new("source-path", "Source path of the backup");
         Argument<string> targetPath = new("target-path", "Target path of the backup");
         Option<bool> recursive = new("--recursive", "Make the backup recursive");
         Option<bool> differential = new("--differential", "Make the backup differential");
 
-        _command = [sourcePath, targetPath, recursive, differential];
+        System.CommandLine.Command command = new("load", "Load jobs from a file and execute them");
 
-        _command.SetHandler(CommandHandler,
+        command.AddArgument(sourcePath);
+        command.AddArgument(targetPath);
+        command.AddOption(recursive);
+        command.AddOption(differential);
+
+        command.SetHandler(CommandHandler,
             sourcePath,
             targetPath,
             recursive,
             differential
         );
-    }
 
-    public int Invoke(string[] args)
-    {
-        return _command.Invoke(args);
+        return command;
     }
 
     private static void CommandHandler(string sourcePath, string targetPath, bool recursive, bool differential)
