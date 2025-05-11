@@ -1,8 +1,7 @@
 using System.CommandLine;
-using System.Text.Json;
-using BackupUtil.Core.Executor;
+using BackupUtil.Cli.Util;
+using BackupUtil.Core.Command;
 using BackupUtil.Core.Job;
-using BackupUtil.Core.Transaction;
 using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Command;
@@ -37,18 +36,22 @@ internal class SingleJobCommand
     {
         Job job = new(sourcePath, targetPath, recursive, differential);
 
+        JobManager jobManager = new();
+
         try
         {
-            BackupTransaction transaction = BackupTransactionBuilder.Build(job);
+            BackupCommand command = jobManager.BuildBackupCommand(job);
 
-            Console.WriteLine("Making these changes");
-            Console.WriteLine(JsonSerializer.Serialize(transaction,
-                new JsonSerializerOptions { WriteIndented = true }));
-            Console.WriteLine("Is this ok [Y/n]");
+            // Display planned changes to the user
+            Console.Write(DisplayChanges.DisplayDirectoryChanges(command.GetConcernedDirectories()));
+            Console.Write(DisplayChanges.DisplayFileChanges(command.GetConcernedFiles()));
+
+            // Ask the user if this is ok
+            Console.WriteLine(I18N.GetLocalizedMessage("IsOk"));
 
             if (new List<string>(["Y", "y", ""]).Contains(Console.ReadLine() ?? "n"))
             {
-                new BackupTransactionExecutor().Execute(transaction);
+                command.Execute();
                 Console.WriteLine("Done");
             }
         }

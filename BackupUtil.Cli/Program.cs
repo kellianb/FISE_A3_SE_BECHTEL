@@ -9,7 +9,8 @@ internal class Program
     {
         RootCommand rootCommand =
         [
-            SingleJobCommand.Build()
+            SingleJobCommand.Build(),
+            LoadJobsCommand.Build()
         ];
 
         return rootCommand.Invoke(args);

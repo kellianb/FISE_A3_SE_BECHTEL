@@ -1,9 +1,11 @@
+using BackupUtil.I18n;
+
 namespace BackupUtil.Core.Transaction.ChangeType;
 
 public enum DirectoryChangeType
 {
-    Create,
-    Delete
+    [I18NKey("changeTypeCreate")] Create = 0,
+    [I18NKey("changeTypeDelete")] Delete = 1
 }
 
 // Represents a directory that needs to be created or deleted
