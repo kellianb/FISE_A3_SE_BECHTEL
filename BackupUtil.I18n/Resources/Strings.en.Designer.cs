@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BackupUtil.Core.Ressources {
+namespace BackupUtil.I18n.Resources {
     using System;
     
     

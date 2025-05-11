@@ -1,5 +1,4 @@
 using BackupUtil.Core.Transaction.Compare;
-using BackupUtil.I18n;
 
 namespace BackupUtil.Core.Transaction;
 
