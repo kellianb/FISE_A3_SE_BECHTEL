@@ -4,12 +4,12 @@ namespace BackupUtil.Core.Transaction;
 
 public class BackupTransactionBuilder : IBackupTransactionBuilder
 {
-    public static BackupTransaction Build(Job.Job job)
+    public BackupTransaction Build(Job.Job job)
     {
         return AddJobToTransaction(job, new BackupTransaction());
     }
 
-    public static BackupTransaction Build(List<Job.Job> job)
+    public BackupTransaction Build(List<Job.Job> job)
     {
         return job.Aggregate(new BackupTransaction(), (acc, next) => AddJobToTransaction(next, acc));
     }

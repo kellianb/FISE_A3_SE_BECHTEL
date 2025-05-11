@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
+                xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
         </xsd:element>
@@ -13,10 +15,14 @@
         <value>1.3</value>
     </resheader>
     <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
     </resheader>
     <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
     </resheader>
     <data name="errorSourcePath" xml:space="preserve">
         <value>Source path is not valid</value>
@@ -45,7 +51,31 @@
     <data name="errorTargetInSource" xml:space="preserve">
         <value>Target path must not be a subdirectory of source path</value>
     </data>
-    <data name="errFileFormatNotSupported" xml:space="preserve">
+    <data name="errorFileFormatNotSupported" xml:space="preserve">
         <value>This file format is not supported</value>
+    </data>
+    <data name="changeTypeModify" xml:space="preserve">
+        <value>Modifying</value>
+    </data>
+    <data name="changeTypeCreate" xml:space="preserve">
+        <value>Creating</value>
+    </data>
+    <data name="changeTypeDelete" xml:space="preserve">
+        <value>Deleting</value>
+    </data>
+    <data name="changesToFiles" xml:space="preserve">
+        <value>These files will be modified:</value>
+    </data>
+    <data name="changesToDirectories" xml:space="preserve">
+        <value>These directories will be modified:</value>
+    </data>
+    <data name="IsOk" xml:space="preserve">
+        <value>Is this ok [Y/n]</value>
+    </data>
+    <data name="selectJobs" xml:space="preserve">
+        <value>Please select the jobs that should be run:</value>
+    </data>
+    <data name="errorInvalidJobFile" xml:space="preserve">
+        <value>The provided job file is invalid.</value>
     </data>
 </root>

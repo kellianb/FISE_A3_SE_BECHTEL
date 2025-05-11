@@ -1,8 +1,8 @@
 using System.CommandLine;
-using System.Text.Json;
-using BackupUtil.Core.Executor;
+using BackupUtil.Cli.Util;
+using BackupUtil.Core.Command;
 using BackupUtil.Core.Job;
-using BackupUtil.Core.Transaction;
+using BackupUtil.Core.Util;
 using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Command;
@@ -11,44 +11,49 @@ public class LoadJobsCommand
 {
     public static System.CommandLine.Command Build()
     {
-        Argument<string> sourcePath = new("source-path", "Source path of the backup");
-        Argument<string> targetPath = new("target-path", "Target path of the backup");
-        Option<bool> recursive = new("--recursive", "Make the backup recursive");
-        Option<bool> differential = new("--differential", "Make the backup differential");
+        Argument<string> jobFilePath = new("job-file-path", "File path to load the jobs from");
 
         System.CommandLine.Command command = new("load", "Load jobs from a file and execute them");
 
-        command.AddArgument(sourcePath);
-        command.AddArgument(targetPath);
-        command.AddOption(recursive);
-        command.AddOption(differential);
+        command.AddArgument(jobFilePath);
 
         command.SetHandler(CommandHandler,
-            sourcePath,
-            targetPath,
-            recursive,
-            differential
+            jobFilePath
         );
 
         return command;
     }
 
-    private static void CommandHandler(string sourcePath, string targetPath, bool recursive, bool differential)
+    private static void CommandHandler(string jobFilePath)
     {
-        Job job = new(sourcePath, targetPath, recursive, differential);
-
         try
         {
-            BackupTransaction transaction = BackupTransactionBuilder.Build(job);
+            JobManager jobManager = new JobManager().LoadJobsFromFile(jobFilePath);
 
-            Console.WriteLine("Making these changes");
-            Console.WriteLine(JsonSerializer.Serialize(transaction,
-                new JsonSerializerOptions { WriteIndented = true }));
-            Console.WriteLine("Is this ok [Y/n]");
+            // Show loaded jobs
+            Console.Write(DisplayJobs.Display(jobManager.Jobs));
+
+            // Ask the user to select which ones to run
+            Console.WriteLine(I18N.GetLocalizedMessage("selectJobs"));
+
+            string selection = Console.ReadLine() ?? "";
+
+            Console.WriteLine();
+
+            HashSet<int> selectedIndexes = SelectionStringParser.Parse(selection);
+
+            BackupCommand command = jobManager.GetBackupCommandForIndexes(selectedIndexes);
+
+            // Display planned changes to the user
+            Console.Write(DisplayChanges.DisplayDirectoryChanges(command.GetConcernedDirectories()));
+            Console.Write(DisplayChanges.DisplayFileChanges(command.GetConcernedFiles()));
+
+            // Ask the user if this is ok
+            Console.WriteLine(I18N.GetLocalizedMessage("IsOk"));
 
             if (new List<string>(["Y", "y", ""]).Contains(Console.ReadLine() ?? "n"))
             {
-                new BackupTransactionExecutor().Execute(transaction);
+                command.Execute();
                 Console.WriteLine("Done");
             }
         }

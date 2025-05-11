@@ -1,10 +1,12 @@
+using BackupUtil.I18n;
+
 namespace BackupUtil.Core.Transaction.ChangeType;
 
 public enum FileChangeType
 {
-    Create,
-    Modify,
-    Delete
+    [I18NKey("changeTypeCreate")] Create = 0,
+    [I18NKey("changeTypeModify")] Modify = 1,
+    [I18NKey("changeTypeDelete")] Delete = 2
 }
 
 // Represents a file that needs to be created, modified, or deleted
