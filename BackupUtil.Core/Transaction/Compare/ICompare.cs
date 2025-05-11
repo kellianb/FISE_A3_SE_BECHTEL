@@ -2,5 +2,5 @@ namespace BackupUtil.Core.Transaction.Compare;
 
 public interface ICompare
 {
-    public BackupTransaction Compare();
+    public BackupTransaction Compare(BackupTransaction transaction);
 }

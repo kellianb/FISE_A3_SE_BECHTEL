@@ -6,6 +6,16 @@ public class BackupTransactionBuilder : IBackupTransactionBuilder
 {
     public static BackupTransaction Build(Job.Job job)
     {
+        return AddJobToTransaction(job, new BackupTransaction());
+    }
+
+    public static BackupTransaction Build(List<Job.Job> job)
+    {
+        return job.Aggregate(new BackupTransaction(), (acc, next) => AddJobToTransaction(next, acc));
+    }
+
+    private static BackupTransaction AddJobToTransaction(Job.Job job, BackupTransaction transaction)
+    {
         try
         {
             job.SourcePath = Path.GetFullPath(job.SourcePath);
@@ -51,7 +61,8 @@ public class BackupTransactionBuilder : IBackupTransactionBuilder
                 throw new ArgumentException("errorSourceFileTargetDir");
             }
 
-            return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential).Compare();
+            return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential).Compare(
+                transaction);
         }
 
         if (Directory.Exists(job.SourcePath))
@@ -62,7 +73,7 @@ public class BackupTransactionBuilder : IBackupTransactionBuilder
             }
 
             return new DirectoryCompare(new DirectoryInfo(job.SourcePath), job.TargetPath, job.Recursive,
-                job.Differential).Compare();
+                job.Differential).Compare(transaction);
         }
 
         throw new FileNotFoundException("errorSourceNotFound");

@@ -15,21 +15,19 @@ public class DirectoryCompare(
     private readonly string _targetDirectoryPath = targetDirectoryPath;
 
 
-    public BackupTransaction Compare()
+    public BackupTransaction Compare(BackupTransaction transaction)
     {
         return _differential
-            ? Differential(_sourceDirectory, _targetDirectoryPath, _recursive)
-            : Full(_sourceDirectory, _targetDirectoryPath, _recursive);
+            ? Differential(transaction, _sourceDirectory, _targetDirectoryPath, _recursive)
+            : Full(transaction, _sourceDirectory, _targetDirectoryPath, _recursive);
     }
 
     /// <summary>
     ///     Make a full backup of a directory
     /// </summary>
-    private static BackupTransaction Full(DirectoryInfo sourceDirectory, string targetDirectoryPath,
-        bool recursive = false, BackupTransaction? transaction = null)
+    private static BackupTransaction Full(BackupTransaction transaction, DirectoryInfo sourceDirectory,
+        string targetDirectoryPath, bool recursive = false)
     {
-        transaction ??= new BackupTransaction();
-
         transaction.AddDirectoryCreation(targetDirectoryPath);
 
         // Copy all files
@@ -45,7 +43,7 @@ public class DirectoryCompare(
         {
             string targetSubDirectoryPath = Path.Combine(targetDirectoryPath, sourceSubDirectory.Name);
 
-            transaction = Full(sourceSubDirectory, targetSubDirectoryPath, recursive, transaction);
+            transaction = Full(transaction, sourceSubDirectory, targetSubDirectoryPath, recursive);
         }
 
         return transaction;
@@ -54,11 +52,9 @@ public class DirectoryCompare(
     /// <summary>
     ///     Make a differential backup of a directory TODO: WIP
     /// </summary>
-    private static BackupTransaction Differential(DirectoryInfo sourceDirectory, string targetDirectoryPath,
-        bool recursive = false, BackupTransaction? transaction = null)
+    private static BackupTransaction Differential(BackupTransaction transaction, DirectoryInfo sourceDirectory,
+        string targetDirectoryPath, bool recursive = false)
     {
-        transaction ??= new BackupTransaction();
-
         // Check if the directory exists
         if (Directory.Exists(targetDirectoryPath))
         {
@@ -90,7 +86,7 @@ public class DirectoryCompare(
 
             if (recursive)
             {
-                transaction = Differential(sourceSubDirectory, targetSubDirectoryPath, recursive, transaction);
+                transaction = Differential(transaction, sourceSubDirectory, targetSubDirectoryPath, recursive);
             }
             else if (!Directory.Exists(targetSubDirectoryPath))
             {
