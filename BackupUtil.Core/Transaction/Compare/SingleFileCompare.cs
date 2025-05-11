@@ -10,50 +10,46 @@ public class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool 
     private readonly string _targetFilePath = targetFilePath;
 
 
-    public BackupTransaction Compare()
+    public BackupTransaction Compare(BackupTransaction transaction)
     {
-        return _differential ? Differential() : Full();
+        return _differential ? Differential(transaction) : Full(transaction);
     }
 
-    private BackupTransaction Differential()
+    private BackupTransaction Differential(BackupTransaction transaction)
     {
-        BackupTransaction diff = new();
-
         // If the target file already exists, check if it needs to be updated
         if (File.Exists(_targetFilePath))
         {
             FileInfo targetFile = new(_targetFilePath);
 
             return FileCompare.AreFilesEqual(_sourceFile, targetFile)
-                ? diff
-                : diff.AddFileUpdate(_sourceFile, targetFile);
+                ? transaction
+                : transaction.AddFileUpdate(_sourceFile, targetFile);
         }
 
         // Create the file
-        diff.AddFileCreation(_sourceFile, _targetFilePath);
+        transaction.AddFileCreation(_sourceFile, _targetFilePath);
 
         string? targetDirectoryName = Path.GetDirectoryName(_targetFilePath);
 
         // If the target directory is the filesystem root or exists, return the diff
         if (string.IsNullOrEmpty(targetDirectoryName) || Directory.Exists(targetDirectoryName))
         {
-            return diff;
+            return transaction;
         }
 
         // Else create the target directory
-        return diff.AddDirectoryCreation(targetDirectoryName);
+        return transaction.AddDirectoryCreation(targetDirectoryName);
     }
 
-    private BackupTransaction Full()
+    private BackupTransaction Full(BackupTransaction transaction)
     {
-        BackupTransaction full = new();
-
         string? targetDirectoryName = Path.GetDirectoryName(_targetFilePath);
         if (!string.IsNullOrEmpty(targetDirectoryName))
         {
-            full.AddDirectoryCreation(targetDirectoryName);
+            transaction.AddDirectoryCreation(targetDirectoryName);
         }
 
-        return full.AddFileCreation(_sourceFile, _targetFilePath);
+        return transaction.AddFileCreation(_sourceFile, _targetFilePath);
     }
 }

@@ -72,7 +72,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, differential);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         // Assert
         Assert.Multiple(() =>
@@ -115,7 +115,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         // Assert
         Assert.Multiple(() =>
@@ -150,7 +150,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         // Assert
         Assert.Multiple(() =>
@@ -191,7 +191,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {
@@ -230,7 +230,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {
@@ -268,7 +268,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {
@@ -304,7 +304,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {

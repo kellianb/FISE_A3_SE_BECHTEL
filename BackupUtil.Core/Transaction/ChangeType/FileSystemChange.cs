@@ -1,7 +1,7 @@
 namespace BackupUtil.Core.Transaction.ChangeType;
 
 // Base class for both file and directory changes
-public abstract class FileSystemChange(string targetPath): IEquatable<FileSystemChange>
+public abstract class FileSystemChange(string targetPath) : IEquatable<FileSystemChange>
 {
     public string TargetPath { get; } = targetPath;
 

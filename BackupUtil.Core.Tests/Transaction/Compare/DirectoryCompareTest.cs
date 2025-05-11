@@ -72,7 +72,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), targetSubFolder, false, differential);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         // Assert
         Assert.Multiple(() =>
@@ -115,7 +115,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         // Assert
         Assert.Multiple(() =>
@@ -153,7 +153,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         // Assert
         Assert.Multiple(() =>
@@ -197,7 +197,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {
@@ -236,7 +236,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {
@@ -274,7 +274,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {
@@ -309,7 +309,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false);
 
         // Act
-        BackupTransaction transaction = compare.Compare();
+        BackupTransaction transaction = compare.Compare(new BackupTransaction());
 
         Assert.Multiple(() =>
         {

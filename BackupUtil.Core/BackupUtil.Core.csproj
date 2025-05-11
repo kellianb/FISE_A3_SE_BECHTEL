@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BackupUtil.I18n\BackupUtil.I18n.csproj" />
+        <ProjectReference Include="..\BackupUtil.I18n\BackupUtil.I18n.csproj"/>
     </ItemGroup>
 
 </Project>
