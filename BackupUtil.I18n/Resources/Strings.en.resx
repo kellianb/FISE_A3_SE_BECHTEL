@@ -45,4 +45,7 @@
     <data name="errorTargetInSource" xml:space="preserve">
         <value>Target path must not be a subdirectory of source path</value>
     </data>
+    <data name="errFileFormatNotSupported" xml:space="preserve">
+        <value>This file format is not supported</value>
+    </data>
 </root>

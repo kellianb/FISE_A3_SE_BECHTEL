@@ -45,4 +45,7 @@
     <data name="errorTargetPathEnd" xml:space="preserve">
         <value>Le chemin d'accès cible ne peut pas se terminer par '\'</value>
     </data>
+    <data name="errFileFormatNotSupported" xml:space="preserve">
+        <value>Ce format de fichier n'est pas pris en charge</value>
+    </data>
 </root>
