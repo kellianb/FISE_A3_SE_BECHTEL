@@ -73,6 +73,7 @@ sequenceDiagram
 
 #### Run one or all jobs
 
+TODO: fix
 ```mermaid
 sequenceDiagram
     actor User
@@ -207,3 +208,40 @@ JobFileLoader ..> JsonDeserializer
 ```
 
 ### Activity Diagram
+
+TODO: WIP
+
+```mermaid
+    graph TD;
+        Z[Launch EasySave] --> A[Create or edit a backup job];
+        Z --> E[Load jobs];
+        Z --> O[Select language];
+        subgraph createEditJob
+            A --> N{Less than 5 jobs already existing?};
+            N -- Yes --> B{Confirm changes?};
+            N -- No --> D[Cancel changes];
+            B -- Yes --> C[Add job to the list];
+            B -- No --> D;
+            C --> M[End];
+            D --> M;
+        end
+        subgraph runJob
+            E --> F[Display jobs information];
+            F --> G[Ask user to select jobs to execute];
+            G --> H[Display modification information];
+            H--> I{Confirm modifications ?};
+            I -- Yes --> J[Execute jobs];
+            I -- No --> K[Cancel modifications];
+            J --> L[End];
+            K --> L;
+
+        end
+        subgraph selectLanguage
+            O --> P[End];
+
+        end
+        M --> Z;
+        L --> Z;
+        P --> Z;
+
+```
