@@ -11,7 +11,7 @@ public class LoadJobsCommand
 {
     public static System.CommandLine.Command Build()
     {
-        Argument<string> jobFilePath = new("job-file-path", "File path to load the jobs from");
+        Argument<FileSystemInfo> jobFilePath = new("job-file-path", "File path to load the jobs from");
 
         System.CommandLine.Command command = new("load", "Load jobs from a file and execute them");
 
@@ -24,11 +24,11 @@ public class LoadJobsCommand
         return command;
     }
 
-    private static void CommandHandler(string jobFilePath)
+    private static void CommandHandler(FileSystemInfo jobFilePath)
     {
         try
         {
-            JobManager jobManager = new JobManager().LoadJobsFromFile(jobFilePath);
+            JobManager jobManager = new JobManager().LoadJobsFromFile(jobFilePath.FullName);
 
             // Show loaded jobs
             Console.Write(DisplayJobs.Display(jobManager.Jobs));
