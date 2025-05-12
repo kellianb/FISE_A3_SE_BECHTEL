@@ -34,60 +34,33 @@ Note: When done rebasing, you have to push using `git push --force`
 ```mermaid
 sequenceDiagram
     actor User
-    participant #58;Program
-    participant rootCommand
-    participant #58;SingleJobCommand
-    participant command
+    participant CLI
     participant jobManager
-    participant transaction
     participant #58;BackupCommand
     participant #58;DisplayChanges
-    participant #58;I18N
 
     activate User
-    User->>+#58;Program: Enter run command with arguments
-    #58;Program->>+rootCommand: Retrieve command
-    rootCommand->>+#58;SingleJobCommand: Transmit command
-    #58;SingleJobCommand->>+command: Build command arguments source and target paths, type and name of backup
-    command-->>#58;SingleJobCommand: Set command handler
+    User->>+CLI: Enters command: run <source-path> <target>
 
     alt no error
-        #58;SingleJobCommand->>+jobManager: Build backup command
-        jobManager->>+transaction: Build job with given information
-        transaction->>+#58;BackupCommand: Build backup command
-        #58;BackupCommand-->>transaction: Return backup command
-        transaction-->>-jobManager: Return backup command
-        jobManager-->>-#58;SingleJobCommand: Return backup command
-        #58;SingleJobCommand->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
-        #58;DisplayChanges->>+#58;I18N: Get messages in the right language
-        activate #58;I18N
-        #58;I18N-->>#58;DisplayChanges: Return messages
-        #58;DisplayChanges-->>-#58;SingleJobCommand: Return changes
-        #58;SingleJobCommand->>I18N: Get message of change confirmation in the right language
-        #58;I18N-->>#58;SingleJobCommand: Return message
-        #58;SingleJobCommand-->>User: Ask for confirmation of changes
+        CLI->>+jobManager: Build backup command
+        jobManager-->>-CLI: Return backup command
+        CLI->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
+        #58;DisplayChanges-->>-CLI: Return changes
+        CLI-->>User: Ask for confirmation of changes
         alt user confirm changes
-            User->>#58;SingleJobCommand: Confirm changes
-            #58;SingleJobCommand->>#58;BackupCommand: Execute backup command
-            #58;BackupCommand-->>#58;SingleJobCommand: Respond with success
-            #58;SingleJobCommand->>I18N: Get message of success in the right language
-            #58;I18N-->>#58;SingleJobCommand: Return message
-            #58;SingleJobCommand-->>User: Send message of success
+            User->>CLI: Confirm changes
+            CLI->>+#58;BackupCommand: Execute backup command
+            #58;BackupCommand-->>CLI: Respond with success
+            CLI-->>User: Send message of success
         else user cancel changes
-            User->>#58;SingleJobCommand: Cancel changes
+            User->>CLI: Cancel changes
         end
     else error
-        #58;BackupCommand-->>#58;SingleJobCommand: Send a message of error
+        #58;BackupCommand-->>CLI: Send a message of error
         deactivate #58;BackupCommand
-        #58;SingleJobCommand->>I18N: Get message of error in the right language
-        #58;I18N-->>-#58;SingleJobCommand: Return message
-        deactivate #58;I18N
-        #58;SingleJobCommand-->>User: Send message of error
+        CLI-->>User: Send message of error
         end
-        #58;SingleJobCommand-->>-rootCommand: Return command
-        rootCommand-->>-#58;Program: Invoke run command
-        #58;Program-->>-User: Display command messages in console
-        deactivate command
     deactivate User
 ```
 
@@ -96,72 +69,38 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor User
-    participant #58;Program
-    participant rootCommand
-    participant #58;LoadJobsCommand
-    participant command
+    participant CLI
     participant jobManager
-    participant transaction
     participant #58;BackupCommand
-    participant #58;JobFileLoader
-    participant #58;JsonDeserializer
     participant #58;DisplayChanges
-    participant #58;I18N
-    participant #58;SelectionStringParser
 
 
     activate User
-    User->>+#58;Program: Enter load command with path argument
-    #58;Program->>+rootCommand: Retrieve command
-    rootCommand->>+#58;LoadJobsCommand: Transmit command
-    #58;LoadJobsCommand->>+command: Build command with path argument
-    command-->>#58;LoadJobsCommand: Set command handler
+    User->>+CLI: Enters command: load <path>
 
     alt no error
-        #58;LoadJobsCommand->>+jobManager: Load jobs from JSON file
-        jobManager-->>#58;JobFileLoader: Load jobs from JSON file
-        #58;JobFileLoader->>+#58;JsonDeserializer: Parse JSON file
-        #58;JsonDeserializer-->>-#58;JobFileLoader: Return jobs parsed into a list
-        #58;JobFileLoader-->>jobManager: Return jobs list
-        jobManager-->>#58;LoadJobsCommand: Return jobs manager
-        #58;LoadJobsCommand-->User: Display jobs list and ask which jobs to run
-        User->>#58;LoadJobsCommand: Select jobs indexes to run
-        #58;LoadJobsCommand->>+#58;SelectionStringParser: Parse selection string
-        #58;SelectionStringParser-->>-#58;LoadJobsCommand: Return selected jobs indexes
-        #58;LoadJobsCommand->>jobManager: Build backup command for indexes
-        jobManager->>+transaction: Build job(s) with given information
-        transaction->>+#58;BackupCommand: Build backup command
-        #58;BackupCommand-->>transaction: Return backup command
-        transaction-->>-jobManager: Return backup command
-        jobManager-->>-#58;LoadJobsCommand: Return backup command
-        #58;LoadJobsCommand->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
-        #58;DisplayChanges ->> +#58;I18N: Get messages in the right language
-        #58;I18N-->>#58;DisplayChanges: Return messages
-        #58;DisplayChanges-->>-#58;LoadJobsCommand: Return changes
-        #58;LoadJobsCommand->>I18N: Get message of change confirmation in the right language
-        #58;I18N-->>#58;LoadJobsCommand: Return message
-        #58;LoadJobsCommand-->>User: Ask for confirmation of changes
+        CLI->>+jobManager: Load jobs from JSON file
+        jobManager-->>CLI: Return jobs manager
+        CLI-->User: Display jobs list and ask which jobs to run
+        User->>CLI: Select jobs indexes to run
+        CLI->>jobManager: Build backup command for indexes
+        jobManager-->>-CLI: Return backup command
+        CLI->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
+        #58;DisplayChanges-->>-CLI: Return changes
+        CLI-->>User: Ask for confirmation of changes
         alt user confirm changes
-            User->>#58;LoadJobsCommand: Confirm changes
-            #58;LoadJobsCommand->>#58;BackupCommand: Execute backup command
-            #58;BackupCommand-->>#58;LoadJobsCommand: Respond with success
-            #58;LoadJobsCommand->>I18N: Get message of success in the right language
-            #58;I18N-->>#58;LoadJobsCommand: Return message
-            #58;LoadJobsCommand-->>User: Send message of success
+            User->>CLI: Confirm changes
+            CLI->>+#58;BackupCommand: Execute backup command
+            #58;BackupCommand-->>CLI: Respond with success
+            CLI-->>User: Send message of success
         else user cancel changes
-            User->>#58;LoadJobsCommand: Cancel changes
+            User->>CLI: Cancel changes
         end
     else error
-        #58;BackupCommand-->>#58;LoadJobsCommand: Send a message of error
+        #58;BackupCommand-->>CLI: Send a message of error
         deactivate #58;BackupCommand
-        #58;LoadJobsCommand->>I18N: Get message of error in the right language
-        #58;I18N-->>-#58;LoadJobsCommand: Return message
-        #58;LoadJobsCommand-->>User: Send message of error
+        CLI-->>User: Send message of error
         end
-        #58;LoadJobsCommand-->>-rootCommand: Return command
-        rootCommand-->>-#58;Program: Invoke run command
-        #58;Program-->>-User: Display command messages in console
-        deactivate command
     deactivate User
 ```
 
