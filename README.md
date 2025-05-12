@@ -29,33 +29,140 @@ Note: When done rebasing, you have to push using `git push --force`
 
 ### Sequence Diagram
 
-#### Create and edit backup job
+#### Create and run a single job
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant #58;BackupUtilCli
+    participant #58;Program
+    participant rootCommand
+    participant #58;SingleJobCommand
+    participant command
+    participant jobManager
+    participant transaction
+    participant #58;BackupCommand
+    participant #58;DisplayChanges
+    participant #58;I18N
 
     activate User
-    User->>+#58;BackupUtilCli: Give source and target paths, type and name of backup
+    User->>+#58;Program: Enter run command with arguments
+    #58;Program->>+rootCommand: Retrieve command
+    rootCommand->>+#58;SingleJobCommand: Transmit command
+    #58;SingleJobCommand->>+command: Build command arguments source and target paths, type and name of backup
+    command-->>#58;SingleJobCommand: Set command handler
+
     alt no error
-        #58;BackupUtilCli->>+transaction: Build job with given information
-        #58;BackupUtilCli-->>User: Ask for confirmation of changes
+        #58;SingleJobCommand->>+jobManager: Build backup command
+        jobManager->>+transaction: Build job with given information
+        transaction->>+#58;BackupCommand: Build backup command
+        #58;BackupCommand-->>transaction: Return backup command
+        transaction-->>-jobManager: Return backup command
+        jobManager-->>-#58;SingleJobCommand: Return backup command
+        #58;SingleJobCommand->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
+        #58;DisplayChanges->>+#58;I18N: Get messages in the right language
+        activate #58;I18N
+        #58;I18N-->>#58;DisplayChanges: Return messages
+        #58;DisplayChanges-->>-#58;SingleJobCommand: Return changes
+        #58;SingleJobCommand->>I18N: Get message of change confirmation in the right language
+        #58;I18N-->>#58;SingleJobCommand: Return message
+        #58;SingleJobCommand-->>User: Ask for confirmation of changes
         alt user confirm changes
-            User->>#58;BackupUtilCli: Confirm changes
-            #58;BackupUtilCli->>transaction: Execute backup transaction
-            transaction-->>#58;BackupUtilCli: Respond with success
-            #58;BackupUtilCli-->>User: Send message of success
+            User->>#58;SingleJobCommand: Confirm changes
+            #58;SingleJobCommand->>#58;BackupCommand: Execute backup command
+            #58;BackupCommand-->>#58;SingleJobCommand: Respond with success
+            #58;SingleJobCommand->>I18N: Get message of success in the right language
+            #58;I18N-->>#58;SingleJobCommand: Return message
+            #58;SingleJobCommand-->>User: Send message of success
         else user cancel changes
-            User->>#58;BackupUtilCli: Cancel changes
+            User->>#58;SingleJobCommand: Cancel changes
         end
     else error
-        transaction-->>#58;BackupUtilCli: Send a message of error
-        deactivate transaction
-        #58;BackupUtilCli-->>User: Send a message of error
-        deactivate #58;BackupUtilCli
-        deactivate User
-    end
+        #58;BackupCommand-->>#58;SingleJobCommand: Send a message of error
+        deactivate #58;BackupCommand
+        #58;SingleJobCommand->>I18N: Get message of error in the right language
+        #58;I18N-->>-#58;SingleJobCommand: Return message
+        deactivate #58;I18N
+        #58;SingleJobCommand-->>User: Send message of error
+        end
+        #58;SingleJobCommand-->>-rootCommand: Return command
+        rootCommand-->>-#58;Program: Invoke run command
+        #58;Program-->>-User: Display command messages in console
+        deactivate command
+    deactivate User
+```
+
+#### Run job(s) from JSON file
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant #58;Program
+    participant rootCommand
+    participant #58;LoadJobsCommand
+    participant command
+    participant jobManager
+    participant transaction
+    participant #58;BackupCommand
+    participant #58;JobFileLoader
+    participant #58;JsonDeserializer
+    participant #58;DisplayChanges
+    participant #58;I18N
+    participant #58;SelectionStringParser
+
+
+    activate User
+    User->>+#58;Program: Enter load command with path argument
+    #58;Program->>+rootCommand: Retrieve command
+    rootCommand->>+#58;LoadJobsCommand: Transmit command
+    #58;LoadJobsCommand->>+command: Build command with path argument
+    command-->>#58;LoadJobsCommand: Set command handler
+
+    alt no error
+        #58;LoadJobsCommand->>+jobManager: Load jobs from JSON file
+        jobManager-->>#58;JobFileLoader: Load jobs from JSON file
+        #58;JobFileLoader->>+#58;JsonDeserializer: Parse JSON file
+        #58;JsonDeserializer-->>-#58;JobFileLoader: Return jobs parsed into a list
+        #58;JobFileLoader-->>jobManager: Return jobs list
+        jobManager-->>#58;LoadJobsCommand: Return jobs manager
+        #58;LoadJobsCommand-->User: Display jobs list and ask which jobs to run
+        User->>#58;LoadJobsCommand: Select jobs indexes to run
+        #58;LoadJobsCommand->>+#58;SelectionStringParser: Parse selection string
+        #58;SelectionStringParser-->>-#58;LoadJobsCommand: Return selected jobs indexes
+        #58;LoadJobsCommand->>jobManager: Build backup command for indexes
+        jobManager->>+transaction: Build job(s) with given information
+        transaction->>+#58;BackupCommand: Build backup command
+        #58;BackupCommand-->>transaction: Return backup command
+        transaction-->>-jobManager: Return backup command
+        jobManager-->>-#58;LoadJobsCommand: Return backup command
+        #58;LoadJobsCommand->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
+        #58;DisplayChanges ->> +#58;I18N: Get messages in the right language
+        #58;I18N-->>#58;DisplayChanges: Return messages
+        #58;DisplayChanges-->>-#58;LoadJobsCommand: Return changes
+        #58;LoadJobsCommand->>I18N: Get message of change confirmation in the right language
+        #58;I18N-->>#58;LoadJobsCommand: Return message
+        #58;LoadJobsCommand-->>User: Ask for confirmation of changes
+        alt user confirm changes
+            User->>#58;LoadJobsCommand: Confirm changes
+            #58;LoadJobsCommand->>#58;BackupCommand: Execute backup command
+            #58;BackupCommand-->>#58;LoadJobsCommand: Respond with success
+            #58;LoadJobsCommand->>I18N: Get message of success in the right language
+            #58;I18N-->>#58;LoadJobsCommand: Return message
+            #58;LoadJobsCommand-->>User: Send message of success
+        else user cancel changes
+            User->>#58;LoadJobsCommand: Cancel changes
+        end
+    else error
+        #58;BackupCommand-->>#58;LoadJobsCommand: Send a message of error
+        deactivate #58;BackupCommand
+        #58;LoadJobsCommand->>I18N: Get message of error in the right language
+        #58;I18N-->>-#58;LoadJobsCommand: Return message
+        #58;LoadJobsCommand-->>User: Send message of error
+        end
+        #58;LoadJobsCommand-->>-rootCommand: Return command
+        rootCommand-->>-#58;Program: Invoke run command
+        #58;Program-->>-User: Display command messages in console
+        deactivate command
+    deactivate User
 ```
 
 #### Select language
@@ -69,27 +176,6 @@ sequenceDiagram
         User->>+#58;I18n: Select language
         deactivate #58;I18n
         deactivate User
-```
-
-#### Run one or all jobs
-
-TODO: fix
-```mermaid
-sequenceDiagram
-    actor User
-    participant #58;SingleFileHandler
-
-    activate User
-    alt single job
-        User->>+#58;SingleFileHandler: Run job
-        deactivate #58;SingleFileHandler
-        else all jobs
-        User->>+#58;DirectoryHandler: Run all jobs
-        deactivate #58;DirectoryHandler
-        deactivate User
-        end
-
-
 ```
 
 #### Delete job
