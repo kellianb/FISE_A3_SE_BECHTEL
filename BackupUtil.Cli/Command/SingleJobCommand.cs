@@ -10,10 +10,10 @@ internal class SingleJobCommand
 {
     public static System.CommandLine.Command Build()
     {
-        Argument<string> sourcePath = new("source-path", "Source path of the backup");
-        Argument<string> targetPath = new("target-path", "Target path of the backup");
-        Option<bool> recursive = new("--recursive", "Make the backup recursive");
-        Option<bool> differential = new("--differential", "Make the backup differential");
+        Argument<FileSystemInfo> sourcePath = new("source-path", "Source path of the backup");
+        Argument<FileSystemInfo> targetPath = new("target-path", "Target path of the backup");
+        Option<bool> recursive = new(["--recursive", "-r"], "Make the backup recursive");
+        Option<bool> differential = new(["--differential", "-d"], "Make the backup differential");
 
         System.CommandLine.Command command = new("run", "Run a single backup job");
 
@@ -32,9 +32,9 @@ internal class SingleJobCommand
         return command;
     }
 
-    private static void CommandHandler(string sourcePath, string targetPath, bool recursive, bool differential)
+    private static void CommandHandler(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive, bool differential)
     {
-        Job job = new(sourcePath, targetPath, recursive, differential);
+        Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential);
 
         JobManager jobManager = new();
 
