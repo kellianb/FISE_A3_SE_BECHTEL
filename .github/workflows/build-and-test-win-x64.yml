@@ -3,8 +3,14 @@ name: Build and test (win-x64)
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '*.md'
+      - 'assets/**'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - '*.md'
+      - 'assets/**'
 
 
 jobs:
@@ -36,5 +42,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Build and test (win-x64)
+        name: BackupUtil.Core Build (win-x64)
         path: 'BackupUtil.Core/bin/Release/net9.0/win-x64/publish'
