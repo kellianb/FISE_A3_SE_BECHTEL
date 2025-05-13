@@ -3,7 +3,7 @@ using BackupUtil.Core.Job;
 
 namespace BackupUtil.Cli.Util;
 
-public class DisplayJobs
+internal static class DisplayJobs
 {
     private static string DisplayOne(Job job, int index)
     {

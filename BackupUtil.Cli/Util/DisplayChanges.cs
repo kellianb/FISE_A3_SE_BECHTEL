@@ -4,7 +4,7 @@ using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Util;
 
-public class DisplayChanges
+internal static class DisplayChanges
 {
     public static string DisplayFileChanges(Dictionary<FileChangeType, string[]> changes)
     {
