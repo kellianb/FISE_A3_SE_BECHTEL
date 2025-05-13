@@ -3,24 +3,17 @@ using BackupUtil.Core.Executor;
 using BackupUtil.Core.Job.Exporter;
 using BackupUtil.Core.Job.Loader;
 using BackupUtil.Core.Transaction;
+using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Job;
 
-public class JobManager
+public class JobManager(uint? maxJobs = null)
 {
     private readonly IBackupTransactionBuilder _transactionBuilder = new BackupTransactionBuilder();
 
     private readonly IBackupTransactionExecutor _transactionExecutor = new BackupTransactionExecutor();
 
-    public JobManager(uint maxJobs = uint.MaxValue)
-    {
-        if (maxJobs > 0)
-        {
-            MaxJobs = maxJobs;
-        }
-    }
-
-    public uint MaxJobs { get; }
+    public uint MaxJobs { get; } = maxJobs is > 0 ? maxJobs.Value : Config.DefaultMaxJobCount;
 
     public List<Job> Jobs { get; } = [];
 
@@ -48,7 +41,7 @@ public class JobManager
         return this;
     }
 
-    public JobManager AddJobsFromFile(string? filePath)
+    public JobManager AddJobsFromFile(string? filePath = null)
     {
         List<Job> jobs;
 

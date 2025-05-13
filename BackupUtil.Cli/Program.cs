@@ -17,6 +17,7 @@ internal class Program
 
         RootCommand rootCommand =
         [
+            CreateJobCommand.Build(),
             SingleJobCommand.Build(),
             LoadJobsCommand.Build()
         ];
