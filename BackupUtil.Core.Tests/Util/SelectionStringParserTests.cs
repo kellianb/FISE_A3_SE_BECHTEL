@@ -20,13 +20,16 @@ public class SelectionStringParserTests
         // Valid inputs
         yield return new TestCaseData("1", new[] { 1 }).SetName("Parse_SingleNumber");
         yield return new TestCaseData("15", new[] { 15 }).SetName("Parse_SingleLargerNumber");
-        yield return new TestCaseData("1 - 3", new[] { 1, 2, 3 }).SetName("Parse_SimpleRange");
+        yield return new TestCaseData("1 - 3", new[] { 1, 2, 3 }).SetName("Parse_SimpleRange1");
+        yield return new TestCaseData("2 - 3", new[] { 2, 3 }).SetName("Parse_SimpleRange2");
+        yield return new TestCaseData("0 - 3", new[] { 0, 1, 2, 3 }).SetName("Parse_SimpleRange3");
         yield return new TestCaseData("1 - 1", new[] { 1 }).SetName("Parse_RangeWithSameNumber");
         yield return new TestCaseData("1 - 4, 6", new[] { 1, 2, 3, 4, 6 }).SetName("Parse_RangeWithSingleNumber");
         yield return new TestCaseData("6, 1 - 4", new[] { 1, 2, 3, 4, 6 }).SetName("Parse_SingleNumberWithRange");
         yield return new TestCaseData("15, 6, 1 - 4", new[] { 1, 2, 3, 4, 6, 15 }).SetName(
             "Parse_MultipleNumbersWithRange");
-        yield return new TestCaseData("5 - 1", new[] { 5 }).SetName("Parse_InvertedRange_ReturnsOnlyFirst");
+        yield return new TestCaseData("5 - 1", new[] { 5 }).SetName("Parse_InvertedRange_ReturnsOnlyFirst1");
+        yield return new TestCaseData("500 - 123", new[] { 500 }).SetName("Parse_InvertedRange_ReturnsOnlyFirst2");
 
         // Error cases
         yield return new TestCaseData("-15, 6, 1 - 4", new[] { 1, 2, 3, 4, 6 }).SetName("Parse_NegativeNumber_Ignored");
