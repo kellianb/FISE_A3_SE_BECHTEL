@@ -40,9 +40,9 @@ public class LoadJobsCommand
 
             Console.WriteLine();
 
-            HashSet<int> selectedIndexes = SelectionStringParser.Parse(selection);
+            HashSet<int> selectedIndices = SelectionStringParser.Parse(selection);
 
-            BackupCommand command = jobManager.RunByIndex(selectedIndexes);
+            BackupCommand command = jobManager.RunByIndices(selectedIndices);
 
             // Display planned changes to the user
             Console.Write(DisplayChanges.DisplayDirectoryChanges(command.GetConcernedDirectories()));

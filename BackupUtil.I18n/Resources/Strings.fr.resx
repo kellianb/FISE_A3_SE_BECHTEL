@@ -78,4 +78,7 @@
     <data name="errorInvalidJobFile" xml:space="preserve">
         <value>Le fichier de tâches fourni n'est pas valide.</value>
     </data>
+    <data name="errorMaxJobs" xml:space="preserve">
+        <value>Limite maximale de tâches dépassée !</value>
+    </data>
 </root>

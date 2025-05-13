@@ -10,35 +10,72 @@ public class JobManager
     private readonly IBackupTransactionBuilder _transactionBuilder = new BackupTransactionBuilder();
 
     private readonly IBackupTransactionExecutor _transactionExecutor = new BackupTransactionExecutor();
+
+    public JobManager(uint maxJobs = uint.MaxValue)
+    {
+        if (maxJobs > 0)
+        {
+            MaxJobs = maxJobs;
+        }
+    }
+
+    public uint MaxJobs { get; }
+
     public List<Job> Jobs { get; } = [];
 
     public JobManager AddJob(Job job)
     {
+        if (Jobs.Count + 1 > MaxJobs)
+        {
+            throw new ArgumentException("errorMaxJobs");
+        }
+
         Jobs.Add(job);
         return this;
     }
 
     public JobManager AddJobs(List<Job> jobs)
     {
+        if (jobs.Count + Jobs.Count > MaxJobs)
+        {
+            throw new ArgumentException("errorMaxJobs");
+        }
+
         Jobs.AddRange(jobs);
         return this;
     }
 
     public JobManager AddJobsFromFile(string filePath)
     {
+        List<Job> jobs;
+
         try
         {
-            Jobs.AddRange(JobFileLoader.LoadJobsFromFile(filePath));
+            jobs = JobFileLoader.LoadJobsFromFile(filePath);
         }
         catch (Exception e)
         {
             throw new ArgumentException("errorInvalidJobFile", e);
         }
 
+        AddJobs(jobs);
+
         return this;
     }
 
-    public BackupCommand RunByIndex(HashSet<int> jobIndices)
+    public JobManager RemoveJobByIndex(int jobIndex)
+    {
+        Jobs.RemoveAt(jobIndex - 1);
+        return this;
+    }
+
+    public JobManager RemoveAll()
+    {
+        Jobs.Clear();
+        return this;
+    }
+
+    public BackupCommand RunByIndices(HashSet<int> jobIndices)
     {
         List<Job> concernedJobs = new(jobIndices.Select(i => Jobs[i - 1]));
 
