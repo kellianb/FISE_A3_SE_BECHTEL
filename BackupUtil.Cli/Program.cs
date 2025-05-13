@@ -2,6 +2,7 @@
 using System.CommandLine.Parsing;
 using System.Globalization;
 using BackupUtil.Cli.Command;
+using BackupUtil.Core.Util;
 using BackupUtil.I18n;
 
 namespace BackupUtil.Cli;
@@ -10,6 +11,8 @@ internal class Program
 {
     private static int Main(string[] args)
     {
+        Logging.Init();
+
         Option<string> localeOption = new(["--locale", "-l"],
             "Locale of the application, example: 'fr-FR', 'en-GB', defaults to OS locale");
 

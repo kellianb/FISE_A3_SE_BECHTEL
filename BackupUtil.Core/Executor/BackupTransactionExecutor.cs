@@ -1,5 +1,6 @@
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
+using Serilog;
 
 namespace BackupUtil.Core.Executor;
 
@@ -7,6 +8,8 @@ public class BackupTransactionExecutor : IBackupTransactionExecutor
 {
     public void Execute(BackupTransaction transaction)
     {
+        Log.Information("Executing transaction: {@BackupTransaction}", transaction);
+
         foreach (DirectoryChange change in transaction.DirectoryChanges)
         {
             ExecuteDirectoryChange(change);
