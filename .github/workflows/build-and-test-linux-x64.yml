@@ -12,7 +12,6 @@ on:
       - '*.md'
       - 'assets/**'
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,8 +38,14 @@ jobs:
     - name: Build solution
       run: dotnet publish $Solution_Name -r linux-x64 --configuration Release --no-restore
 
-    - name: Upload build artifacts
+    - name: Upload BackupUtil.Core build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Build and test (linux-x64)
+        name: BackupUtil.Core Build (linux-x64)
         path: 'BackupUtil.Core/bin/Release/net9.0/linux-x64/publish'
+
+    - name: Upload BackupUtil.Cli build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: BackupUtil.Cli Build (linux-x64)
+        path: 'BackupUtil.Cli/bin/Release/net9.0/linux-x64/publish'
