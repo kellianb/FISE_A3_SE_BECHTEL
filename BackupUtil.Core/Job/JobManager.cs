@@ -65,7 +65,7 @@ public class JobManager(uint? maxJobs = null)
 
     public JobManager RemoveJobByIndex(int jobIndex)
     {
-        Jobs.RemoveAt(jobIndex - 1);
+        Jobs.RemoveAt(jobIndex);
         return this;
     }
 
@@ -81,7 +81,7 @@ public class JobManager(uint? maxJobs = null)
 
     public BackupCommand RunByIndices(HashSet<int> jobIndices)
     {
-        List<Job> concernedJobs = new(jobIndices.Select(i => Jobs[i - 1]));
+        List<Job> concernedJobs = new(jobIndices.Select(i => Jobs[i]));
 
         return BuildBackupCommand(concernedJobs);
     }
@@ -117,7 +117,7 @@ public class JobManager(uint? maxJobs = null)
 
     public JobManager ExportByIndices(HashSet<int> jobIndices, string? filePath = null)
     {
-        List<Job> concernedJobs = new(jobIndices.Select(i => Jobs[i - 1]));
+        List<Job> concernedJobs = new(jobIndices.Select(i => Jobs[i]));
         JobFileExporter.ExportJobsToFile(concernedJobs, filePath);
         return this;
     }
