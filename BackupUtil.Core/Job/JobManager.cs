@@ -1,5 +1,6 @@
 using BackupUtil.Core.Command;
 using BackupUtil.Core.Executor;
+using BackupUtil.Core.Job.Exporter;
 using BackupUtil.Core.Job.Loader;
 using BackupUtil.Core.Transaction;
 
@@ -23,6 +24,8 @@ public class JobManager
 
     public List<Job> Jobs { get; } = [];
 
+    #region Add jobs
+
     public JobManager AddJob(Job job)
     {
         if (Jobs.Count + 1 > MaxJobs)
@@ -45,7 +48,7 @@ public class JobManager
         return this;
     }
 
-    public JobManager AddJobsFromFile(string filePath)
+    public JobManager AddJobsFromFile(string? filePath)
     {
         List<Job> jobs;
 
@@ -63,6 +66,10 @@ public class JobManager
         return this;
     }
 
+    #endregion
+
+    #region Remove jobs
+
     public JobManager RemoveJobByIndex(int jobIndex)
     {
         Jobs.RemoveAt(jobIndex - 1);
@@ -74,6 +81,10 @@ public class JobManager
         Jobs.Clear();
         return this;
     }
+
+    #endregion
+
+    #region Run jobs
 
     public BackupCommand RunByIndices(HashSet<int> jobIndices)
     {
@@ -100,4 +111,23 @@ public class JobManager
 
         return new BackupCommand(_transactionExecutor, transaction);
     }
+
+    #endregion
+
+    #region Export jobs
+
+    public JobManager ExportAll(string? filePath = null)
+    {
+        JobFileExporter.ExportJobsToFile(Jobs, filePath);
+        return this;
+    }
+
+    public JobManager ExportByIndices(HashSet<int> jobIndices, string? filePath = null)
+    {
+        List<Job> concernedJobs = new(jobIndices.Select(i => Jobs[i - 1]));
+        JobFileExporter.ExportJobsToFile(concernedJobs, filePath);
+        return this;
+    }
+
+    #endregion
 }
