@@ -10,7 +10,7 @@ public static class JobFileLoader
 
         return Path.GetExtension(filePath) switch
         {
-            ".json" => JsonDeserializer.LoadJobs(reader),
+            ".json" => JsonDeserializer.Deserialize(reader),
             _ => throw new ArgumentException("errorFileFormatNotSupported")
         };
     }

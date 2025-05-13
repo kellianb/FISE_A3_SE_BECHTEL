@@ -4,7 +4,7 @@ namespace BackupUtil.Core.Job.Loader;
 
 public static class JsonDeserializer
 {
-    public static List<Job> LoadJobs(TextReader reader)
+    public static List<Job> Deserialize(TextReader reader)
     {
         return JsonSerializer.Deserialize<List<Job>>(reader.ReadToEnd()) ?? [];
     }
