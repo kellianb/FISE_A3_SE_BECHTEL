@@ -3,7 +3,7 @@ using BackupUtil.Core.Job;
 
 namespace BackupUtil.Cli.Util;
 
-public class DisplayJobs
+internal static class DisplayJobs
 {
     private static string DisplayOne(Job job, int index)
     {
@@ -25,7 +25,7 @@ public class DisplayJobs
 
         foreach ((Job job, int idx) in jobs.Select((job, idx) => (job, idx)))
         {
-            display += DisplayOne(job, idx + 1);
+            display += DisplayOne(job, idx);
         }
 
         return display;
