@@ -30,10 +30,18 @@ public static class SelectionStringParser
         {
             string[] rangeBoundaries = expressionPart.Split(RangeSeparator);
 
-            if (rangeBoundaries.Length == 2 && int.TryParse(rangeBoundaries[0], out int rangeStart) &&
-                int.TryParse(rangeBoundaries[1], out int rangeEnd))
+            if (rangeBoundaries.Length == 2
+                && int.TryParse(rangeBoundaries[0], out int rangeStart)
+                && int.TryParse(rangeBoundaries[1], out int rangeEnd))
             {
-                result.InsertRange(0, Enumerable.Range(rangeStart, rangeEnd));
+                if (rangeStart > rangeEnd)
+                {
+                    result.Add(rangeStart);
+                }
+                else
+                {
+                    result.InsertRange(0, Enumerable.Range(rangeStart, rangeEnd - rangeStart + 1));
+                }
             }
         }
         else if (int.TryParse(expressionPart, out int number))
