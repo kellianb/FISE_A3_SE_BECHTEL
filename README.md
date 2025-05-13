@@ -37,29 +37,24 @@ sequenceDiagram
     participant CLI
     participant jobManager
     participant #58;BackupCommand
-    participant #58;DisplayChanges
+    participant Filesystem
 
     activate User
     User->>+CLI: Enters command: run <source-path> <target>
 
-    alt no error
         CLI->>+jobManager: Build backup command
         jobManager-->>-CLI: Return backup command
-        CLI->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
-        #58;DisplayChanges-->>-CLI: Return changes
         CLI-->>User: Ask for confirmation of changes
-        alt user confirm changes
+        alt user confirms changes
             User->>CLI: Confirm changes
             CLI->>+#58;BackupCommand: Execute backup command
-            #58;BackupCommand-->>CLI: Respond with success
-            CLI-->>User: Send message of success
-        else user cancel changes
+            #58;BackupCommand->>+Filesystem: Execute file changes
+            Filesystem-->>-#58;BackupCommand: Respond with success
+            #58;BackupCommand-->>CLI: Confirmation
+            CLI-->>User: Confirmation
+        else user cancels changes
             User->>CLI: Cancel changes
-        end
-    else error
-        #58;BackupCommand-->>CLI: Send a message of error
-        deactivate #58;BackupCommand
-        CLI-->>User: Send message of error
+            CLI-->>User: Confirmation
         end
     deactivate User
 ```
@@ -72,35 +67,35 @@ sequenceDiagram
     participant CLI
     participant jobManager
     participant #58;BackupCommand
-    participant #58;DisplayChanges
-
+    participant Filesystem
 
     activate User
     User->>+CLI: Enters command: load <path>
 
-    alt no error
         CLI->>+jobManager: Load jobs from JSON file
-        jobManager-->>CLI: Return jobs manager
-        CLI-->User: Display jobs list and ask which jobs to run
-        User->>CLI: Select jobs indexes to run
-        CLI->>jobManager: Build backup command for indexes
+        jobManager->>+ Filesystem: Read JSON file
+        Filesystem-->>-jobManager: Return JSON file contents
+        jobManager-->>CLI:
+        CLI->>jobManager: Get jobs list
+        jobManager-->>CLI: Return jobs list
+        CLI-->>User: Display job list and ask for which jobs to run
+        User->>CLI: Select jobs to run
+        CLI->>jobManager: Build backup command from selected jobs
         jobManager-->>-CLI: Return backup command
-        CLI->>+#58;DisplayChanges: Retrieve changes of concerned files and directories
-        #58;DisplayChanges-->>-CLI: Return changes
         CLI-->>User: Ask for confirmation of changes
-        alt user confirm changes
+        alt user confirms changes
             User->>CLI: Confirm changes
             CLI->>+#58;BackupCommand: Execute backup command
-            #58;BackupCommand-->>CLI: Respond with success
-            CLI-->>User: Send message of success
-        else user cancel changes
+            #58;BackupCommand->>+Filesystem: Execute file changes
+            Filesystem-->>-#58;BackupCommand: Respond with success
+            #58;BackupCommand-->>CLI: Confirmation
+            CLI-->>User: Confirmation
+        else user cancels changes
             User->>CLI: Cancel changes
-        end
-    else error
-        #58;BackupCommand-->>CLI: Send a message of error
-        deactivate #58;BackupCommand
-        CLI-->>User: Send message of error
-        end
+            CLI-->>User: Confirmation
+
+end
+
     deactivate User
 ```
 
@@ -117,10 +112,6 @@ sequenceDiagram
         deactivate User
 ```
 
-#### Delete job
-
-```mermaid
-```
 
 ### Class Diagram
 
@@ -234,39 +225,5 @@ JobFileLoader ..> JsonDeserializer
 
 ### Activity Diagram
 
-TODO: WIP
+![use_case.svg](assets%2Factivity.svg)
 
-```mermaid
-    graph TD;
-        Z[Launch EasySave] --> A[Create or edit a backup job];
-        Z --> E[Load jobs];
-        Z --> O[Select language];
-        subgraph createEditJob
-            A --> N{Less than 5 jobs already existing?};
-            N -- Yes --> B{Confirm changes?};
-            N -- No --> D[Cancel changes];
-            B -- Yes --> C[Add job to the list];
-            B -- No --> D;
-            C --> M[End];
-            D --> M;
-        end
-        subgraph runJob
-            E --> F[Display jobs information];
-            F --> G[Ask user to select jobs to execute];
-            G --> H[Display modification information];
-            H--> I{Confirm modifications ?};
-            I -- Yes --> J[Execute jobs];
-            I -- No --> K[Cancel modifications];
-            J --> L[End];
-            K --> L;
-
-        end
-        subgraph selectLanguage
-            O --> P[End];
-
-        end
-        M --> Z;
-        L --> Z;
-        P --> Z;
-
-```
