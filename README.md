@@ -166,6 +166,7 @@ class BackupTransaction {
 }
 
 class IBackupTransactionBuilder {
+    <<interface>>
     +BackupTransaction Build(Job)
     +BackupTransaction Build(Job[])
 }
@@ -186,6 +187,7 @@ class JobManager {
 }
 
 class IBackupTransactionExecutor {
+    <<interface>>
     +Execute(BackupTransaction)
 }
 
@@ -233,7 +235,7 @@ JobManager *--IBackupTransactionExecutor
 BackupCommand *-- BackupTransaction
 BackupCommand *-- IBackupTransactionExecutor
 
-JobManager ..> BackupCommand : instantiate
+JobManager ..> BackupCommand : instantiate 
 
 JobManager ..> JobFileLoader
 

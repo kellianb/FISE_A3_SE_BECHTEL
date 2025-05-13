@@ -49,10 +49,13 @@ internal static class CreateJobCommand
             {
                 manager.AddJobsFromFile(jobFilePath?.FullName);
             }
-            catch (Exception e)
+            catch
             {
                 // Only catch the exception if the default job file path was used
-                if (jobFilePath is not null) throw;
+                if (jobFilePath is not null)
+                {
+                    throw;
+                }
             }
 
             manager.AddJob(job)

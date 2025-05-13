@@ -38,11 +38,10 @@ public class BackupTransactionExecutor : IBackupTransactionExecutor
         switch (change.ChangeType)
         {
             case FileChangeType.Create:
-                File.Copy(change.SourcePath!, change.TargetPath);
+                File.Copy(change.SourcePath!, change.TargetPath, true);
                 break;
             case FileChangeType.Modify:
-                File.Delete(change.TargetPath);
-                File.Copy(change.SourcePath!, change.TargetPath);
+                File.Copy(change.SourcePath!, change.TargetPath, true);
                 break;
             case FileChangeType.Delete:
                 File.Delete(change.TargetPath);
