@@ -4,7 +4,7 @@ using Serilog;
 
 namespace BackupUtil.Core.Executor;
 
-public class BackupTransactionExecutor : IBackupTransactionExecutor
+internal class BackupTransactionExecutor : IBackupTransactionExecutor
 {
     public void Execute(BackupTransaction transaction)
     {

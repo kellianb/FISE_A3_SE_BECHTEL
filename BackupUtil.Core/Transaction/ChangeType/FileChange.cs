@@ -10,7 +10,7 @@ public enum FileChangeType
 }
 
 // Represents a file that needs to be created, modified, or deleted
-public class FileChange(
+internal class FileChange(
     string targetPath,
     FileChangeType changeType,
     string? sourcePath = null,
