@@ -75,7 +75,7 @@ sequenceDiagram
         CLI->>+jobManager: Load jobs from JSON file
         jobManager->>+ Filesystem: Read JSON file
         Filesystem-->>-jobManager: Return JSON file contents
-        jobManager-->>CLI:
+        jobManager-->>CLI: 
         CLI->>jobManager: Get jobs list
         jobManager-->>CLI: Return jobs list
         CLI-->>User: Display job list and ask for which jobs to run
