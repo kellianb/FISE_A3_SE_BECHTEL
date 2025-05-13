@@ -24,6 +24,28 @@ public class BackupTransaction
 
     #endregion
 
+    #region Add directory Changes
+
+    private BackupTransaction AddDirectoryChange(DirectoryChange change)
+    {
+        DirectoryChanges.Add(change);
+        return this;
+    }
+
+    public BackupTransaction AddDirectoryCreation(string path)
+    {
+        DirectoryChange change = new(path, DirectoryChangeType.Create);
+        return AddDirectoryChange(change);
+    }
+
+    public BackupTransaction AddDirectoryDeletion(DirectoryInfo targetDirectory)
+    {
+        DirectoryChange change = new(targetDirectory.FullName, DirectoryChangeType.Delete);
+        return AddDirectoryChange(change);
+    }
+
+    #endregion
+
     #region Get info about file changes
 
     /// <summary>
@@ -74,28 +96,6 @@ public class BackupTransaction
     {
         FileChange change = new(targetFile.FullName, FileChangeType.Delete, fileSize: targetFile.Length);
         return AddFileChange(change);
-    }
-
-    #endregion
-
-    #region Add directory Changes
-
-    private BackupTransaction AddDirectoryChange(DirectoryChange change)
-    {
-        DirectoryChanges.Add(change);
-        return this;
-    }
-
-    public BackupTransaction AddDirectoryCreation(string path)
-    {
-        DirectoryChange change = new(path, DirectoryChangeType.Create);
-        return AddDirectoryChange(change);
-    }
-
-    public BackupTransaction AddDirectoryDeletion(DirectoryInfo targetDirectory)
-    {
-        DirectoryChange change = new(targetDirectory.FullName, DirectoryChangeType.Delete);
-        return AddDirectoryChange(change);
     }
 
     #endregion

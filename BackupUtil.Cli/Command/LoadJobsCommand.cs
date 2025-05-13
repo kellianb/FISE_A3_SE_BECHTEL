@@ -28,7 +28,7 @@ public class LoadJobsCommand
     {
         try
         {
-            JobManager jobManager = new JobManager().LoadJobsFromFile(jobFilePath.FullName);
+            JobManager jobManager = new JobManager().AddJobsFromFile(jobFilePath.FullName);
 
             // Show loaded jobs
             Console.Write(DisplayJobs.Display(jobManager.Jobs));
@@ -42,7 +42,7 @@ public class LoadJobsCommand
 
             HashSet<int> selectedIndexes = SelectionStringParser.Parse(selection);
 
-            BackupCommand command = jobManager.GetBackupCommandForIndexes(selectedIndexes);
+            BackupCommand command = jobManager.RunByIndex(selectedIndexes);
 
             // Display planned changes to the user
             Console.Write(DisplayChanges.DisplayDirectoryChanges(command.GetConcernedDirectories()));
@@ -54,7 +54,6 @@ public class LoadJobsCommand
             if (new List<string>(["Y", "y", ""]).Contains(Console.ReadLine() ?? "n"))
             {
                 command.Execute();
-                Console.WriteLine("Done");
             }
         }
         catch (Exception e)

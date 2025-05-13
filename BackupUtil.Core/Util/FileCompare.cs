@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 
 namespace BackupUtil.Core.Util;
 
-public class FileCompare
+public static class FileCompare
 {
     public static bool AreFilesEqual(FileInfo file1, FileInfo file2)
     {

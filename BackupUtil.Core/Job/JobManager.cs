@@ -12,7 +12,19 @@ public class JobManager
     private readonly IBackupTransactionExecutor _transactionExecutor = new BackupTransactionExecutor();
     public List<Job> Jobs { get; } = [];
 
-    public JobManager LoadJobsFromFile(string filePath)
+    public JobManager AddJob(Job job)
+    {
+        Jobs.Add(job);
+        return this;
+    }
+
+    public JobManager AddJobs(List<Job> jobs)
+    {
+        Jobs.AddRange(jobs);
+        return this;
+    }
+
+    public JobManager AddJobsFromFile(string filePath)
     {
         try
         {
@@ -26,21 +38,26 @@ public class JobManager
         return this;
     }
 
-    public BackupCommand GetBackupCommandForIndexes(HashSet<int> jobIndexes)
+    public BackupCommand RunByIndex(HashSet<int> jobIndices)
     {
-        List<Job> concernedJobs = new(jobIndexes.Select(i => Jobs[i-1]));
+        List<Job> concernedJobs = new(jobIndices.Select(i => Jobs[i - 1]));
 
         return BuildBackupCommand(concernedJobs);
     }
 
-    public BackupCommand BuildBackupCommand(List<Job> concernedJobs)
+    public BackupCommand RunAll()
+    {
+        return BuildBackupCommand(Jobs);
+    }
+
+    private BackupCommand BuildBackupCommand(List<Job> concernedJobs)
     {
         BackupTransaction transaction = _transactionBuilder.Build(concernedJobs);
 
         return new BackupCommand(_transactionExecutor, transaction);
     }
 
-    public BackupCommand BuildBackupCommand(Job concernedJobs)
+    private BackupCommand BuildBackupCommand(Job concernedJobs)
     {
         BackupTransaction transaction = _transactionBuilder.Build(concernedJobs);
 
