@@ -1,3 +1,5 @@
+using BackupUtil.Core.Util;
+
 namespace BackupUtil.Core.Job.Exporter;
 
 public static class JobFileExporter
@@ -6,7 +8,7 @@ public static class JobFileExporter
     {
         filePath = filePath != null
             ? Path.GetFullPath(filePath)
-            : Path.GetFullPath("BackupJobs.json"); // Use a default path in CWD by default
+            : Path.GetFullPath(Config.DefaultJobFilePath);
 
 
         string serializedJobs = Path.GetExtension(filePath) switch

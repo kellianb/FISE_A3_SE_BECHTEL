@@ -7,13 +7,13 @@ using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Command;
 
-public class LoadJobsCommand
+internal static class LoadJobsCommand
 {
     public static System.CommandLine.Command Build()
     {
-        Argument<FileSystemInfo> jobFilePath = new("job-file-path", "File path to load the jobs from");
+        Argument<FileSystemInfo?> jobFilePath = new("job-file-path", getDefaultValue: () => null ,"File path to load the jobs from");
 
-        System.CommandLine.Command command = new("load", "Load jobs from a file and execute them");
+        System.CommandLine.Command command = new("load", "Load backup jobs from a file and execute them");
 
         command.AddArgument(jobFilePath);
 
@@ -24,11 +24,11 @@ public class LoadJobsCommand
         return command;
     }
 
-    private static void CommandHandler(FileSystemInfo jobFilePath)
+    private static void CommandHandler(FileSystemInfo? jobFilePath)
     {
         try
         {
-            JobManager jobManager = new JobManager().AddJobsFromFile(jobFilePath.FullName);
+            JobManager jobManager = new JobManager().AddJobsFromFile(jobFilePath?.FullName);
 
             // Show loaded jobs
             Console.Write(DisplayJobs.Display(jobManager.Jobs));
@@ -51,7 +51,7 @@ public class LoadJobsCommand
             // Ask the user if this is ok
             Console.WriteLine(I18N.GetLocalizedMessage("IsOk"));
 
-            if (new List<string>(["Y", "y", ""]).Contains(Console.ReadLine() ?? "n"))
+            if (Console.ReadLine() is "Y" or "y" or "")
             {
                 command.Execute();
             }

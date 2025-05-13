@@ -1,3 +1,5 @@
+using BackupUtil.Core.Util;
+
 namespace BackupUtil.Core.Job.Loader;
 
 public static class JobFileLoader
@@ -6,7 +8,7 @@ public static class JobFileLoader
     {
         filePath = filePath != null
             ? Path.GetFullPath(filePath)
-            : Path.GetFullPath("BackupJobs.json"); // Use a default path in CWD by default
+            : Path.GetFullPath(Config.DefaultJobFilePath);
 
         using StreamReader reader = new(filePath);
 
