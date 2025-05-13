@@ -2,7 +2,7 @@ using System.Text.Json;
 
 namespace BackupUtil.Core.Job.Loader;
 
-public static class JsonDeserializer
+public static class JsonJobDeserializer
 {
     public static List<Job> Deserialize(TextReader reader)
     {
