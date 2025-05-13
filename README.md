@@ -210,6 +210,14 @@ class JsonDeserializer {
     List[Job] Deserialize(TextReader reader)
 }
 
+class JobFileExporter {
+    +void ExportJobsToFile(List[Job], string?)
+}
+
+class JsonSerializer {
+    string Serialize(List[Job] jobs)
+}
+
 JobManager *-- Job
 FileChange --|> FileSystemChange
 DirectoryChange --|> FileSystemChange
@@ -218,21 +226,26 @@ BackupTransaction *-- DirectoryChange
 BackupTransactionExecutor --|> IBackupTransactionExecutor
 
 BackupTransactionBuilder --|> IBackupTransactionBuilder
-BackupTransactionBuilder ..> BackupTransaction : instantiates
+BackupTransactionBuilder ..> BackupTransaction : instantiate
 
 JobManager *--IBackupTransactionBuilder
 JobManager *--IBackupTransactionExecutor
 BackupCommand *-- BackupTransaction
 BackupCommand *-- IBackupTransactionExecutor
 
-JobManager ..> BackupCommand : instantiates
+JobManager ..> BackupCommand : instantiate
 
 JobManager ..> JobFileLoader
-JobFileLoader ..> Job : instantiates
+
+JobFileLoader ..> Job : instantiate
 JobFileLoader ..> JsonDeserializer
+
+JobManager ..JobFileExporter
+
+JobFileExporter ..> JsonSerializer
 ```
 
 ### Activity Diagram
 
-![use_case.svg](assets%2Factivity.svg)
+![use_case.svg](assets/activity.svg)
 
