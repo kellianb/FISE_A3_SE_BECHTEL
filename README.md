@@ -104,11 +104,20 @@ end
 ```mermaid
     sequenceDiagram
         actor User
-        participant #58;I18n
+        participant CLI
+        participant I18n
 
         activate User
-        User->>+#58;I18n: Select language
-        deactivate #58;I18n
+        activate I18n
+        User->>+CLI: Enters command with a language option
+        CLI->>I18n: Set selected language
+        I18n-->>CLI: Confirmation
+        loop For each message
+            CLI->>I18n: Get message with selected language
+            I18n-->>CLI: Return message
+            CLI-->>-User: Display message in selected language
+        end
+        deactivate I18n
         deactivate User
 ```
 
