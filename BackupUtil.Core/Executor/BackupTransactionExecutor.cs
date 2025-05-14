@@ -1,9 +1,8 @@
-using System.Diagnostics;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using Serilog;
-using Serilog.Context;
-using SerilogTracing;
+using SerilogTimings;
+using SerilogTimings.Extensions;
 
 namespace BackupUtil.Core.Executor;
 
@@ -11,7 +10,7 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
 {
     public void Execute(BackupTransaction transaction)
     {
-        using LoggerActivity activity = Log.Logger.StartActivity("Executing transaction: {@BackupTransaction}", transaction);
+        using IDisposable _ = Log.Logger.TimeOperation("Executing transaction: {@BackupTransaction}", transaction);
 
         foreach (DirectoryChange change in transaction.DirectoryChanges)
         {
@@ -41,8 +40,6 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
 
     private static void ExecuteFileChange(FileChange change)
     {
-        Stopwatch stopwatch = Stopwatch.StartNew();
-
         switch (change.ChangeType)
         {
             case FileChangeType.Create:
@@ -57,8 +54,5 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        stopwatch.Stop();
-        change.ExecutionTime = stopwatch.ElapsedMilliseconds;
     }
 }

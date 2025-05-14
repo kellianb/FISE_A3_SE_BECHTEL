@@ -2,7 +2,6 @@ using System.Text.Json;
 using BackupUtil.Core.Transaction;
 using Serilog;
 using Serilog.Formatting.Json;
-using SerilogTracing;
 
 namespace BackupUtil.Core.Util;
 
@@ -11,6 +10,8 @@ public static class Logging
     public static void Init()
     {
         Log.Logger = GetLogger();
+
+        Log.Debug("Logging to: {string}", Path.Join(Config.LoggingDirectory, $"{DateTime.Now:yyyy-MM-dd}.json"));
     }
 
     private static ILogger GetLogger()
@@ -20,15 +21,10 @@ public static class Logging
             .Destructure.ByTransforming<BackupTransaction>(t => JsonSerializer.Serialize(t))
             .WriteTo.Console()
             .WriteTo.File(
-                path: Path.Join(Config.LoggingDirectory, $"{DateTime.Now:yyyy-MM-dd}.json"),
+                path: Path.Join(Config.LoggingDirectory, "log-.json"),
                 rollingInterval: RollingInterval.Day,
                 formatter: new JsonFormatter()
             )
             .CreateLogger();
-    }
-
-    public static IDisposable GetTracing()
-    {
-        return new ActivityListenerConfiguration().TraceTo(Log.Logger);
     }
 }

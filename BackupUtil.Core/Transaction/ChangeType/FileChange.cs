@@ -21,7 +21,6 @@ internal class FileChange(
     public FileChangeType ChangeType { get; } = changeType;
     public long FileSize { get; } = fileSize;
     public string? SourcePath { get; } = sourcePath;
-    public long ExecutionTime { get; set; } = 0;
 
     public bool Equals(FileChange? other)
     {

@@ -14,10 +14,6 @@ internal class Program
     {
         Logging.Init();
 
-        Log.Debug("Logging to {Path}", Config.LoggingDirectory);
-
-        using IDisposable _ = Logging.GetTracing();
-
         Option<string> localeOption = new(["--locale", "-l"],
             "Locale of the application, example: 'fr-FR', 'en-GB', defaults to OS locale");
 

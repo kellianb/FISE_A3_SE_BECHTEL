@@ -1,6 +1,6 @@
 namespace BackupUtil.Core.Util;
 
-public class Config
+internal static class Config
 {
     // Default file path to look for a job file
     public static string DefaultJobFilePath { get; } = "BackupJobs.json";
