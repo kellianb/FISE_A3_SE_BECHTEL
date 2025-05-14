@@ -9,7 +9,32 @@
 | Kellian BECHTEL |
 | Evan CAUMARTIN  |
 
-## CLI usage guide
+
+## Getting started
+
+To get the CLI, you can either download it from the build artifacts of the "Build and test" GitHub action corresponding to your platform, or compile it yourself.
+
+To compile the app, Clone this repository and run `dotnet build`.
+
+To run backup jobs, you can either directly specify all parameters as arguments (`BackupUtil.Cli run ...`)
+or load a list of backup jobs from a json file (`BackupUtil.Cli load ...`) and pick which to run.
+
+You need to create a backup job before being able to load and run it.
+Backup jobs can be created using `Backuputil.Cli create ...`.
+
+If no filepath is specified, backup jobs are saved to, removed and loaded from `BackupJobs.json` in the CWD by default.
+
+A daily log file containing details about all changes made by this utility can be found at:
+
+- Linux: ~/.locale/share/EasySave/logs
+- Windows: ~\AppData\Local\EasySave\Logs
+
+Currently, two languages are supported: French and English.
+If your OS language is among them, the CLI will default to it.
+
+You can also manually set your language by using the `-l ` option.
+
+### CLI usage guide
 
 ```
 Usage:
@@ -21,36 +46,11 @@ Options:
   -?, -h, --help         Show help and usage information
 
 Commands:
-  create <source-path> <target-path>  Create a backup job
-  load <job-file-path>                Load backup jobs from a file and execute them []
-  remove                              Remove a backup job
+  create <source-path> <target-path>  Create a backup job and write it to a file
+  load <job-file-path>                Load backup jobs from a file and execute them
+  remove                              Remove a backup job from a file
   run <source-path> <target-path>     Run a backup job
 ```
-
-To use this CLI application, you need to open the CLI at the path "{location of your application}\FISE_A3_SE_BECHTEL\BackupUtil.Cli\bin\Debug\net9.0". 
-Then you will be able to run the commands above with the chosen options.
-You need to create a backup job with a source and a target path before loading it.
-You can also directly run a backup job by specifying the source and target paths.
-Once you have loaded available jobs, you can run them by selecting the job index, then confirm your choice.
-The backup job will then be executed and the files will be copied from the source to the target path, and all changes will be displayed in the CLI.
-The log file, generated in the local application data folder, will contain the details of the changes ("~\AppData\Local\EasySave\Logs" on Windows and "~/.locale/share/EasySave/logs" on Linux).
-
-You can also chose your language by using the -l option.
-
-
-## How to make changes
-
-- Clone the project: `git pull <repo url>`
-- Create a new feature branch: `git checkout -b 'feature/<name-of-your-feature>'`
-- Commit your changes: `git commit -m '<Tell us what you did and why here>'`
-- Push you changes: `git push`
-- Open a PR on github
-
-## How to solve merge conflicts
-
-Prefer git rebases over merges
-
-Note: When done rebasing, you have to push using `git push --force`
 
 ## UML Diagrams
 
@@ -307,3 +307,18 @@ JobFileExporter ..> JsonSerializer
 ### Activity Diagram
 
 ![use_case.svg](assets/activity.svg)
+
+## Contributing
+### How to make changes
+
+- Clone the project: `git pull <repo url>`
+- Create a new feature branch: `git checkout -b 'feature/<name-of-your-feature>'`
+- Commit your changes: `git commit -m '<Tell us what you did and why here>'`
+- Push you changes: `git push`
+- Open a PR on github
+
+### How to solve merge conflicts
+
+Prefer git rebases over merges
+
+Note: When done rebasing, you have to push using `git push --force`
