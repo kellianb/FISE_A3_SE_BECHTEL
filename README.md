@@ -3,16 +3,28 @@
 [![Build and test (linux-x64)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-linux-x64.yml/badge.svg)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-linux-x64.yml)
 [![Build and test (win-x64)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-win-x64.yml/badge.svg)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-win-x64.yml)
 
-
 | Project Members |
 |-----------------|
 | Laura GIESE     |
 | Kellian BECHTEL |
 | Evan CAUMARTIN  |
 
+## CLI usage guide
+
 ```
+Usage:
+  BackupUtil.Cli [command] [options]
 
+Options:
+  -l, --locale <locale>  Locale of the application, example: 'fr-FR', 'en-GB', defaults to OS locale
+  --version              Show version information
+  -?, -h, --help         Show help and usage information
 
+Commands:
+  create <source-path> <target-path>  Create a backup job
+  load <job-file-path>                Load backup jobs from a file and execute them []
+  remove                              Remove a backup job
+  run <source-path> <target-path>     Run a backup job
 ```
 
 ## How to make changes
@@ -22,7 +34,6 @@
 - Commit your changes: `git commit -m '<Tell us what you did and why here>'`
 - Push you changes: `git push`
 - Open a PR on github
-
 
 ## How to solve merge conflicts
 
@@ -108,7 +119,6 @@ end
     deactivate User
 ```
 
-
 #### Create and save a Job to a JSON file
 
 ```mermaid
@@ -157,7 +167,6 @@ sequenceDiagram
         deactivate I18n
         deactivate User
 ```
-
 
 ### Class Diagram
 
@@ -287,4 +296,3 @@ JobFileExporter ..> JsonSerializer
 ### Activity Diagram
 
 ![use_case.svg](assets/activity.svg)
-
