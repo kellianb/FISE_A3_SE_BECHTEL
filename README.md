@@ -40,7 +40,7 @@ sequenceDiagram
     participant Filesystem
 
     activate User
-    User->>+CLI: Enters command: run <source-path> <target>
+    User->>+CLI: Enters command: run <source-path> <target> ...
 
         CLI->>+jobManager: Build backup command
         jobManager-->>-CLI: Return backup command
@@ -70,12 +70,12 @@ sequenceDiagram
     participant Filesystem
 
     activate User
-    User->>+CLI: Enters command: load <path>
+    User->>+CLI: Enters command: load <path> ...
 
         CLI->>+jobManager: Load jobs from JSON file
         jobManager->>+ Filesystem: Read JSON file
         Filesystem-->>-jobManager: Return JSON file contents
-        jobManager-->>CLI: 
+        jobManager-->>CLI: Confirmation
         CLI->>jobManager: Get jobs list
         jobManager-->>CLI: Return jobs list
         CLI-->>User: Display job list and ask for which jobs to run
@@ -95,6 +95,34 @@ sequenceDiagram
             CLI-->>User: Confirmation
 
 end
+
+    deactivate User
+```
+
+
+#### Create and save a Job to a JSON file
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant CLI
+    participant jobManager
+    participant Filesystem
+
+    activate User
+    User->>+CLI: Enters command: create -o <path> ...
+        CLI->>+jobManager: Load jobs from JSON file
+        jobManager->>+ Filesystem: Read JSON file
+        Filesystem-->>-jobManager: Return JSON file contents
+        jobManager-->>CLI: Confirmation
+        CLI->>jobManager: Add new job from user
+        jobManager-->>CLI: Confirmation
+        CLI->>+jobManager: Save all jobs to JSON file
+        jobManager->>+ Filesystem: Write JSON to file
+        Filesystem-->>-jobManager: Confirmation
+        jobManager-->>CLI: Confirmation
+        CLI-->>User: Confirmation
+
 
     deactivate User
 ```
