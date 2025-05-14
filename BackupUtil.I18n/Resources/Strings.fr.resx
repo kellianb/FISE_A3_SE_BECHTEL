@@ -72,7 +72,7 @@
     <data name="IsOk" xml:space="preserve">
         <value>Est-ce que cela est correct [Y/n] ?</value>
     </data>
-    <data name="selectJobs" xml:space="preserve">
+    <data name="selectJobsToRun" xml:space="preserve">
         <value>Veuillez sélectionner les tâches de sauvegarde à exécuter :</value>
     </data>
     <data name="errorInvalidJobFile" xml:space="preserve">
@@ -80,5 +80,23 @@
     </data>
     <data name="errorMaxJobs" xml:space="preserve">
         <value>Limite maximale de tâches dépassée !</value>
+    </data>
+    <data name="selectJobsToRemove" xml:space="preserve">
+        <value>Veuillez sélectionner les tâches de sauvegarde à supprimer :</value>
+    </data>
+    <data name="jobName" xml:space="preserve">
+        <value>Nom</value>
+    </data>
+    <data name="jobTargetPath" xml:space="preserve">
+        <value>Chemin cible</value>
+    </data>
+    <data name="jobSourcePath" xml:space="preserve">
+        <value>Chemin source</value>
+    </data>
+    <data name="jobDifferential" xml:space="preserve">
+        <value>Différentiel</value>
+    </data>
+    <data name="jobRecursive" xml:space="preserve">
+        <value>Récursif</value>
     </data>
 </root>

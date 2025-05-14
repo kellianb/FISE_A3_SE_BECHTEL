@@ -33,7 +33,7 @@ public class RemoveJobCommand
             Console.Write(DisplayJobs.Display(jobManager.Jobs));
 
             // Ask the user to select which ones to remove
-            Console.WriteLine(I18N.GetLocalizedMessage("selectJobs"));
+            Console.WriteLine(I18N.GetLocalizedMessage("selectJobsToRemove"));
 
             string selection = Console.ReadLine() ?? "";
 

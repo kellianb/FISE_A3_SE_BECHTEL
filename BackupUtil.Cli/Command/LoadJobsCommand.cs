@@ -34,7 +34,7 @@ internal static class LoadJobsCommand
             Console.Write(DisplayJobs.Display(jobManager.Jobs));
 
             // Ask the user to select which ones to run
-            Console.WriteLine(I18N.GetLocalizedMessage("selectJobs"));
+            Console.WriteLine(I18N.GetLocalizedMessage("selectJobsToRun"));
 
             string selection = Console.ReadLine() ?? "";
 
