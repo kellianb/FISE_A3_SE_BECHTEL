@@ -10,9 +10,9 @@ public class RemoveJobCommand
 {
     public static System.CommandLine.Command Build()
     {
-        Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "File path to save the job to");
+        Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "File path to remove the job from");
 
-        System.CommandLine.Command command = new("remove", "Remove a backup job");
+        System.CommandLine.Command command = new("remove", "Remove a backup job from a file");
 
         command.AddOption(jobFilePath);
 

@@ -15,7 +15,7 @@ internal static class CreateJobCommand
         Option<bool> differential = new(["--differential", "-d"], "Make the backup differential.");
         Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "File path to save the job to");
 
-        System.CommandLine.Command command = new("create", "Create a backup job");
+        System.CommandLine.Command command = new("create", "Create a backup job and write it to a file");
 
         command.AddArgument(sourcePath);
         command.AddArgument(targetPath);
