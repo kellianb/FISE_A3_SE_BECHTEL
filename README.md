@@ -27,6 +27,17 @@ Commands:
   run <source-path> <target-path>     Run a backup job
 ```
 
+To use this CLI application, you need to open the CLI at the path "{location of your application}\FISE_A3_SE_BECHTEL\BackupUtil.Cli\bin\Debug\net9.0". 
+Then you will be able to run the commands above with the chosen options.
+You need to create a backup job with a source and a target path before loading it.
+You can also directly run a backup job by specifying the source and target paths.
+Once you have loaded available jobs, you can run them by selecting the job index, then confirm your choice.
+The backup job will then be executed and the files will be copied from the source to the target path, and all changes will be displayed in the CLI.
+The log file, generated in the local application data folder, will contain the details of the changes.
+
+You can also chose your language by using the -l option.
+
+
 ## How to make changes
 
 - Clone the project: `git pull <repo url>`
