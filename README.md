@@ -33,7 +33,7 @@ You need to create a backup job with a source and a target path before loading i
 You can also directly run a backup job by specifying the source and target paths.
 Once you have loaded available jobs, you can run them by selecting the job index, then confirm your choice.
 The backup job will then be executed and the files will be copied from the source to the target path, and all changes will be displayed in the CLI.
-The log file, generated in the local application data folder, will contain the details of the changes.
+The log file, generated in the local application data folder, will contain the details of the changes ("C:\Users\Utilisateur\AppData\Local\EasySave\Logs" on Windows).
 
 You can also chose your language by using the -l option.
 
