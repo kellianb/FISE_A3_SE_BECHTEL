@@ -2,7 +2,7 @@ using BackupUtil.Core.Transaction.Compare;
 
 namespace BackupUtil.Core.Transaction;
 
-public class BackupTransactionBuilder : IBackupTransactionBuilder
+internal class BackupTransactionBuilder : IBackupTransactionBuilder
 {
     public BackupTransaction Build(Job.Job job)
     {

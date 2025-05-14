@@ -2,7 +2,7 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Job.Exporter;
 
-public static class JobFileExporter
+internal static class JobFileExporter
 {
     public static void ExportJobsToFile(List<Job> jobs, string? filePath = null)
     {

@@ -9,7 +9,7 @@ public enum DirectoryChangeType
 }
 
 // Represents a directory that needs to be created or deleted
-public class DirectoryChange(
+internal class DirectoryChange(
     string targetPath,
     DirectoryChangeType changeType) : FileSystemChange(targetPath),
     IEquatable<DirectoryChange>

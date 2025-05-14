@@ -2,7 +2,7 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.Compare;
 
-public class DirectoryCompare(
+internal class DirectoryCompare(
     DirectoryInfo sourceDirectory,
     string targetDirectoryPath,
     bool recursive,

@@ -2,7 +2,7 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Job.Loader;
 
-public static class JobFileLoader
+internal static class JobFileLoader
 {
     public static List<Job> LoadJobsFromFile(string? filePath)
     {

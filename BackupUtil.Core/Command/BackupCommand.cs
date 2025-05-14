@@ -4,21 +4,30 @@ using BackupUtil.Core.Transaction.ChangeType;
 
 namespace BackupUtil.Core.Command;
 
-public class BackupCommand(IBackupTransactionExecutor receiver, BackupTransaction transaction)
+public class BackupCommand
 {
+    private readonly IBackupTransactionExecutor _receiver;
+    private readonly BackupTransaction _transaction;
+
+    internal BackupCommand(IBackupTransactionExecutor receiver, BackupTransaction transaction)
+    {
+        _receiver = receiver;
+        _transaction = transaction;
+    }
+
     public void Execute()
     {
-        receiver.Execute(transaction);
+        _receiver.Execute(_transaction);
     }
 
     public long GetTotalCopiedFileSize()
     {
-        return transaction.GetTotalCopiedFileSize();
+        return _transaction.GetTotalCopiedFileSize();
     }
 
     public Dictionary<FileChangeType, string[]> GetConcernedFiles()
     {
-        return transaction.FileChanges
+        return _transaction.FileChanges
             .GroupBy(change => change.ChangeType)
             .ToDictionary(
                 group => group.Key,
@@ -28,7 +37,7 @@ public class BackupCommand(IBackupTransactionExecutor receiver, BackupTransactio
 
     public Dictionary<DirectoryChangeType, string[]> GetConcernedDirectories()
     {
-        return transaction.DirectoryChanges
+        return _transaction.DirectoryChanges
             .GroupBy(change => change.ChangeType)
             .ToDictionary(
                 group => group.Key,

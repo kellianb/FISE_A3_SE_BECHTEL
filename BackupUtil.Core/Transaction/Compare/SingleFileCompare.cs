@@ -2,7 +2,7 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.Compare;
 
-public class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool differential)
+internal class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool differential)
     : ICompare
 {
     private readonly bool _differential = differential;
