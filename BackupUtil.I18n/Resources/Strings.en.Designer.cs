@@ -141,15 +141,57 @@ namespace BackupUtil.I18n.Resources {
             }
         }
         
-        internal static string selectJobs {
+        internal static string selectJobsToRun {
             get {
-                return ResourceManager.GetString("selectJobs", resourceCulture);
+                return ResourceManager.GetString("selectJobsToRun", resourceCulture);
             }
         }
         
         internal static string errorInvalidJobFile {
             get {
                 return ResourceManager.GetString("errorInvalidJobFile", resourceCulture);
+            }
+        }
+        
+        internal static string errorMaxJobs {
+            get {
+                return ResourceManager.GetString("errorMaxJobs", resourceCulture);
+            }
+        }
+        
+        internal static string selectJobsToRemove {
+            get {
+                return ResourceManager.GetString("selectJobsToRemove", resourceCulture);
+            }
+        }
+        
+        internal static string jobName {
+            get {
+                return ResourceManager.GetString("jobName", resourceCulture);
+            }
+        }
+        
+        internal static string jobTargetPath {
+            get {
+                return ResourceManager.GetString("jobTargetPath", resourceCulture);
+            }
+        }
+        
+        internal static string jobSourcePath {
+            get {
+                return ResourceManager.GetString("jobSourcePath", resourceCulture);
+            }
+        }
+        
+        internal static string jobDifferential {
+            get {
+                return ResourceManager.GetString("jobDifferential", resourceCulture);
+            }
+        }
+        
+        internal static string jobRecursive {
+            get {
+                return ResourceManager.GetString("jobRecursive", resourceCulture);
             }
         }
     }

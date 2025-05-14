@@ -6,7 +6,7 @@ using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Command;
 
-internal static class SingleJobCommand
+internal static class RunJobCommand
 {
     public static System.CommandLine.Command Build()
     {

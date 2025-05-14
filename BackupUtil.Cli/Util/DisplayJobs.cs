@@ -1,5 +1,6 @@
 using System.Text;
 using BackupUtil.Core.Job;
+using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Util;
 
@@ -9,12 +10,25 @@ internal static class DisplayJobs
     {
         StringBuilder display = new();
 
-        display.AppendLine(Formatting.BoldOn + "[" + index + "] " + job.Name + Formatting.Reset);
-        display.AppendLine(Formatting.Indent + job.SourcePath);
-        display.AppendLine(Formatting.Indent + job.TargetPath);
-        display.AppendLine(Formatting.Indent + job.Recursive);
-        display.AppendLine(Formatting.Indent + job.Differential);
-        display.AppendLine();
+        const int indexWidth = -5; // Left-aligned, 5 chars wide
+        const int labelWidth = -15; // Left-aligned, 15 chars wide
+        const int valueWidth = -30; // Left-aligned, 30 chars wide
+
+        display.AppendLine(Formatting.BoldOn
+                           + $"{$"[{index}]",indexWidth}{I18N.GetLocalizedMessage("jobName"),labelWidth}{job.Name,valueWidth}"
+                           + Formatting.Reset);
+
+        void AppendDetailLine(string labelKey, object value)
+        {
+            display.AppendLine($"{"",-indexWidth}{I18N.GetLocalizedMessage(labelKey),labelWidth}{value,valueWidth}");
+        }
+
+        // Use the method for each detail line
+        AppendDetailLine("jobSourcePath", job.SourcePath);
+        AppendDetailLine("jobTargetPath", job.TargetPath);
+        AppendDetailLine("jobRecursive", job.Recursive);
+        AppendDetailLine("jobDifferential", job.Differential);
+
 
         return display.ToString();
     }

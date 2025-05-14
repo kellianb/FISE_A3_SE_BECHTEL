@@ -1,21 +1,20 @@
 using System.CommandLine;
 using BackupUtil.Cli.Util;
-using BackupUtil.Core.Command;
 using BackupUtil.Core.Job;
 using BackupUtil.Core.Util;
 using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Command;
 
-internal static class LoadJobsCommand
+public class RemoveJobCommand
 {
     public static System.CommandLine.Command Build()
     {
-        Argument<FileSystemInfo?> jobFilePath = new("job-file-path", getDefaultValue: () => null ,"File path to load the jobs from");
+        Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "File path to save the job to");
 
-        System.CommandLine.Command command = new("load", "Load backup jobs from a file and execute them");
+        System.CommandLine.Command command = new("remove", "Remove a backup job");
 
-        command.AddArgument(jobFilePath);
+        command.AddOption(jobFilePath);
 
         command.SetHandler(CommandHandler,
             jobFilePath
@@ -24,7 +23,7 @@ internal static class LoadJobsCommand
         return command;
     }
 
-    private static void CommandHandler(FileSystemInfo? jobFilePath)
+    private static void CommandHandler(FileSystemInfo jobFilePath)
     {
         try
         {
@@ -33,8 +32,8 @@ internal static class LoadJobsCommand
             // Show loaded jobs
             Console.Write(DisplayJobs.Display(jobManager.Jobs));
 
-            // Ask the user to select which ones to run
-            Console.WriteLine(I18N.GetLocalizedMessage("selectJobsToRun"));
+            // Ask the user to select which ones to remove
+            Console.WriteLine(I18N.GetLocalizedMessage("selectJobsToRemove"));
 
             string selection = Console.ReadLine() ?? "";
 
@@ -42,18 +41,16 @@ internal static class LoadJobsCommand
 
             HashSet<int> selectedIndices = SelectionStringParser.Parse(selection);
 
-            BackupCommand command = jobManager.RunByIndices(selectedIndices);
+            jobManager.RemoveByIndices(selectedIndices);
 
-            // Display planned changes to the user
-            Console.Write(DisplayChanges.DisplayDirectoryChanges(command.GetConcernedDirectories()));
-            Console.Write(DisplayChanges.DisplayFileChanges(command.GetConcernedFiles()));
+            Console.Write(DisplayJobs.Display(jobManager.Jobs));
 
             // Ask the user if this is ok
             Console.WriteLine(I18N.GetLocalizedMessage("IsOk"));
 
             if (Console.ReadLine() is "Y" or "y" or "")
             {
-                command.Execute();
+                jobManager.ExportAll(jobFilePath?.FullName);
             }
         }
         catch (Exception e)

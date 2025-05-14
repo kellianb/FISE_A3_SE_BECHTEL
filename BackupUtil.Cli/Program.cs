@@ -22,12 +22,12 @@ internal class Program
         RootCommand rootCommand =
         [
             CreateJobCommand.Build(),
-            SingleJobCommand.Build(),
-            LoadJobsCommand.Build()
+            LoadJobsCommand.Build(),
+            RemoveJobCommand.Build(),
+            RunJobCommand.Build()
         ];
 
         rootCommand.AddGlobalOption(localeOption);
-
 
         return rootCommand.Invoke(args);
     }
