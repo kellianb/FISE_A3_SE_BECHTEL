@@ -1,7 +1,6 @@
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using Serilog;
-using SerilogTimings;
 using SerilogTimings.Extensions;
 
 namespace BackupUtil.Core.Executor;

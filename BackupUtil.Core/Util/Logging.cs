@@ -1,6 +1,7 @@
 using System.Text.Json;
 using BackupUtil.Core.Transaction;
 using Serilog;
+using Serilog.Events;
 using Serilog.Formatting.Json;
 
 namespace BackupUtil.Core.Util;
@@ -19,11 +20,12 @@ public static class Logging
         return new LoggerConfiguration()
             .MinimumLevel.Debug()
             .Destructure.ByTransforming<BackupTransaction>(t => JsonSerializer.Serialize(t))
-            .WriteTo.Console()
+            .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Warning)
             .WriteTo.File(
                 path: Path.Join(Config.LoggingDirectory, "log-.json"),
                 rollingInterval: RollingInterval.Day,
-                formatter: new JsonFormatter()
+                formatter: new JsonFormatter(),
+                restrictedToMinimumLevel: LogEventLevel.Information
             )
             .CreateLogger();
     }
