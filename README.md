@@ -1,10 +1,19 @@
 # Software engineering project
 
+[![Build and test (linux-x64)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-linux-x64.yml/badge.svg)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-linux-x64.yml)
+[![Build and test (win-x64)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-win-x64.yml/badge.svg)](https://github.com/kellianb/FISE_A3_SE_BECHTEL/actions/workflows/build-and-test-win-x64.yml)
+
+
 | Project Members |
 |-----------------|
 | Laura GIESE     |
 | Kellian BECHTEL |
 | Evan CAUMARTIN  |
+
+```
+
+
+```
 
 ## How to make changes
 
