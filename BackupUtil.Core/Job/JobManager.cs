@@ -69,6 +69,16 @@ public class JobManager(uint? maxJobs = null)
         return this;
     }
 
+    public JobManager RemoveByIndices(HashSet<int> jobIndices)
+    {
+        foreach (int jobIndex in jobIndices)
+        {
+            Jobs.RemoveAt(jobIndex);
+        }
+
+        return this;
+    }
+
     public JobManager RemoveAll()
     {
         Jobs.Clear();

@@ -1,0 +1,61 @@
+using System.CommandLine;
+using BackupUtil.Cli.Util;
+using BackupUtil.Core.Job;
+using BackupUtil.Core.Util;
+using BackupUtil.I18n;
+
+namespace BackupUtil.Cli.Command;
+
+public class RemoveJobCommand
+{
+    public static System.CommandLine.Command Build()
+    {
+        Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "File path to save the job to");
+
+        System.CommandLine.Command command = new("remove", "Remove a backup job");
+
+        command.AddOption(jobFilePath);
+
+        command.SetHandler(CommandHandler,
+            jobFilePath
+        );
+
+        return command;
+    }
+
+    private static void CommandHandler(FileSystemInfo jobFilePath)
+    {
+        try
+        {
+            JobManager jobManager = new JobManager().AddJobsFromFile(jobFilePath?.FullName);
+
+            // Show loaded jobs
+            Console.Write(DisplayJobs.Display(jobManager.Jobs));
+
+            // Ask the user to select which ones to remove
+            Console.WriteLine(I18N.GetLocalizedMessage("selectJobs"));
+
+            string selection = Console.ReadLine() ?? "";
+
+            Console.WriteLine();
+
+            HashSet<int> selectedIndices = SelectionStringParser.Parse(selection);
+
+            jobManager.RemoveByIndices(selectedIndices);
+
+            Console.Write(DisplayJobs.Display(jobManager.Jobs));
+
+            // Ask the user if this is ok
+            Console.WriteLine(I18N.GetLocalizedMessage("IsOk"));
+
+            if (Console.ReadLine() is "Y" or "y" or "")
+            {
+                jobManager.ExportAll(jobFilePath?.FullName);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(I18N.GetLocalizedMessage(e.Message));
+        }
+    }
+}
