@@ -2,6 +2,7 @@ using System.Text.Json;
 using BackupUtil.Core.Transaction;
 using Serilog;
 using Serilog.Formatting.Json;
+using SerilogTracing;
 
 namespace BackupUtil.Core.Util;
 
@@ -24,5 +25,10 @@ public static class Logging
                 formatter: new JsonFormatter()
             )
             .CreateLogger();
+    }
+
+    public static IDisposable GetTracing()
+    {
+        return new ActivityListenerConfiguration().TraceTo(Log.Logger);
     }
 }

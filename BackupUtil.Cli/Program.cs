@@ -4,6 +4,7 @@ using System.Globalization;
 using BackupUtil.Cli.Command;
 using BackupUtil.Core.Util;
 using BackupUtil.I18n;
+using Serilog;
 
 namespace BackupUtil.Cli;
 
@@ -12,6 +13,10 @@ internal class Program
     private static int Main(string[] args)
     {
         Logging.Init();
+
+        Log.Debug("Logging to {Path}", Config.LoggingDirectory);
+
+        using IDisposable _ = Logging.GetTracing();
 
         Option<string> localeOption = new(["--locale", "-l"],
             "Locale of the application, example: 'fr-FR', 'en-GB', defaults to OS locale");
