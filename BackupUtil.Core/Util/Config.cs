@@ -1,6 +1,6 @@
 namespace BackupUtil.Core.Util;
 
-internal class Config
+internal static class Config
 {
     // Default file path to look for a job file
     public static string DefaultJobFilePath { get; } = "BackupJobs.json";
@@ -8,5 +8,8 @@ internal class Config
     // Default max job count for the job manager
     public static uint DefaultMaxJobCount { get; } = 5;
 
-    public static string LoggingDirectory { get; } = "/tmp/EasySave";
+    // Logging directory path
+    public static string LoggingDirectory { get; } = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "EasySave", "Logs");
 }

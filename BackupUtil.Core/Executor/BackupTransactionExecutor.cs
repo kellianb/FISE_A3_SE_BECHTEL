@@ -1,6 +1,7 @@
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using Serilog;
+using SerilogTimings.Extensions;
 
 namespace BackupUtil.Core.Executor;
 
@@ -8,7 +9,7 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
 {
     public void Execute(BackupTransaction transaction)
     {
-        Log.Information("Executing transaction: {@BackupTransaction}", transaction);
+        using IDisposable _ = Log.Logger.TimeOperation("Executing transaction: {@BackupTransaction}", transaction);
 
         foreach (DirectoryChange change in transaction.DirectoryChanges)
         {

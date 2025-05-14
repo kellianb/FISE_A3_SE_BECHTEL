@@ -50,7 +50,7 @@ internal class DirectoryCompare(
     }
 
     /// <summary>
-    ///     Make a differential backup of a directory TODO: WIP
+    ///     Make a differential backup of a directory
     /// </summary>
     private static BackupTransaction Differential(BackupTransaction transaction, DirectoryInfo sourceDirectory,
         string targetDirectoryPath, bool recursive = false)
