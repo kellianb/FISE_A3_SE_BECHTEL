@@ -4,7 +4,6 @@ using System.Globalization;
 using BackupUtil.Cli.Command;
 using BackupUtil.Core.Util;
 using BackupUtil.I18n;
-using Serilog;
 
 namespace BackupUtil.Cli;
 

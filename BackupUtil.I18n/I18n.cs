@@ -19,7 +19,7 @@ public static class I18N
         {
             return s_resourceManager.GetString(key, Thread.CurrentThread.CurrentUICulture) ?? key;
         }
-        catch (Exception e)
+        catch
         {
             return key;
         }
