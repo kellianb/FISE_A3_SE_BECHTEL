@@ -99,4 +99,13 @@
     <data name="jobRecursive" xml:space="preserve">
         <value>Récursif</value>
     </data>
+    <data name="langLabel" xml:space="preserve">
+        <value>Langue :</value>
+    </data>
+    <data name="french" xml:space="preserve">
+        <value>Français</value>
+    </data>
+    <data name="english" xml:space="preserve">
+        <value>Anglais</value>
+    </data>
 </root>
