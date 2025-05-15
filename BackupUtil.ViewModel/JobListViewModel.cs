@@ -6,6 +6,8 @@ namespace BackupUtil.ViewModel;
 public class JobListViewModel : ViewModelBase
 {
     private readonly ObservableCollection<JobViewModel> _jobs;
+    public LanguageSelectorViewModel LanguageSelectorViewModel { get; set; }
+
 
     public IEnumerable<JobViewModel> Jobs => _jobs;
 
@@ -19,5 +21,7 @@ public class JobListViewModel : ViewModelBase
         _jobs.Add(new JobViewModel(new Job()));
         _jobs.Add(new JobViewModel(new Job()));
         _jobs.Add(new JobViewModel(new Job()));
+
+        LanguageSelectorViewModel = new LanguageSelectorViewModel();
     }
 }
