@@ -11,11 +11,12 @@ internal static class LoadJobsCommand
 {
     public static System.CommandLine.Command Build()
     {
-        Argument<FileSystemInfo?> jobFilePath = new("job-file-path", getDefaultValue: () => null ,"File path to load the jobs from");
+        // Path of the job file
+        Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "Job file path");
 
         System.CommandLine.Command command = new("load", "Load backup jobs from a file and execute them");
 
-        command.AddArgument(jobFilePath);
+        command.AddOption(jobFilePath);
 
         command.SetHandler(CommandHandler,
             jobFilePath
@@ -28,10 +29,23 @@ internal static class LoadJobsCommand
     {
         try
         {
-            JobManager jobManager = new JobManager().AddJobsFromFile(jobFilePath?.FullName);
+            JobManager manager = new();
+
+            try
+            {
+                manager.AddJobsFromFile(jobFilePath?.FullName);
+            }
+            catch
+            {
+                // Only catch the exception if the default job file path was used
+                if (jobFilePath is not null)
+                {
+                    throw;
+                }
+            }
 
             // Show loaded jobs
-            Console.Write(DisplayJobs.Display(jobManager.Jobs));
+            Console.Write(DisplayJobs.Display(manager.Jobs));
 
             // Ask the user to select which ones to run
             Console.WriteLine(I18N.GetLocalizedMessage("selectJobsToRun"));
@@ -42,7 +56,7 @@ internal static class LoadJobsCommand
 
             HashSet<int> selectedIndices = SelectionStringParser.Parse(selection);
 
-            BackupCommand command = jobManager.RunByIndices(selectedIndices);
+            BackupCommand command = manager.RunByIndices(selectedIndices);
 
             // Display planned changes to the user
             Console.Write(DisplayChanges.DisplayDirectoryChanges(command.GetConcernedDirectories()));

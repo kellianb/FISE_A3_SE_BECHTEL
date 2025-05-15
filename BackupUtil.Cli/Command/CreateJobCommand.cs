@@ -13,7 +13,9 @@ internal static class CreateJobCommand
         Option<string> name = new(["--name", "-n"], "Name of the job");
         Option<bool> recursive = new(["--recursive", "-r"], "Make the backup recursive");
         Option<bool> differential = new(["--differential", "-d"], "Make the backup differential.");
-        Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "File path to save the job to");
+
+        // Path of the job file
+        Option<FileSystemInfo> jobFilePath = new(["--job-file-path", "-o"], "Job file path");
 
         System.CommandLine.Command command = new("create", "Create a backup job and write it to a file");
 

@@ -22,12 +22,15 @@ or load a list of backup jobs from a json file (`BackupUtil.Cli load ...`) and p
 You need to create a backup job before being able to load and run it.
 Backup jobs can be created using `Backuputil.Cli create ...`.
 
-If no filepath is specified, backup jobs are saved to, removed and loaded from `BackupJobs.json` in the CWD by default.
+If no filepath is specified, backup jobs are saved to, removed and loaded from:
+
+- Linux: `~/.locale/share/EasySave/Jobs/BackupJobs.json`
+- Windows: `~\AppData\Local\EasySave\Jobs\BackupJobs.json`
 
 A daily log file containing details about all changes made by this utility can be found at:
 
-- Linux: ~/.locale/share/EasySave/logs
-- Windows: ~\AppData\Local\EasySave\Logs
+- Linux: `~/.locale/share/EasySave/Logs`
+- Windows: `~\AppData\Local\EasySave\Logs`
 
 Currently, two languages are supported: French and English.
 If your OS language is among them, the CLI will default to it.
@@ -47,7 +50,7 @@ Options:
 
 Commands:
   create <source-path> <target-path>  Create a backup job and write it to a file
-  load <job-file-path>                Load backup jobs from a file and execute them
+  load                                Load backup jobs from a file and execute them
   remove                              Remove a backup job from a file
   run <source-path> <target-path>     Run a backup job
 ```
