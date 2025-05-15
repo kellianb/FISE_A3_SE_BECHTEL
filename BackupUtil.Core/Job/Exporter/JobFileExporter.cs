@@ -17,6 +17,14 @@ internal static class JobFileExporter
             _ => throw new ArgumentException("errorFileFormatNotSupported")
         };
 
+        string? directoryName = Path.GetDirectoryName(filePath);
+
+        // Create the directory if it doesn't exist
+        if (!string.IsNullOrEmpty(directoryName))
+        {
+            Directory.CreateDirectory(directoryName);
+        }
+
         File.WriteAllText(filePath, serializedJobs);
     }
 }
