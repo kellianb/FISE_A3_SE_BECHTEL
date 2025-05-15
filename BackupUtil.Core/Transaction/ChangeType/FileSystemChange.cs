@@ -1,8 +1,12 @@
+using System.Text.Json.Serialization;
+using BackupUtil.Core.Util;
+
 namespace BackupUtil.Core.Transaction.ChangeType;
 
 // Base class for both file and directory changes
 internal abstract class FileSystemChange(string targetPath) : IEquatable<FileSystemChange>
 {
+    [JsonConverter(typeof(UncPathJsonConverter))]
     public string TargetPath { get; } = targetPath;
 
     public bool Equals(FileSystemChange? other)

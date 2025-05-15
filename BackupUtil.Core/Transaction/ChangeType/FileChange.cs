@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using BackupUtil.Core.Util;
 using BackupUtil.I18n;
 
 namespace BackupUtil.Core.Transaction.ChangeType;
@@ -20,6 +22,8 @@ internal class FileChange(
 {
     public FileChangeType ChangeType { get; } = changeType;
     public long FileSize { get; } = fileSize;
+
+    [JsonConverter(typeof(UncPathJsonConverter))]
     public string? SourcePath { get; } = sourcePath;
 
     public bool Equals(FileChange? other)
