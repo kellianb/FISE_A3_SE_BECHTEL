@@ -19,8 +19,9 @@ public static class Logging
     {
         return new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .Destructure.ByTransforming<BackupTransaction>(t => JsonSerializer.Serialize(t))
-            .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Warning)
+            .Destructure.ByTransforming<BackupTransaction>(t =>
+                JsonSerializer.Serialize(t, JsonBackupUtilSerializerContext.Default.BackupTransaction))
+            .WriteTo.Console(LogEventLevel.Warning)
             .WriteTo.File(
                 path: Path.Join(Config.LoggingDirectory, "log-.json"),
                 rollingInterval: RollingInterval.Day,
