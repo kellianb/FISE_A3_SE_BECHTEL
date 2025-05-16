@@ -1,4 +1,5 @@
 using BackupUtil.Core.Command;
+using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Executor;
 using BackupUtil.Core.Job.Exporter;
 using BackupUtil.Core.Job.Loader;
@@ -11,7 +12,7 @@ public class JobManager(uint? maxJobs = null)
 {
     private readonly IBackupTransactionBuilder _transactionBuilder = new BackupTransactionBuilder();
 
-    private readonly IBackupTransactionExecutor _transactionExecutor = new BackupTransactionExecutor();
+    private readonly IBackupTransactionExecutor _transactionExecutor = new BackupTransactionExecutor(new XorEncryptor());
 
     public uint MaxJobs { get; } = maxJobs is > 0 ? maxJobs.Value : Config.DefaultMaxJobCount;
 
@@ -108,9 +109,9 @@ public class JobManager(uint? maxJobs = null)
         return new BackupCommand(_transactionExecutor, transaction);
     }
 
-    private BackupCommand BuildBackupCommand(Job concernedJobs)
+    private BackupCommand BuildBackupCommand(Job concernedJob)
     {
-        BackupTransaction transaction = _transactionBuilder.Build(concernedJobs);
+        BackupTransaction transaction = _transactionBuilder.Build(concernedJob);
 
         return new BackupCommand(_transactionExecutor, transaction);
     }

@@ -7,14 +7,15 @@ public class Job
         bool recursive = false,
         bool differential = false,
         string? name = null,
-        List<string>? ignorePatterns = null)
+        string? encryptionKey = null
+    )
     {
         Name = name ?? "New backup job";
         SourcePath = sourcePath;
         TargetPath = targetPath;
         Recursive = recursive;
         Differential = differential;
-        IgnorePatterns = ignorePatterns ?? [];
+        EncryptionKey = encryptionKey;
     }
 
     public Job()
@@ -24,15 +25,15 @@ public class Job
         TargetPath = "";
         Recursive = false;
         Differential = false;
-        IgnorePatterns = [];
+        EncryptionKey = null;
     }
+
 
     public string Name { get; set; }
     public string SourcePath { get; set; }
     public string TargetPath { get; set; }
 
     public bool Recursive { get; set; }
-
     public bool Differential { get; set; }
-    public List<string> IgnorePatterns { get; set; }
+    public string? EncryptionKey { get; set; }
 }

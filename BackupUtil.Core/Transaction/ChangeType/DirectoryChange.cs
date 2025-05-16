@@ -8,7 +8,11 @@ public enum DirectoryChangeType
     [I18NKey("changeTypeDelete")] Delete = 1
 }
 
-// Represents a directory that needs to be created or deleted
+/// <summary>
+/// Represents a change operation for a directory, such as creation or deletion.
+/// <param name="targetPath">Path of the directory to apply changes to</param>
+/// <param name="changeType">Type of change to apply</param>
+/// </summary>
 internal class DirectoryChange(
     string targetPath,
     DirectoryChangeType changeType) : FileSystemChange(targetPath),

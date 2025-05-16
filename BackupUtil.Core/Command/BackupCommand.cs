@@ -1,3 +1,4 @@
+using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Executor;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;

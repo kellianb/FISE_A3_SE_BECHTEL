@@ -6,10 +6,12 @@ internal class DirectoryCompare(
     DirectoryInfo sourceDirectory,
     string targetDirectoryPath,
     bool recursive,
-    bool differential)
+    bool differential,
+    string? encryptionKey)
     : ICompare
 {
     private readonly bool _differential = differential;
+    private readonly string? _encryptionKey = encryptionKey;
     private readonly bool _recursive = recursive;
     private readonly DirectoryInfo _sourceDirectory = sourceDirectory;
     private readonly string _targetDirectoryPath = targetDirectoryPath;
@@ -18,20 +20,20 @@ internal class DirectoryCompare(
     public BackupTransaction Compare(BackupTransaction transaction)
     {
         return _differential
-            ? Differential(transaction, _sourceDirectory, _targetDirectoryPath, _recursive)
-            : Full(transaction, _sourceDirectory, _targetDirectoryPath, _recursive);
+            ? Differential(transaction, _sourceDirectory, _targetDirectoryPath, _encryptionKey, _recursive)
+            : Full(transaction, _sourceDirectory, _targetDirectoryPath, _encryptionKey, _recursive);
     }
 
     /// <summary>
     ///     Make a full backup of a directory
     /// </summary>
     private static BackupTransaction Full(BackupTransaction transaction, DirectoryInfo sourceDirectory,
-        string targetDirectoryPath, bool recursive = false)
+        string targetDirectoryPath, string? encryptionKey, bool recursive = false)
     {
         transaction.AddDirectoryCreation(targetDirectoryPath);
 
         // Copy all files
-        transaction = FullDirectoryFiles(sourceDirectory, targetDirectoryPath, transaction);
+        transaction = FullDirectoryFiles(sourceDirectory, targetDirectoryPath, transaction, encryptionKey);
 
         if (!recursive)
         {
@@ -43,7 +45,7 @@ internal class DirectoryCompare(
         {
             string targetSubDirectoryPath = Path.Combine(targetDirectoryPath, sourceSubDirectory.Name);
 
-            transaction = Full(transaction, sourceSubDirectory, targetSubDirectoryPath, recursive);
+            transaction = Full(transaction, sourceSubDirectory, targetSubDirectoryPath, encryptionKey, recursive);
         }
 
         return transaction;
@@ -53,7 +55,7 @@ internal class DirectoryCompare(
     ///     Make a differential backup of a directory
     /// </summary>
     private static BackupTransaction Differential(BackupTransaction transaction, DirectoryInfo sourceDirectory,
-        string targetDirectoryPath, bool recursive = false)
+        string targetDirectoryPath, string? encryptionKey, bool recursive = false)
     {
         // Check if the directory exists
         if (Directory.Exists(targetDirectoryPath))
@@ -69,14 +71,14 @@ internal class DirectoryCompare(
             }
 
             // Diff directory files
-            transaction = DiffDirectoryFiles(sourceDirectory, targetDirectory, transaction);
+            transaction = DiffDirectoryFiles(sourceDirectory, targetDirectory, transaction, encryptionKey);
         }
         else
         {
             // If it does not exist, create it
             transaction.AddDirectoryCreation(targetDirectoryPath);
 
-            transaction = FullDirectoryFiles(sourceDirectory, targetDirectoryPath, transaction);
+            transaction = FullDirectoryFiles(sourceDirectory, targetDirectoryPath, transaction, encryptionKey);
         }
 
         // Handle subdirectories
@@ -86,7 +88,8 @@ internal class DirectoryCompare(
 
             if (recursive)
             {
-                transaction = Differential(transaction, sourceSubDirectory, targetSubDirectoryPath, recursive);
+                transaction = Differential(transaction, sourceSubDirectory, targetSubDirectoryPath, encryptionKey,
+                    recursive);
             }
             else if (!Directory.Exists(targetSubDirectoryPath))
             {
@@ -101,7 +104,7 @@ internal class DirectoryCompare(
     ///     Make a differential backup of a directory's files
     /// </summary>
     private static BackupTransaction DiffDirectoryFiles(DirectoryInfo sourceDirectory,
-        DirectoryInfo targetDirectory, BackupTransaction transaction)
+        DirectoryInfo targetDirectory, BackupTransaction transaction, string? encryptionKey)
     {
         FileInfo[] sourceFiles = sourceDirectory.GetFiles();
         FileInfo[] targetFiles = targetDirectory.GetFiles();
@@ -110,7 +113,7 @@ internal class DirectoryCompare(
         foreach (FileInfo fileInfo in sourceFiles.ExceptBy(targetFiles.Select(f => f.Name),
                      f => f.Name))
         {
-            transaction.AddFileCreation(fileInfo, Path.Combine(targetDirectory.FullName, fileInfo.Name));
+            transaction.AddFileCreation(fileInfo, Path.Combine(targetDirectory.FullName, fileInfo.Name), encryptionKey);
         }
 
         // -- Get files to update --
@@ -130,7 +133,7 @@ internal class DirectoryCompare(
                 continue;
             }
 
-            transaction.AddFileUpdate(sourceFile, targetFile);
+            transaction.AddFileUpdate(sourceFile, targetFile, encryptionKey);
         }
 
         // -- Get files to delete --
@@ -148,11 +151,11 @@ internal class DirectoryCompare(
     ///     Make a full backup of a directory's files
     /// </summary>
     private static BackupTransaction FullDirectoryFiles(DirectoryInfo sourceDirectory,
-        string targetDirectoryPath, BackupTransaction transaction)
+        string targetDirectoryPath, BackupTransaction transaction, string? encryptionKey)
     {
         foreach (FileInfo file in sourceDirectory.GetFiles())
         {
-            transaction.AddFileCreation(file, Path.Combine(targetDirectoryPath, file.Name));
+            transaction.AddFileCreation(file, Path.Combine(targetDirectoryPath, file.Name), encryptionKey);
         }
 
         return transaction;

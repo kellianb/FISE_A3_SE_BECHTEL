@@ -79,15 +79,15 @@ internal class BackupTransaction
         return this;
     }
 
-    public BackupTransaction AddFileCreation(FileInfo sourceFile, string targetFilePath)
+    public BackupTransaction AddFileCreation(FileInfo sourceFile, string targetFilePath, string? encryptionKey)
     {
-        FileChange change = new(targetFilePath, FileChangeType.Create, sourceFile.FullName, sourceFile.Length);
+        FileChange change = new(targetFilePath, FileChangeType.Create, sourceFile.FullName, sourceFile.Length, encryptionKey);
         return AddFileChange(change);
     }
 
-    public BackupTransaction AddFileUpdate(FileInfo sourceFile, FileInfo targetFile)
+    public BackupTransaction AddFileUpdate(FileInfo sourceFile, FileInfo targetFile, string? encryptionKey)
     {
-        FileChange change = new(targetFile.FullName, FileChangeType.Modify, sourceFile.FullName, sourceFile.Length);
+        FileChange change = new(targetFile.FullName, FileChangeType.Modify, sourceFile.FullName, sourceFile.Length, encryptionKey);
 
         return AddFileChange(change);
     }
