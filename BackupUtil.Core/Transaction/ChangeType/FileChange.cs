@@ -9,18 +9,32 @@ public enum FileChangeType
     [I18NKey("changeTypeDelete")] Delete = 2
 }
 
-// Represents a file that needs to be created, modified, or deleted
+//
+/// <summary>
+/// Represents a change made to a file, containing details such as the type of change,
+/// file size, and optional source path and encryption key.
+/// This class is used to describe file-level changes that occur within a transaction
+/// during backup operations, such as creation, modification, or deletion of a file.
+/// <param name="targetPath">Path of the file to apply changes to</param>
+/// <param name="changeType">Type of change to make to the file at targetPath</param>
+/// <param name="sourcePath">Path of the source file, only set for Creation and Modifications</param>
+/// <param name="fileSize">Size of the source file, only set for Creation and Modifications</param>
+/// <param name="encryptionKey">Key to encrypt the file with, leave null if no encryption should be applied</param>
+/// </summary>
 internal class FileChange(
     string targetPath,
     FileChangeType changeType,
     string? sourcePath = null,
-    long fileSize = 0)
+    long fileSize = 0,
+    string? encryptionKey = null)
     : FileSystemChange(targetPath),
         IEquatable<FileChange>
 {
     public FileChangeType ChangeType { get; } = changeType;
     public long FileSize { get; } = fileSize;
     public string? SourcePath { get; } = sourcePath;
+
+    public string? EncryptionKey { get; } = encryptionKey;
 
     public bool Equals(FileChange? other)
     {

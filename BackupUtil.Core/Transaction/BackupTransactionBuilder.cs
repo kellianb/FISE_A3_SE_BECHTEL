@@ -61,7 +61,7 @@ internal class BackupTransactionBuilder : IBackupTransactionBuilder
                 throw new ArgumentException("errorSourceFileTargetDir");
             }
 
-            return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential).Compare(
+            return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential, job.EncryptionKey).Compare(
                 transaction);
         }
 
@@ -73,7 +73,7 @@ internal class BackupTransactionBuilder : IBackupTransactionBuilder
             }
 
             return new DirectoryCompare(new DirectoryInfo(job.SourcePath), job.TargetPath, job.Recursive,
-                job.Differential).Compare(transaction);
+                job.Differential, job.EncryptionKey).Compare(transaction);
         }
 
         throw new FileNotFoundException("errorSourceNotFound");

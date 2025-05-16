@@ -2,7 +2,7 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.Compare;
 
-internal class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool differential)
+internal class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool differential, string? encryptionKey)
     : ICompare
 {
     private readonly bool _differential = differential;
@@ -24,11 +24,11 @@ internal class SingleFileCompare(FileInfo sourceFile, string targetFilePath, boo
 
             return FileCompare.AreFilesEqual(_sourceFile, targetFile)
                 ? transaction
-                : transaction.AddFileUpdate(_sourceFile, targetFile);
+                : transaction.AddFileUpdate(_sourceFile, targetFile, encryptionKey);
         }
 
         // Create the file
-        transaction.AddFileCreation(_sourceFile, _targetFilePath);
+        transaction.AddFileCreation(_sourceFile, _targetFilePath, encryptionKey);
 
         string? targetDirectoryName = Path.GetDirectoryName(_targetFilePath);
 
@@ -50,6 +50,6 @@ internal class SingleFileCompare(FileInfo sourceFile, string targetFilePath, boo
             transaction.AddDirectoryCreation(targetDirectoryName);
         }
 
-        return transaction.AddFileCreation(_sourceFile, _targetFilePath);
+        return transaction.AddFileCreation(_sourceFile, _targetFilePath, encryptionKey);
     }
 }

@@ -1,3 +1,4 @@
+using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using Serilog;
@@ -5,7 +6,7 @@ using SerilogTimings.Extensions;
 
 namespace BackupUtil.Core.Executor;
 
-internal class BackupTransactionExecutor : IBackupTransactionExecutor
+internal class BackupTransactionExecutor(IEncryptor encryptor) : IBackupTransactionExecutor
 {
     public void Execute(BackupTransaction transaction)
     {
@@ -22,7 +23,7 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         }
     }
 
-    private static void ExecuteDirectoryChange(DirectoryChange change)
+    private void ExecuteDirectoryChange(DirectoryChange change)
     {
         switch (change.ChangeType)
         {
@@ -37,15 +38,22 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         }
     }
 
-    private static void ExecuteFileChange(FileChange change)
+    private void ExecuteFileChange(FileChange change)
     {
         switch (change.ChangeType)
         {
             case FileChangeType.Create:
-                File.Copy(change.SourcePath!, change.TargetPath, true);
-                break;
             case FileChangeType.Modify:
-                File.Copy(change.SourcePath!, change.TargetPath, true);
+                if (change.EncryptionKey == null)
+                {
+                    File.Copy(change.SourcePath!, change.TargetPath, true);
+                }
+                else
+                {
+                    File.WriteAllText(change.TargetPath,
+                        encryptor.Encrypt(File.ReadAllText(change.SourcePath!), change.EncryptionKey));
+                }
+
                 break;
             case FileChangeType.Delete:
                 File.Delete(change.TargetPath);

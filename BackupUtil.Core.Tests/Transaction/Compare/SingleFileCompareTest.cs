@@ -69,7 +69,7 @@ public class SingleFileCompareTest
         DirectoryChange expectedDirectoryChange = new(targetSubFolder, DirectoryChangeType.Create);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, differential);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, differential, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -112,7 +112,7 @@ public class SingleFileCompareTest
             new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -147,7 +147,7 @@ public class SingleFileCompareTest
             new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -188,7 +188,7 @@ public class SingleFileCompareTest
             new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -227,7 +227,7 @@ public class SingleFileCompareTest
         DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -265,7 +265,7 @@ public class SingleFileCompareTest
         File.WriteAllText(targetFilePath, fileContent);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -301,7 +301,7 @@ public class SingleFileCompareTest
         DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());

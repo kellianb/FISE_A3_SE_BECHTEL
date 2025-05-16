@@ -69,7 +69,7 @@ public class DirectoryCompareTest
         DirectoryChange expectedDirectoryChange = new(targetSubFolder, DirectoryChangeType.Create);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), targetSubFolder, false, differential);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), targetSubFolder, false, differential, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -112,7 +112,7 @@ public class DirectoryCompareTest
             new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -150,7 +150,7 @@ public class DirectoryCompareTest
         DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -194,7 +194,7 @@ public class DirectoryCompareTest
             new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -233,7 +233,7 @@ public class DirectoryCompareTest
         DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -271,7 +271,7 @@ public class DirectoryCompareTest
         File.WriteAllText(targetFilePath, fileContent);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -306,7 +306,7 @@ public class DirectoryCompareTest
         DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
