@@ -99,4 +99,7 @@
     <data name="jobRecursive" xml:space="preserve">
         <value>Récursif</value>
     </data>
+    <data name="jobEncrypted" xml:space="preserve">
+        <value>Chiffré</value>
+    </data>
 </root>
