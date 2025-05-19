@@ -34,14 +34,12 @@ internal class BackupTransaction
 
     public BackupTransaction AddDirectoryCreation(string path)
     {
-        DirectoryChange change = new(path, DirectoryChangeType.Create);
-        return AddDirectoryChange(change);
+        return AddDirectoryChange(DirectoryChange.Creation(path));
     }
 
     public BackupTransaction AddDirectoryDeletion(DirectoryInfo targetDirectory)
     {
-        DirectoryChange change = new(targetDirectory.FullName, DirectoryChangeType.Delete);
-        return AddDirectoryChange(change);
+        return AddDirectoryChange(DirectoryChange.Deletion(targetDirectory.FullName));
     }
 
     #endregion
@@ -81,20 +79,28 @@ internal class BackupTransaction
 
     public BackupTransaction AddFileCreation(FileInfo sourceFile, string targetFilePath, string? encryptionKey)
     {
-        FileChange change = new(targetFilePath, FileChangeType.Create, sourceFile.FullName, sourceFile.Length, encryptionKey);
+        FileChange change = FileChange.Creation(sourceFile.FullName,
+            targetFilePath,
+            sourceFile.Length,
+            encryptionKey);
+
         return AddFileChange(change);
     }
 
     public BackupTransaction AddFileUpdate(FileInfo sourceFile, FileInfo targetFile, string? encryptionKey)
     {
-        FileChange change = new(targetFile.FullName, FileChangeType.Modify, sourceFile.FullName, sourceFile.Length, encryptionKey);
+        FileChange change = FileChange.Modification(sourceFile.FullName,
+            targetFile.FullName,
+            sourceFile.Length,
+            encryptionKey);
 
         return AddFileChange(change);
     }
 
     public BackupTransaction AddFileDeletion(FileInfo targetFile)
     {
-        FileChange change = new(targetFile.FullName, FileChangeType.Delete, fileSize: targetFile.Length);
+        FileChange change = FileChange.Deletion(targetFile.FullName);
+
         return AddFileChange(change);
     }
 
