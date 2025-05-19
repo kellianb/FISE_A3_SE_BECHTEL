@@ -11,30 +11,42 @@ public enum FileChangeType
 
 //
 /// <summary>
-/// Represents a change made to a file, containing details such as the type of change,
-/// file size, and optional source path and encryption key.
-/// This class is used to describe file-level changes that occur within a transaction
-/// during backup operations, such as creation, modification, or deletion of a file.
-/// <param name="targetPath">Path of the file to apply changes to</param>
-/// <param name="changeType">Type of change to make to the file at targetPath</param>
-/// <param name="sourcePath">Path of the source file, only set for Creation and Modifications</param>
-/// <param name="fileSize">Size of the source file, only set for Creation and Modifications</param>
-/// <param name="encryptionKey">Key to encrypt the file with, leave null if no encryption should be applied</param>
+///     Represents a change made to a file, containing details such as the type of change,
+///     file size, and optional source path and encryption key.
+///     This class is used to describe file-level changes that occur within a transaction
+///     during backup operations, such as creation, modification, or deletion of a file.
 /// </summary>
-internal class FileChange(
-    string targetPath,
-    FileChangeType changeType,
-    string? sourcePath = null,
-    long fileSize = 0,
-    string? encryptionKey = null)
-    : FileSystemChange(targetPath),
-        IEquatable<FileChange>
+internal class FileChange : FileSystemChange,
+    IEquatable<FileChange>
 {
-    public FileChangeType ChangeType { get; } = changeType;
-    public long FileSize { get; } = fileSize;
-    public string? SourcePath { get; } = sourcePath;
+    /// <summary>
+    ///     Represents a change made to a file, containing details such as the type of change,
+    ///     file size, and optional source path and encryption key.
+    ///     This class is used to describe file-level changes that occur within a transaction
+    ///     during backup operations, such as creation, modification, or deletion of a file.
+    ///     <param name="targetPath">Path of the file to apply changes to</param>
+    ///     <param name="changeType">Type of change to make to the file at targetPath</param>
+    ///     <param name="sourcePath">Path of the source file, only set for Creation and Modifications</param>
+    ///     <param name="fileSize">Size of the source file, only set for Creation and Modifications</param>
+    ///     <param name="encryptionKey">Key to encrypt the file with, leave null if no encryption should be applied</param>
+    /// </summary>
+    private FileChange(string targetPath,
+        FileChangeType changeType,
+        string? sourcePath = null,
+        long fileSize = 0,
+        string? encryptionKey = null) : base(targetPath)
+    {
+        ChangeType = changeType;
+        FileSize = fileSize;
+        SourcePath = sourcePath;
+        EncryptionKey = encryptionKey;
+    }
 
-    public string? EncryptionKey { get; } = encryptionKey;
+    public FileChangeType ChangeType { get; }
+    public long FileSize { get; }
+    public string? SourcePath { get; }
+
+    public string? EncryptionKey { get; }
 
     public bool Equals(FileChange? other)
     {
@@ -49,6 +61,22 @@ internal class FileChange(
         }
 
         return ChangeType == other.ChangeType && FileSize == other.FileSize && SourcePath == other.SourcePath;
+    }
+
+    public static FileChange Creation(string sourcePath, string targetPath, long fileSize, string? encryptionKey = null)
+    {
+        return new FileChange(targetPath, FileChangeType.Create, sourcePath, fileSize, encryptionKey);
+    }
+
+    public static FileChange Modification(string sourcePath, string targetPath, long fileSize,
+        string? encryptionKey = null)
+    {
+        return new FileChange(targetPath, FileChangeType.Modify, sourcePath, fileSize, encryptionKey);
+    }
+
+    public static FileChange Deletion(string targetPath)
+    {
+        return new FileChange(targetPath, FileChangeType.Delete);
     }
 
     public override bool Equals(object? obj)

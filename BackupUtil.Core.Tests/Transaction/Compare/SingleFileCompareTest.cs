@@ -62,11 +62,10 @@ public class SingleFileCompareTest
         File.WriteAllText(sourceFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Expected folder change
-        DirectoryChange expectedDirectoryChange = new(targetSubFolder, DirectoryChangeType.Create);
+        DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(targetSubFolder);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, differential, null);
@@ -108,8 +107,7 @@ public class SingleFileCompareTest
         File.WriteAllText(sourceFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
@@ -143,8 +141,7 @@ public class SingleFileCompareTest
         File.WriteAllText(sourceFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);;
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
@@ -184,8 +181,7 @@ public class SingleFileCompareTest
         File.WriteAllText(targetFilePath, oldContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Modify, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Modification(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
@@ -220,11 +216,10 @@ public class SingleFileCompareTest
         File.WriteAllText(targetFilePath, newContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);;
 
         // Expected folder change
-        DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
+        DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, null);
@@ -294,11 +289,10 @@ public class SingleFileCompareTest
         File.WriteAllText(targetFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);;
 
         // Expected folder change
-        DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
+        DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, null);

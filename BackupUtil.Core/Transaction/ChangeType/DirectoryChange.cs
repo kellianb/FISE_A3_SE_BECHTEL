@@ -9,16 +9,23 @@ public enum DirectoryChangeType
 }
 
 /// <summary>
-/// Represents a change operation for a directory, such as creation or deletion.
-/// <param name="targetPath">Path of the directory to apply changes to</param>
-/// <param name="changeType">Type of change to apply</param>
+///     Represents a change operation for a directory, such as creation or deletion.
 /// </summary>
-internal class DirectoryChange(
-    string targetPath,
-    DirectoryChangeType changeType) : FileSystemChange(targetPath),
+internal class DirectoryChange : FileSystemChange,
     IEquatable<DirectoryChange>
 {
-    public DirectoryChangeType ChangeType { get; } = changeType;
+    /// <summary>
+    ///     Represents a change operation for a directory, such as creation or deletion.
+    ///     <param name="targetPath">Path of the directory to apply changes to</param>
+    ///     <param name="changeType">Type of change to apply</param>
+    /// </summary>
+    private DirectoryChange(string targetPath,
+        DirectoryChangeType changeType) : base(targetPath)
+    {
+        ChangeType = changeType;
+    }
+
+    public DirectoryChangeType ChangeType { get; }
 
     public bool Equals(DirectoryChange? other)
     {
@@ -33,6 +40,16 @@ internal class DirectoryChange(
         }
 
         return ChangeType == other.ChangeType;
+    }
+
+    public static DirectoryChange Creation(string targetPath)
+    {
+        return new DirectoryChange(targetPath, DirectoryChangeType.Create);
+    }
+
+    public static DirectoryChange Deletion(string targetPath)
+    {
+        return new DirectoryChange(targetPath, DirectoryChangeType.Delete);
     }
 
     public override bool Equals(object? obj)

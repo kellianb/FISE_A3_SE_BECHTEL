@@ -62,11 +62,11 @@ public class DirectoryCompareTest
         File.WriteAllText(sourceFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange =
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Expected folder change
-        DirectoryChange expectedDirectoryChange = new(targetSubFolder, DirectoryChangeType.Create);
+        DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(targetSubFolder);
 
         // Create compare object
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), targetSubFolder, false, differential, null);
@@ -108,8 +108,8 @@ public class DirectoryCompareTest
         File.WriteAllText(sourceFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange =
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, null);
@@ -143,11 +143,11 @@ public class DirectoryCompareTest
         File.WriteAllText(sourceFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange =
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Expected folder change
-        DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
+        DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, null);
@@ -190,8 +190,7 @@ public class DirectoryCompareTest
         File.WriteAllText(targetFilePath, oldContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Modify, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Modification(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, null);
@@ -226,11 +225,10 @@ public class DirectoryCompareTest
         File.WriteAllText(targetFilePath, newContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Expected folder change
-        DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
+        DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, null);
@@ -299,11 +297,11 @@ public class DirectoryCompareTest
         File.WriteAllText(targetFilePath, fileContent);
 
         // Expected file change
-        FileChange expectedFileChange = new(targetFilePath, FileChangeType.Create, sourceFilePath,
-            new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange =
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Expected folder change
-        DirectoryChange expectedDirectoryChange = new(_targetFolder, DirectoryChangeType.Create);
+        DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, null);
