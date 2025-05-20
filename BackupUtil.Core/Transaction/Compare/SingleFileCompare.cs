@@ -2,35 +2,35 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.Compare;
 
-internal class SingleFileCompare(FileInfo sourceFile, string targetFilePath, bool differential, string? encryptionKey)
+internal class SingleFileCompare(
+    FileInfo sourceFile,
+    string targetFilePath,
+    bool differential,
+    FileCompare compare,
+    string? encryptionKey)
     : ICompare
 {
-    private readonly bool _differential = differential;
-    private readonly FileInfo _sourceFile = sourceFile;
-    private readonly string _targetFilePath = targetFilePath;
-
-
     public BackupTransaction Compare(BackupTransaction transaction)
     {
-        return _differential ? Differential(transaction) : Full(transaction);
+        return differential ? Differential(transaction) : Full(transaction);
     }
 
     private BackupTransaction Differential(BackupTransaction transaction)
     {
         // If the target file already exists, check if it needs to be updated
-        if (File.Exists(_targetFilePath))
+        if (File.Exists(targetFilePath))
         {
-            FileInfo targetFile = new(_targetFilePath);
+            FileInfo targetFile = new(targetFilePath);
 
-            return FileCompare.AreFilesEqual(_sourceFile, targetFile)
+            return compare.AreFilesEqual(sourceFile, targetFile, encryptionKey)
                 ? transaction
-                : transaction.AddFileUpdate(_sourceFile, targetFile, encryptionKey);
+                : transaction.AddFileUpdate(sourceFile, targetFile, encryptionKey);
         }
 
         // Create the file
-        transaction.AddFileCreation(_sourceFile, _targetFilePath, encryptionKey);
+        transaction.AddFileCreation(sourceFile, targetFilePath, encryptionKey);
 
-        string? targetDirectoryName = Path.GetDirectoryName(_targetFilePath);
+        string? targetDirectoryName = Path.GetDirectoryName(targetFilePath);
 
         // If the target directory is the filesystem root or exists, return the diff
         if (string.IsNullOrEmpty(targetDirectoryName) || Directory.Exists(targetDirectoryName))
@@ -44,12 +44,12 @@ internal class SingleFileCompare(FileInfo sourceFile, string targetFilePath, boo
 
     private BackupTransaction Full(BackupTransaction transaction)
     {
-        string? targetDirectoryName = Path.GetDirectoryName(_targetFilePath);
+        string? targetDirectoryName = Path.GetDirectoryName(targetFilePath);
         if (!string.IsNullOrEmpty(targetDirectoryName))
         {
             transaction.AddDirectoryCreation(targetDirectoryName);
         }
 
-        return transaction.AddFileCreation(_sourceFile, _targetFilePath, encryptionKey);
+        return transaction.AddFileCreation(sourceFile, targetFilePath, encryptionKey);
     }
 }

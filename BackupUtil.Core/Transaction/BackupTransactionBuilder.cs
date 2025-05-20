@@ -1,8 +1,9 @@
 using BackupUtil.Core.Transaction.Compare;
+using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction;
 
-internal class BackupTransactionBuilder : IBackupTransactionBuilder
+internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransactionBuilder
 {
     public BackupTransaction Build(Job.Job job)
     {
@@ -14,7 +15,7 @@ internal class BackupTransactionBuilder : IBackupTransactionBuilder
         return job.Aggregate(new BackupTransaction(), (acc, next) => AddJobToTransaction(next, acc));
     }
 
-    private static BackupTransaction AddJobToTransaction(Job.Job job, BackupTransaction transaction)
+    private BackupTransaction AddJobToTransaction(Job.Job job, BackupTransaction transaction)
     {
         try
         {
@@ -61,8 +62,13 @@ internal class BackupTransactionBuilder : IBackupTransactionBuilder
                 throw new ArgumentException("errorSourceFileTargetDir");
             }
 
-            return new SingleFileCompare(new FileInfo(job.SourcePath), job.TargetPath, job.Differential, job.EncryptionKey).Compare(
-                transaction);
+            return new SingleFileCompare(
+                    new FileInfo(job.SourcePath),
+                    job.TargetPath,
+                    job.Differential,
+                    fileCompare,
+                    job.EncryptionKey)
+                .Compare(transaction);
         }
 
         if (Directory.Exists(job.SourcePath))
@@ -72,8 +78,14 @@ internal class BackupTransactionBuilder : IBackupTransactionBuilder
                 throw new ArgumentException("errorSourceDirTargetFile");
             }
 
-            return new DirectoryCompare(new DirectoryInfo(job.SourcePath), job.TargetPath, job.Recursive,
-                job.Differential, job.EncryptionKey).Compare(transaction);
+            return new DirectoryCompare(
+                    new DirectoryInfo(job.SourcePath),
+                    job.TargetPath,
+                    job.Recursive,
+                    job.Differential,
+                    fileCompare,
+                    job.EncryptionKey)
+                .Compare(transaction);
         }
 
         throw new FileNotFoundException("errorSourceNotFound");

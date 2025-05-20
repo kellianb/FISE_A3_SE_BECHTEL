@@ -1,6 +1,8 @@
+using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.Core.Transaction.Compare;
+using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Tests.Transaction.Compare;
 
@@ -68,7 +70,7 @@ public class SingleFileCompareTest
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(targetSubFolder);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, differential, null);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, differential, new FileCompare(new XorEncryptor()), null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -110,7 +112,7 @@ public class SingleFileCompareTest
         FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -144,7 +146,7 @@ public class SingleFileCompareTest
         FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);;
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -184,7 +186,7 @@ public class SingleFileCompareTest
         FileChange expectedFileChange = FileChange.Modification(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -222,7 +224,7 @@ public class SingleFileCompareTest
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, null);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, new FileCompare(new XorEncryptor()), null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -260,7 +262,7 @@ public class SingleFileCompareTest
         File.WriteAllText(targetFilePath, fileContent);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, null);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());
@@ -295,7 +297,7 @@ public class SingleFileCompareTest
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
-        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, null);
+        SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, new FileCompare(new XorEncryptor()), null);
 
         // Act
         BackupTransaction transaction = compare.Compare(new BackupTransaction());

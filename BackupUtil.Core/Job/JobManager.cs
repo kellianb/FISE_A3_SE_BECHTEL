@@ -8,13 +8,35 @@ using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Job;
 
-public class JobManager(uint? maxJobs = null)
+public class JobManager
 {
-    private readonly IBackupTransactionBuilder _transactionBuilder = new BackupTransactionBuilder();
+    private readonly IBackupTransactionBuilder _transactionBuilder;
 
-    private readonly IBackupTransactionExecutor _transactionExecutor = new BackupTransactionExecutor(new XorEncryptor());
+    private readonly IBackupTransactionExecutor _transactionExecutor;
 
-    public uint MaxJobs { get; } = maxJobs is > 0 ? maxJobs.Value : Config.DefaultMaxJobCount;
+    internal JobManager(
+        IBackupTransactionExecutor transactionExecutor,
+        IBackupTransactionBuilder transactionBuilder,
+        FileCompare compare,
+        uint? maxJobs = null)
+    {
+        _transactionBuilder = transactionBuilder;
+        _transactionExecutor = transactionExecutor;
+        MaxJobs = maxJobs is > 0 ? maxJobs.Value : Config.DefaultMaxJobCount;
+    }
+
+
+    public JobManager()
+    {
+        IEncryptor encryptor = new XorEncryptor();
+
+        _transactionBuilder = new BackupTransactionBuilder(new FileCompare(encryptor));
+        _transactionExecutor = new BackupTransactionExecutor(encryptor);
+
+        MaxJobs = Config.DefaultMaxJobCount;
+    }
+
+    public uint MaxJobs { get; }
 
     public List<Job> Jobs { get; } = [];
 
