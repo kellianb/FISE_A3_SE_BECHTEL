@@ -21,6 +21,10 @@ public class JobManagerTest
     [TearDown]
     public void Cleanup()
     {
+        // Force garbage collection to release file handles
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+
         // Clean up test directories
         if (Directory.Exists(_sourceFolder))
         {
