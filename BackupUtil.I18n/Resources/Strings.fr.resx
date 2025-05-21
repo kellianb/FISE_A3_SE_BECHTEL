@@ -102,4 +102,7 @@
     <data name="jobEncrypted" xml:space="preserve">
         <value>Chiffré</value>
     </data>
+    <data name="errorEncryptionKeyEmpty" xml:space="preserve">
+        <value>La clé de chiffrement ne peut être vide</value>
+    </data>
 </root>

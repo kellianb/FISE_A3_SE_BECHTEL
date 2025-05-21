@@ -6,8 +6,7 @@ internal class XorEncryptor : IEncryptor
     {
         if (string.IsNullOrEmpty(key))
         {
-            // TODO Localize
-            throw new ArgumentException("Key cannot be null or empty", nameof(key));
+            throw new ArgumentException("errorEncryptionKeyEmpty");
         }
 
         return new string(input.Select((c, i) =>

@@ -102,4 +102,7 @@
     <data name="jobEncrypted" xml:space="preserve">
         <value>Encrypted</value>
     </data>
+    <data name="errorEncryptionKeyEmpty" xml:space="preserve">
+        <value>Encryption key cannot be empty</value>
+    </data>
 </root>
