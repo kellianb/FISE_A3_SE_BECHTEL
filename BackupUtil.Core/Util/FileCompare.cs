@@ -23,13 +23,22 @@ internal class FileCompare(IEncryptor encryptor)
                 return false;
             }
 
-            hash1 = CalculateFileHash(file1.OpenRead());
+            using FileStream stream = file1.OpenRead();
+            hash1 = CalculateFileHash(stream);
         }
         else
         {
             // Encrypt file1 with the key before hashing it
-            string encryptedFile1 = encryptor.Encrypt(file1.OpenText().ReadToEnd(), key);
-            hash1 = CalculateFileHash(new MemoryStream(Encoding.UTF8.GetBytes(encryptedFile1)));
+            string encryptedFile1;
+            using (StreamReader reader = file1.OpenText())
+            {
+                encryptedFile1 = encryptor.Encrypt(reader.ReadToEnd(), key);
+            }
+
+            using (MemoryStream stream = new(Encoding.UTF8.GetBytes(encryptedFile1)))
+            {
+                hash1 = CalculateFileHash(stream);
+            }
         }
 
         string hash2 = CalculateFileHash(file2.OpenRead());
