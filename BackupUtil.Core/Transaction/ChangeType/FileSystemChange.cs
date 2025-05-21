@@ -5,6 +5,8 @@ internal abstract class FileSystemChange(string targetPath) : IEquatable<FileSys
 {
     public string TargetPath { get; } = targetPath;
 
+    #region Equality
+
     public bool Equals(FileSystemChange? other)
     {
         if (other is null)
@@ -44,4 +46,6 @@ internal abstract class FileSystemChange(string targetPath) : IEquatable<FileSys
     {
         return TargetPath.GetHashCode();
     }
+
+    #endregion
 }
