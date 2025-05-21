@@ -27,6 +27,8 @@ internal class DirectoryChange : FileSystemChange,
 
     public DirectoryChangeType ChangeType { get; }
 
+    #region Equality
+
     public bool Equals(DirectoryChange? other)
     {
         if (other is null)
@@ -76,4 +78,6 @@ internal class DirectoryChange : FileSystemChange,
     {
         return (int)ChangeType;
     }
+
+    #endregion
 }
