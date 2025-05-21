@@ -27,6 +27,17 @@ internal class DirectoryChange : FileSystemChange,
 
     public DirectoryChangeType ChangeType { get; }
 
+    public static DirectoryChange Creation(string targetPath)
+    {
+        return new DirectoryChange(targetPath, DirectoryChangeType.Create);
+    }
+
+    public static DirectoryChange Deletion(string targetPath)
+    {
+        return new DirectoryChange(targetPath, DirectoryChangeType.Delete);
+    }
+
+
     #region Equality
 
     public bool Equals(DirectoryChange? other)
@@ -42,16 +53,6 @@ internal class DirectoryChange : FileSystemChange,
         }
 
         return ChangeType == other.ChangeType;
-    }
-
-    public static DirectoryChange Creation(string targetPath)
-    {
-        return new DirectoryChange(targetPath, DirectoryChangeType.Create);
-    }
-
-    public static DirectoryChange Deletion(string targetPath)
-    {
-        return new DirectoryChange(targetPath, DirectoryChangeType.Delete);
     }
 
     public override bool Equals(object? obj)

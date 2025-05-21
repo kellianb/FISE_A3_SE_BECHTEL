@@ -48,21 +48,6 @@ internal class FileChange : FileSystemChange,
 
     public string? EncryptionKey { get; }
 
-    public bool Equals(FileChange? other)
-    {
-        if (other is null)
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(this, other))
-        {
-            return true;
-        }
-
-        return ChangeType == other.ChangeType && FileSize == other.FileSize && SourcePath == other.SourcePath;
-    }
-
     public static FileChange Creation(string sourcePath, string targetPath, long fileSize, string? encryptionKey = null)
     {
         return new FileChange(targetPath, FileChangeType.Create, sourcePath, fileSize, encryptionKey);
@@ -77,6 +62,23 @@ internal class FileChange : FileSystemChange,
     public static FileChange Deletion(string targetPath)
     {
         return new FileChange(targetPath, FileChangeType.Delete);
+    }
+
+    #region Equality
+
+    public bool Equals(FileChange? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return ChangeType == other.ChangeType && FileSize == other.FileSize && SourcePath == other.SourcePath;
     }
 
     public override bool Equals(object? obj)
@@ -103,4 +105,6 @@ internal class FileChange : FileSystemChange,
     {
         return HashCode.Combine((int)ChangeType, FileSize, SourcePath);
     }
+
+    #endregion
 }
