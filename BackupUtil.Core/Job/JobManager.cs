@@ -4,6 +4,7 @@ using BackupUtil.Core.Executor;
 using BackupUtil.Core.Job.Exporter;
 using BackupUtil.Core.Job.Loader;
 using BackupUtil.Core.Transaction;
+using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Job;
@@ -35,6 +36,8 @@ public class JobManager
 
         MaxJobs = Config.DefaultMaxJobCount;
     }
+
+    public FileMask? FileMask { get; set; }
 
     public uint MaxJobs { get; }
 
@@ -126,14 +129,16 @@ public class JobManager
 
     private BackupCommand BuildBackupCommand(List<Job> concernedJobs)
     {
-        BackupTransaction transaction = _transactionBuilder.Build(concernedJobs);
+        FileMask mask = FileMask ?? new FileMask();
+        BackupTransaction transaction = _transactionBuilder.Build(concernedJobs, mask);
 
         return new BackupCommand(_transactionExecutor, transaction);
     }
 
     private BackupCommand BuildBackupCommand(Job concernedJob)
     {
-        BackupTransaction transaction = _transactionBuilder.Build(concernedJob);
+        FileMask mask = FileMask ?? new FileMask();
+        BackupTransaction transaction = _transactionBuilder.Build(concernedJob, mask);
 
         return new BackupCommand(_transactionExecutor, transaction);
     }
