@@ -5,14 +5,14 @@ namespace BackupUtil.Core.Transaction;
 
 internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransactionBuilder
 {
-    public BackupTransaction Build(Job.Job job)
+    public BackupTransaction Build(Job.Job job, FileMask.FileMask fileMask)
     {
-        return AddJobToTransaction(job, new BackupTransaction());
+        return AddJobToTransaction(job, new BackupTransaction(fileMask));
     }
 
-    public BackupTransaction Build(List<Job.Job> job)
+    public BackupTransaction Build(List<Job.Job> job, FileMask.FileMask fileMask)
     {
-        return job.Aggregate(new BackupTransaction(), (acc, next) => AddJobToTransaction(next, acc));
+        return job.Aggregate(new BackupTransaction(fileMask), (acc, next) => AddJobToTransaction(next, acc));
     }
 
     private BackupTransaction AddJobToTransaction(Job.Job job, BackupTransaction transaction)

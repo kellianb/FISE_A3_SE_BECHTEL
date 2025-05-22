@@ -3,8 +3,10 @@ using BackupUtil.Core.Transaction.ChangeType;
 namespace BackupUtil.Core.Transaction;
 
 // Class to hold all the changes that need to be applied
-internal class BackupTransaction
+internal class BackupTransaction(FileMask.FileMask? fileMask = null)
 {
+    private readonly FileMask.FileMask _fileMask = fileMask ?? new FileMask.FileMask();
+
     public List<FileChange> FileChanges { get; } = [];
     public List<DirectoryChange> DirectoryChanges { get; } = [];
 
@@ -79,6 +81,16 @@ internal class BackupTransaction
 
     public BackupTransaction AddFileCreation(FileInfo sourceFile, string targetFilePath, string? encryptionKey)
     {
+        if (!_fileMask.ShouldCopy(sourceFile))
+        {
+            return this;
+        }
+
+        if (encryptionKey != null && !fileMask.ShouldEncrypt(sourceFile))
+        {
+            encryptionKey = null;
+        }
+
         FileChange change = FileChange.Creation(sourceFile.FullName,
             targetFilePath,
             sourceFile.Length,
@@ -89,6 +101,16 @@ internal class BackupTransaction
 
     public BackupTransaction AddFileUpdate(FileInfo sourceFile, FileInfo targetFile, string? encryptionKey)
     {
+        if (!_fileMask.ShouldCopy(sourceFile))
+        {
+            return this;
+        }
+
+        if (encryptionKey != null && !fileMask.ShouldEncrypt(sourceFile))
+        {
+            encryptionKey = null;
+        }
+
         FileChange change = FileChange.Modification(sourceFile.FullName,
             targetFile.FullName,
             sourceFile.Length,
