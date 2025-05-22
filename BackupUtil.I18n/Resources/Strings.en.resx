@@ -105,4 +105,13 @@
     <data name="errorEncryptionKeyEmpty" xml:space="preserve">
         <value>Encryption key cannot be empty</value>
     </data>
+    <data name="langLabel" xml:space="preserve">
+        <value>Language:</value>
+    </data>
+    <data name="french" xml:space="preserve">
+        <value>French</value>
+    </data>
+    <data name="english" xml:space="preserve">
+        <value>English</value>
+    </data>
 </root>
