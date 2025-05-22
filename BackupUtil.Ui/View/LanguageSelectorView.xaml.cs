@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using BackupUtil.I18n;
 using BackupUtil.ViewModel;
 
@@ -10,6 +11,15 @@ public partial class LanguageSelectorView : UserControl
     {
         InitializeComponent();
         DataContext = new LanguageSelectorViewModel();
+    }
+
+    public void SelectLanguage(object sender, RoutedEventArgs routedEventArgs)
+    {
+        Console.WriteLine("selection " + languageComboBox.SelectedItem);
+        if (DataContext is LanguageSelectorViewModel viewModel)
+        {
+            viewModel.ChangeLanguage(languageComboBox.SelectedItem.ToString());
+        }
     }
 }
 
