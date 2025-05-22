@@ -1,3 +1,4 @@
+using BackupUtil.Core.Transaction.Editor;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.Compare;
@@ -10,12 +11,12 @@ internal class SingleFileCompare(
     string? encryptionKey)
     : ICompare
 {
-    public BackupTransaction Compare(BackupTransaction transaction)
+    public BackupTransactionEditor Compare(BackupTransactionEditor transaction)
     {
         return differential ? Differential(transaction) : Full(transaction);
     }
 
-    private BackupTransaction Differential(BackupTransaction transaction)
+    private BackupTransactionEditor Differential(BackupTransactionEditor transaction)
     {
         // If the target file already exists, check if it needs to be updated
         if (File.Exists(targetFilePath))
@@ -42,7 +43,7 @@ internal class SingleFileCompare(
         return transaction.AddDirectoryCreation(targetDirectoryName);
     }
 
-    private BackupTransaction Full(BackupTransaction transaction)
+    private BackupTransactionEditor Full(BackupTransactionEditor transaction)
     {
         string? targetDirectoryName = Path.GetDirectoryName(targetFilePath);
         if (!string.IsNullOrEmpty(targetDirectoryName))
