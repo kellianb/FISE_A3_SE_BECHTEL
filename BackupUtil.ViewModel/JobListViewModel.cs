@@ -1,13 +1,28 @@
 using System.Collections.ObjectModel;
 using BackupUtil.Core.Job;
+using BackupUtil.I18n;
 
 namespace BackupUtil.ViewModel;
 
 public class JobListViewModel : ViewModelBase
 {
-    private readonly ObservableCollection<JobViewModel> _jobs;
-    public LanguageSelectorViewModel LanguageSelectorViewModel { get; set; }
+    static private ObservableCollection<JobViewModel> _jobs { get; set; }
+    public LanguageSelectorViewModel LanguageSelectorViewModel { get; set; } = new LanguageSelectorViewModel();
 
+    public FileInfo jobFilePath = new FileInfo(Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "EasySave", "jobs", "BackupJobs.json"));
+
+    public Dictionary<string, string> LocalizedMessages => new()
+    {
+        { "jobName", I18N.GetLocalizedMessage("jobName") },
+        { "jobTargetPath", I18N.GetLocalizedMessage("jobTargetPath") },
+        { "jobSourcePath", I18N.GetLocalizedMessage("jobSourcePath") },
+        { "jobRecursive", I18N.GetLocalizedMessage("jobRecursive") },
+        { "jobDifferential", I18N.GetLocalizedMessage("jobDifferential") },
+        { "addJob", I18N.GetLocalizedMessage("addJob") },
+        { "changeJobFile", I18N.GetLocalizedMessage("changeJobFile") }
+    };
 
     public IEnumerable<JobViewModel> Jobs => _jobs;
 
@@ -17,11 +32,93 @@ public class JobListViewModel : ViewModelBase
     {
         _jobs = new ObservableCollection<JobViewModel>();
 
-        _jobs.Add(new JobViewModel(new Job("a", "b",  true, true, "Hello world")));
-        _jobs.Add(new JobViewModel(new Job()));
-        _jobs.Add(new JobViewModel(new Job()));
-        _jobs.Add(new JobViewModel(new Job()));
+        try
+        {
+            JobManager manager = new();
 
-        LanguageSelectorViewModel = new LanguageSelectorViewModel();
+            try
+            {
+                manager.AddJobsFromFile(jobFilePath?.FullName);
+            }
+            catch
+            {
+                // Only catch the exception if the default job file path was used
+                if (jobFilePath is not null)
+                {
+                    throw;
+                }
+            }
+
+            // Add jobs to the collection
+            foreach (Job job in manager.Jobs)
+            {
+                _jobs.Add(new JobViewModel(job));
+            }
+
+        } catch (Exception ex)
+        {
+            // Handle errors (e.g., invalid file format)
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public static void ChangeJobsPath(string filename)
+    {
+        //TODO: linux version + implement in view
+            try
+                {
+                    // Load jobs from the selected file
+                    JobManager manager = new();
+                    manager.AddJobsFromFile(filename);
+
+                    // Clear the current jobs and add the new ones
+                    _jobs.Clear();
+                    foreach (Job job in manager.Jobs)
+                    {
+                        _jobs.Add(new JobViewModel(job));
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    // Handle errors (e.g., invalid file format)
+                    Console.WriteLine(ex.Message);
+                }
+    }
+
+    //TODO: implement in view + add creation of file if not exist
+    public void AddJob(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive, bool differential, string name = null)
+    {
+        Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential, name);
+
+        try
+        {
+            JobManager manager = new();
+
+            try
+            {
+                manager.AddJobsFromFile(jobFilePath?.FullName);
+            }
+            catch
+            {
+                // Only catch the exception if the default job file path was used
+                if (jobFilePath is not null)
+                {
+                    throw;
+                }
+            }
+
+            manager.AddJob(job)
+                .ExportAll(jobFilePath?.FullName);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(I18N.GetLocalizedMessage(e.Message));
+        }
+    }
+
+    public void NotifyLocalizedMessagesChanged()
+    {
+        OnPropertyChanged(nameof(LocalizedMessages));
     }
 }

@@ -1,5 +1,8 @@
+using System.Windows;
 using System.Windows.Controls;
 using BackupUtil.ViewModel;
+using BackupUtil.I18n;
+using Microsoft.Win32;
 
 namespace BackupUtil.Ui.View;
 
@@ -8,6 +11,41 @@ public partial class JobListingView : UserControl
     public JobListingView()
     {
         InitializeComponent();
+        if (DataContext is JobListViewModel viewModel)
+        {
+            viewModel.LanguageSelectorViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(LanguageSelectorViewModel.SelectedLanguage))
+                {
+                    viewModel.NotifyLocalizedMessagesChanged();
+                }
+            };
+        }
+    }
+
+    public void SelectJobsPath(object sender, RoutedEventArgs routedEventArgs)
+    {
+        // Configure open file dialog box
+        OpenFileDialog dialog = new OpenFileDialog
+        {
+            Filter = "JSON Files (*.json)|*.json", // Filter files by extension
+            Title = I18N.GetLocalizedMessage("selectJobsDialogTitle"), // Set the title of the dialog
+        };
+
+        // Show open file dialog box
+        bool? result = dialog.ShowDialog();
+
+        // Process open file dialog box results
+        if (result == true)
+        {
+            string filename = dialog.FileName;
+            JobListViewModel.ChangeJobsPath(filename);
+        }
+    }
+
+    public void CreateJob(object sender, RoutedEventArgs routedEventArgs)
+    {
+
     }
 }
 
