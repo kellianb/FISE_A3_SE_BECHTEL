@@ -114,4 +114,13 @@
     <data name="english" xml:space="preserve">
         <value>Anglais</value>
     </data>
+    <data name="selectJobsDialogTitle" xml:space="preserve">
+        <value>Sélectionner le fichier des Backup Jobs</value>
+    </data>
+    <data name="addJob" xml:space="preserve">
+        <value>Ajouter un nouveau job</value>
+    </data>
+    <data name="changeJobFile" xml:space="preserve">
+        <value>Changer de fichier de jobs</value>
+    </data>
 </root>

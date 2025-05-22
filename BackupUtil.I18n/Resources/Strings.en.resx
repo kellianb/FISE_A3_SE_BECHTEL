@@ -114,4 +114,13 @@
     <data name="english" xml:space="preserve">
         <value>English</value>
     </data>
+    <data name="selectJobsDialogTitle" xml:space="preserve">
+        <value>Select Backup Jobs File</value>
+    </data>
+    <data name="addJob" xml:space="preserve">
+        <value>Add new job</value>
+    </data>
+    <data name="changeJobFile" xml:space="preserve">
+        <value>Change jobs file</value>
+    </data>
 </root>
