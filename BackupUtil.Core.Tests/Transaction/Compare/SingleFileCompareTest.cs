@@ -2,6 +2,7 @@ using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.Core.Transaction.Compare;
+using BackupUtil.Core.Transaction.Editor;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Tests.Transaction.Compare;
@@ -77,7 +78,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, differential, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         // Assert
         Assert.Multiple(() =>
@@ -119,7 +120,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         // Assert
         Assert.Multiple(() =>
@@ -153,7 +154,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         // Assert
         Assert.Multiple(() =>
@@ -193,7 +194,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {
@@ -231,7 +232,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {
@@ -269,7 +270,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {
@@ -304,7 +305,7 @@ public class SingleFileCompareTest
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, false, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {

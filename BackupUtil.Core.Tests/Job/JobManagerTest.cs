@@ -1,4 +1,5 @@
 using BackupUtil.Core.Job;
+using FluentAssertions;
 
 namespace BackupUtil.Core.Tests.Job;
 
@@ -120,10 +121,6 @@ public class JobManagerTest
         manager.AddJobsFromFile(jobFilePath);
 
         // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(manager.Jobs, Has.Count.EqualTo(1), "Job list should contain exactly one job");
-            Assert.That(manager.Jobs[0], Is.EqualTo(expectedJob), "Job should match the expected value");
-        });
+        manager.Jobs.Should().BeEquivalentTo([expectedJob]);
     }
 }

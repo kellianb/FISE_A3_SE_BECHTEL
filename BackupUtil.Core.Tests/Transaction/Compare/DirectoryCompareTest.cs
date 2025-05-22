@@ -2,6 +2,7 @@ using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.Core.Transaction.Compare;
+using BackupUtil.Core.Transaction.Editor;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Tests.Transaction.Compare;
@@ -78,7 +79,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), targetSubFolder, false, differential, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         // Assert
         Assert.Multiple(() =>
@@ -121,7 +122,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         // Assert
         Assert.Multiple(() =>
@@ -159,7 +160,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         // Assert
         Assert.Multiple(() =>
@@ -202,7 +203,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {
@@ -240,7 +241,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {
@@ -278,7 +279,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {
@@ -313,7 +314,7 @@ public class DirectoryCompareTest
         DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, new FileCompare(new XorEncryptor()), null);
 
         // Act
-        BackupTransaction transaction = compare.Compare(new BackupTransaction());
+        BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
 
         Assert.Multiple(() =>
         {

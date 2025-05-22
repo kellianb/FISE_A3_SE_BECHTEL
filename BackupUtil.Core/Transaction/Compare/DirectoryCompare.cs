@@ -1,3 +1,4 @@
+using BackupUtil.Core.Transaction.Editor;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.Compare;
@@ -26,7 +27,7 @@ internal class DirectoryCompare : ICompare
         _encryptionKey = encryptionKey;
     }
 
-    public BackupTransaction Compare(BackupTransaction transaction)
+    public BackupTransactionEditor Compare(BackupTransactionEditor transaction)
     {
         return _differential
             ? Differential(transaction, _sourceDirectory, _targetDirectoryPath, _recursive)
@@ -36,8 +37,8 @@ internal class DirectoryCompare : ICompare
     /// <summary>
     ///     Make a full backup of a directory
     /// </summary>
-    private BackupTransaction Full(
-        BackupTransaction transaction,
+    private BackupTransactionEditor Full(
+        BackupTransactionEditor transaction,
         DirectoryInfo sourceDirectory,
         string targetDirectoryPath,
         bool recursive = false)
@@ -66,8 +67,8 @@ internal class DirectoryCompare : ICompare
     /// <summary>
     ///     Make a differential backup of a directory
     /// </summary>
-    private BackupTransaction Differential(
-        BackupTransaction transaction,
+    private BackupTransactionEditor Differential(
+        BackupTransactionEditor transaction,
         DirectoryInfo sourceDirectory,
         string targetDirectoryPath,
         bool recursive = false)
@@ -118,10 +119,10 @@ internal class DirectoryCompare : ICompare
     /// <summary>
     ///     Make a differential backup of a directory's files
     /// </summary>
-    private BackupTransaction DiffDirectoryFiles(
+    private BackupTransactionEditor DiffDirectoryFiles(
         DirectoryInfo sourceDirectory,
         DirectoryInfo targetDirectory,
-        BackupTransaction transaction
+        BackupTransactionEditor transaction
     )
     {
         FileInfo[] sourceFiles = sourceDirectory.GetFiles();
@@ -169,8 +170,8 @@ internal class DirectoryCompare : ICompare
     /// <summary>
     ///     Make a full backup of a directory's files
     /// </summary>
-    private BackupTransaction FullDirectoryFiles(DirectoryInfo sourceDirectory,
-        string targetDirectoryPath, BackupTransaction transaction)
+    private BackupTransactionEditor FullDirectoryFiles(DirectoryInfo sourceDirectory,
+        string targetDirectoryPath, BackupTransactionEditor transaction)
     {
         foreach (FileInfo file in sourceDirectory.GetFiles())
         {

@@ -1,14 +1,45 @@
+using System.Text.Json;
 using BackupUtil.Core.Transaction.FileMask.Strategy;
 
 namespace BackupUtil.Core.Transaction.FileMask;
 
 public class FileMaskBuilder
 {
-    private readonly FileMask _fileMask = new();
+    private readonly FileMask _fileMask;
 
-    public FileMask Build()
+    private FileMaskBuilder(FileMask? mask = null)
+    {
+        _fileMask = mask ?? new FileMask();
+    }
+
+    internal static FileMask Empty()
+    {
+        return new FileMask();
+    }
+
+    public static FileMaskBuilder New()
+    {
+        return new FileMaskBuilder();
+    }
+
+    internal static FileMaskBuilder From(FileMask mask)
+    {
+        return new FileMaskBuilder(mask);
+    }
+
+    public static FileMaskBuilder FromString(string serialized)
+    {
+        return new FileMaskBuilder(JsonSerializer.Deserialize<FileMask>(serialized));
+    }
+
+    internal FileMask Build()
     {
         return _fileMask;
+    }
+
+    public string BuildSerialized()
+    {
+        return JsonSerializer.Serialize(Build());
     }
 
     /// <summary>

@@ -1,21 +1,34 @@
 using BackupUtil.Core.Transaction.Compare;
+using BackupUtil.Core.Transaction.Editor;
+using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction;
 
 internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransactionBuilder
 {
-    public BackupTransaction Build(Job.Job job, FileMask.FileMask fileMask)
+    public BackupTransaction Build(Job.Job job)
     {
-        return AddJobToTransaction(job, new BackupTransaction(fileMask));
+        FileMask.FileMask mask = string.IsNullOrWhiteSpace(job.FileMask)
+            ? FileMaskBuilder.Empty()
+            : FileMaskBuilder.FromString(job.FileMask).Build();
+
+        return AddJobToTransaction(job, BackupTransactionEditor.WithMask(mask)).Get();
     }
 
-    public BackupTransaction Build(List<Job.Job> job, FileMask.FileMask fileMask)
+    public BackupTransaction Build(List<Job.Job> jobs)
     {
-        return job.Aggregate(new BackupTransaction(fileMask), (acc, next) => AddJobToTransaction(next, acc));
+        return jobs.Aggregate(BackupTransactionEditor.New(), (acc, next) =>
+        {
+            FileMask.FileMask mask = string.IsNullOrWhiteSpace(next.FileMask)
+                ? FileMaskBuilder.Empty()
+                : FileMaskBuilder.FromString(next.FileMask).Build();
+
+            return AddJobToTransaction(next, acc.SetMask(mask));
+        }).Get();
     }
 
-    private BackupTransaction AddJobToTransaction(Job.Job job, BackupTransaction transaction)
+    private BackupTransactionEditor AddJobToTransaction(Job.Job job, BackupTransactionEditor editor)
     {
         try
         {
@@ -68,7 +81,7 @@ internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransa
                     job.Differential,
                     fileCompare,
                     job.EncryptionKey)
-                .Compare(transaction);
+                .Compare(editor);
         }
 
         if (Directory.Exists(job.SourcePath))
@@ -85,7 +98,7 @@ internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransa
                     job.Differential,
                     fileCompare,
                     job.EncryptionKey)
-                .Compare(transaction);
+                .Compare(editor);
         }
 
         throw new FileNotFoundException("errorSourceNotFound");

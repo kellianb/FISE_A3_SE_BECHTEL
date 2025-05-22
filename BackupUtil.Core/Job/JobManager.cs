@@ -37,8 +37,6 @@ public class JobManager
         MaxJobs = Config.DefaultMaxJobCount;
     }
 
-    public FileMask? FileMask { get; set; }
-
     public uint MaxJobs { get; }
 
     public List<Job> Jobs { get; } = [];
@@ -129,16 +127,14 @@ public class JobManager
 
     private BackupCommand BuildBackupCommand(List<Job> concernedJobs)
     {
-        FileMask mask = FileMask ?? new FileMask();
-        BackupTransaction transaction = _transactionBuilder.Build(concernedJobs, mask);
+        BackupTransaction transaction = _transactionBuilder.Build(concernedJobs);
 
         return new BackupCommand(_transactionExecutor, transaction);
     }
 
     private BackupCommand BuildBackupCommand(Job concernedJob)
     {
-        FileMask mask = FileMask ?? new FileMask();
-        BackupTransaction transaction = _transactionBuilder.Build(concernedJob, mask);
+        BackupTransaction transaction = _transactionBuilder.Build(concernedJob);
 
         return new BackupCommand(_transactionExecutor, transaction);
     }

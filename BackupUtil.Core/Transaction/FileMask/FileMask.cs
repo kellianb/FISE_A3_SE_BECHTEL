@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using BackupUtil.Core.Transaction.FileMask.Strategy;
 
 namespace BackupUtil.Core.Transaction.FileMask;
@@ -5,29 +6,34 @@ namespace BackupUtil.Core.Transaction.FileMask;
 /// <summary>
 ///     Set rules for files in a backup transaction.
 /// </summary>
-public class FileMask
+internal class FileMask
 {
-    private readonly Dictionary<FileMaskEffect, List<FileMaskingStrategy>> _masks;
+    [JsonInclude] public readonly Dictionary<FileMaskEffect, List<FileMaskingStrategy>> Masks;
 
     public FileMask()
     {
-        _masks = new Dictionary<FileMaskEffect, List<FileMaskingStrategy>>();
-
+        Masks = new Dictionary<FileMaskEffect, List<FileMaskingStrategy>>();
         foreach (FileMaskEffect value in Enum.GetValues<FileMaskEffect>())
         {
-            _masks.Add(value, []);
+            Masks.Add(value, []);
         }
+    }
+
+    [JsonConstructor]
+    public FileMask(Dictionary<FileMaskEffect, List<FileMaskingStrategy>> masks)
+    {
+        Masks = masks;
     }
 
     internal void AddMask(FileMaskEffect effect, FileMaskingStrategy strategy)
     {
-        _masks[effect].Add(strategy);
+        Masks[effect].Add(strategy);
     }
 
     private bool ApplyMask(FileMaskEffect effect, FileInfo file)
     {
         // Only apply masks for the given effect
-        return _masks[effect]
+        return Masks[effect]
             // All strategies must return true for the file to be allowed
             .All(strategy => strategy.IsOk(file));
     }

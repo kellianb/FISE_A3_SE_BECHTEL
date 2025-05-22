@@ -3,14 +3,22 @@ using BackupUtil.Core.Transaction.ChangeType;
 namespace BackupUtil.Core.Transaction;
 
 // Class to hold all the changes that need to be applied
-internal class BackupTransaction(FileMask.FileMask? fileMask = null)
+internal class BackupTransaction()
 {
-    private readonly FileMask.FileMask _fileMask = fileMask ?? new FileMask.FileMask();
-
     public List<FileChange> FileChanges { get; } = [];
     public List<DirectoryChange> DirectoryChanges { get; } = [];
 
-    #region Get info about directory changes
+    public BackupTransaction AddDirectoryChange(DirectoryChange change)
+    {
+        DirectoryChanges.Add(change);
+        return this;
+    }
+
+    public BackupTransaction AddFileChange(FileChange change)
+    {
+        FileChanges.Add(change);
+        return this;
+    }
 
     /// <summary>
     ///     Get the list of folders that will undergo a certain type of change
@@ -23,30 +31,6 @@ internal class BackupTransaction(FileMask.FileMask? fileMask = null)
             .Select(x => x.TargetPath)
             .ToArray();
     }
-
-    #endregion
-
-    #region Add directory Changes
-
-    private BackupTransaction AddDirectoryChange(DirectoryChange change)
-    {
-        DirectoryChanges.Add(change);
-        return this;
-    }
-
-    public BackupTransaction AddDirectoryCreation(string path)
-    {
-        return AddDirectoryChange(DirectoryChange.Creation(path));
-    }
-
-    public BackupTransaction AddDirectoryDeletion(DirectoryInfo targetDirectory)
-    {
-        return AddDirectoryChange(DirectoryChange.Deletion(targetDirectory.FullName));
-    }
-
-    #endregion
-
-    #region Get info about file changes
 
     /// <summary>
     ///     Get the total size of the files that will be copied
@@ -68,63 +52,4 @@ internal class BackupTransaction(FileMask.FileMask? fileMask = null)
             .Select(x => x.TargetPath)
             .ToArray();
     }
-
-    #endregion
-
-    #region Add file Changes
-
-    private BackupTransaction AddFileChange(FileChange change)
-    {
-        FileChanges.Add(change);
-        return this;
-    }
-
-    public BackupTransaction AddFileCreation(FileInfo sourceFile, string targetFilePath, string? encryptionKey)
-    {
-        if (!_fileMask.ShouldCopy(sourceFile))
-        {
-            return this;
-        }
-
-        if (encryptionKey != null && !fileMask.ShouldEncrypt(sourceFile))
-        {
-            encryptionKey = null;
-        }
-
-        FileChange change = FileChange.Creation(sourceFile.FullName,
-            targetFilePath,
-            sourceFile.Length,
-            encryptionKey);
-
-        return AddFileChange(change);
-    }
-
-    public BackupTransaction AddFileUpdate(FileInfo sourceFile, FileInfo targetFile, string? encryptionKey)
-    {
-        if (!_fileMask.ShouldCopy(sourceFile))
-        {
-            return this;
-        }
-
-        if (encryptionKey != null && !fileMask.ShouldEncrypt(sourceFile))
-        {
-            encryptionKey = null;
-        }
-
-        FileChange change = FileChange.Modification(sourceFile.FullName,
-            targetFile.FullName,
-            sourceFile.Length,
-            encryptionKey);
-
-        return AddFileChange(change);
-    }
-
-    public BackupTransaction AddFileDeletion(FileInfo targetFile)
-    {
-        FileChange change = FileChange.Deletion(targetFile.FullName);
-
-        return AddFileChange(change);
-    }
-
-    #endregion
 }
