@@ -1,4 +1,4 @@
-﻿<Window x:Class="BackupUtil.Ui.View.ConfigureJobWindow"
+﻿<Window x:Class="BackupUtil.Ui.View.CreateJobView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -34,6 +34,10 @@
                 <TextBlock Text="{Binding LocalizedMessages[jobDifferential], Mode=TwoWay}" Margin="0,0,0,5" />
                 <CheckBox x:Name="DifferentialInput"
                           HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <StackPanel x:Name="EncryptionPanel">
+                <ComboBox x:Name="EncryptionTypeInput" SelectionChanged="SelectEncryptionType" ItemsSource="{Binding AvailableTypes}" SelectedItem="{Binding NoEncryption, Mode=TwoWay}" Margin="0,0,0,10" />
             </StackPanel>
 
             <Button Content="{Binding LocalizedMessages[addJob], Mode=TwoWay}" Click="SendJobData" />
