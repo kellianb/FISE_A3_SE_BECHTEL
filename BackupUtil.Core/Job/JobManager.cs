@@ -1,10 +1,8 @@
 using BackupUtil.Core.Command;
-using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Executor;
 using BackupUtil.Core.Job.Exporter;
 using BackupUtil.Core.Job.Loader;
 using BackupUtil.Core.Transaction;
-using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Job;
@@ -18,7 +16,6 @@ public class JobManager
     internal JobManager(
         IBackupTransactionExecutor transactionExecutor,
         IBackupTransactionBuilder transactionBuilder,
-        FileCompare compare,
         uint? maxJobs = null)
     {
         _transactionBuilder = transactionBuilder;
@@ -29,10 +26,8 @@ public class JobManager
 
     public JobManager()
     {
-        IEncryptor encryptor = new XorEncryptor();
-
-        _transactionBuilder = new BackupTransactionBuilder(new FileCompare(encryptor));
-        _transactionExecutor = new BackupTransactionExecutor(encryptor);
+        _transactionBuilder = new BackupTransactionBuilder();
+        _transactionExecutor = new BackupTransactionExecutor();
 
         MaxJobs = Config.DefaultMaxJobCount;
     }

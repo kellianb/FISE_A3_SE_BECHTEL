@@ -1,3 +1,4 @@
+using BackupUtil.Crypto.Encryptor;
 using BackupUtil.I18n;
 
 namespace BackupUtil.Core.Transaction.ChangeType;
@@ -28,35 +29,35 @@ internal class FileChange : FileSystemChange,
     ///     <param name="changeType">Type of change to make to the file at targetPath</param>
     ///     <param name="sourcePath">Path of the source file, only set for Creation and Modifications</param>
     ///     <param name="fileSize">Size of the source file, only set for Creation and Modifications</param>
-    ///     <param name="encryptionKey">Key to encrypt the file with, leave null if no encryption should be applied</param>
+    ///     <param name="encryptor">Key to encrypt the file with, leave null if no encryption should be applied</param>
     /// </summary>
     private FileChange(string targetPath,
         FileChangeType changeType,
         string? sourcePath = null,
         long fileSize = 0,
-        string? encryptionKey = null) : base(targetPath)
+        IEncryptor? encryptor = null) : base(targetPath)
     {
         ChangeType = changeType;
         FileSize = fileSize;
         SourcePath = sourcePath;
-        EncryptionKey = encryptionKey;
+        Encryptor = encryptor;
     }
 
     public FileChangeType ChangeType { get; }
     public long FileSize { get; }
     public string? SourcePath { get; }
 
-    public string? EncryptionKey { get; }
+    public IEncryptor? Encryptor { get; }
 
-    public static FileChange Creation(string sourcePath, string targetPath, long fileSize, string? encryptionKey = null)
+    public static FileChange Creation(string sourcePath, string targetPath, long fileSize, IEncryptor? encryptor = null)
     {
-        return new FileChange(targetPath, FileChangeType.Create, sourcePath, fileSize, encryptionKey);
+        return new FileChange(targetPath, FileChangeType.Create, sourcePath, fileSize, encryptor);
     }
 
     public static FileChange Modification(string sourcePath, string targetPath, long fileSize,
-        string? encryptionKey = null)
+        IEncryptor? encryptor = null)
     {
-        return new FileChange(targetPath, FileChangeType.Modify, sourcePath, fileSize, encryptionKey);
+        return new FileChange(targetPath, FileChangeType.Modify, sourcePath, fileSize, encryptor);
     }
 
     public static FileChange Deletion(string targetPath)

@@ -1,19 +1,26 @@
-namespace BackupUtil.Core.Encryptor;
+namespace BackupUtil.Crypto.Encryptor;
 
 internal class XorEncryptor : IEncryptor
 {
-    public string Encrypt(string input, string key)
+    private readonly string _key;
+
+    public XorEncryptor(string key)
     {
         if (string.IsNullOrEmpty(key))
         {
             throw new ArgumentException("errorEncryptionKeyEmpty");
         }
 
+        _key = key;
+    }
+
+    public string Encrypt(string input)
+    {
         return new string(input.Select((c, i) =>
         {
             uint charCode = c;
 
-            uint keyCode = key[i % key.Length];
+            uint keyCode = _key[i % _key.Length];
 
             return (char)(charCode ^ keyCode);
         }).ToArray());
