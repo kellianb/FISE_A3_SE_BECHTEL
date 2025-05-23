@@ -9,12 +9,11 @@
     <Grid>
         <WrapPanel VerticalAlignment="Top">
             <Button Click="SelectJobsPath" Content="{Binding LocalizedMessages[changeJobFile], Mode=TwoWay}" />
-            <Button Click="CreateJob" Content="{Binding LocalizedMessages[addJob], Mode=TwoWay}" />
             <local:LanguageSelectorView DataContext="{Binding LanguageSelectorViewModel}" HorizontalAlignment="Right"
                                         VerticalAlignment="Top" Panel.ZIndex="10" />
         </WrapPanel>
         <DataGrid x:Name="JobGrid" Grid.Row="0" AutoGenerateColumns="False"
-                  IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single" ItemsSource="{Binding Jobs}">
+                  IsReadOnly="True" Margin="0,25,0,0" SelectionMode="Single" ItemsSource="{Binding Jobs}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{Binding LocalizedMessages[jobName], Mode=TwoWay}" Binding="{Binding Name}"
                                     Width="200" />
@@ -28,5 +27,8 @@
                                         Binding="{Binding Differential}" />
             </DataGrid.Columns>
         </DataGrid>
+        <WrapPanel VerticalAlignment="Bottom">
+            <Button Click="CreateJob" Content="{Binding LocalizedMessages[addJob], Mode=TwoWay}" />
+        </WrapPanel>
     </Grid>
 </UserControl>
