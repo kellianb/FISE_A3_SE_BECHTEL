@@ -10,7 +10,6 @@
     <Window.DataContext>
         <viewModel:JobCreationViewModel/>
     </Window.DataContext>
-
     <Grid>
         <StackPanel Orientation="Vertical" Margin="40,30,40,30" VerticalAlignment="Center">
             <StackPanel.Resources>
