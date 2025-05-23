@@ -17,6 +17,7 @@ public partial class CreateJobView : Window
     public CreateJobView(JobListingViewModel jobListingViewModel)
     {
         InitializeComponent();
+        DataContext = jobListingViewModel;
         _jobListingViewModel = jobListingViewModel;
     }
 
