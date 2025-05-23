@@ -16,6 +16,7 @@ public partial class ConfigureJobWindow : Window
     {
         InitializeComponent();
         this.jobListViewModel = jobListViewModel;
+        DataContext = jobListViewModel;
     }
 
     public void SelectSourcePath(object sender, RoutedEventArgs routedEventArgs)
