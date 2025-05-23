@@ -6,7 +6,6 @@
         xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
         mc:Ignorable="d"
         Title="ConfigureJobWindow" Height="300" Width="300">
-
     <Window.DataContext>
         <viewModel:JobCreationViewModel/>
     </Window.DataContext>
