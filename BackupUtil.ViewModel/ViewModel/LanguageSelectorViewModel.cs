@@ -1,10 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using BackupUtil.I18n;
 
-namespace BackupUtil.ViewModel;
+namespace BackupUtil.ViewModel.ViewModel;
 
 public class LanguageSelectorViewModel : ViewModelBase
 {
@@ -62,7 +60,7 @@ public class LanguageSelectorViewModel : ViewModelBase
         AvailableLanguages.Add(I18N.GetLocalizedMessage("french"));
         OnPropertyChanged(nameof(AvailableLanguages));
         OnPropertyChanged(nameof(LocalizedMessages));
-        OnPropertyChanged(nameof(JobListViewModel.LocalizedMessages));
+        OnPropertyChanged(nameof(JobListingViewModel.LocalizedMessages));
         Console.WriteLine("AvailableLanguages after trigger: " + AvailableLanguages);
         Console.WriteLine("SelectedLanguage after trigger: " + SelectedLanguage);
     }

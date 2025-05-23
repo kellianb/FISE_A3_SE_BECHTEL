@@ -1,6 +1,6 @@
 ﻿using BackupUtil.Core.Job;
 
-namespace BackupUtil.ViewModel;
+namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobViewModel(Job job) : ViewModelBase
 {
