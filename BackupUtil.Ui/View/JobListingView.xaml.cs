@@ -48,8 +48,8 @@ public partial class JobListingView : UserControl
 
     public void CreateJob(object sender, RoutedEventArgs routedEventArgs)
     {
-        CreateJobView window = new(DataContext as JobListingViewModel);
-        window.Owner = Window.GetWindow(this);
-        window.ShowDialog();
+        CreateJobView view = new(DataContext as JobListingViewModel);
+        view.Owner = Window.GetWindow(this);
+        view.ShowDialog();
     }
 }

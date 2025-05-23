@@ -10,13 +10,6 @@ public class JobListingViewModel : ViewModelBase
 
     public JobListingViewModel()
     {
-        // Create the default directories if they doesn't exist
-        Directory.CreateDirectory(
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "EasySave", "jobs"));
-        jobFilePath = new FileInfo(Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "EasySave", "jobs", "BackupJobs.json"));
         LanguageSelectorViewModel = new LanguageSelectorViewModel();
         _jobs = new ObservableCollection<JobViewModel>();
 
@@ -24,18 +17,7 @@ public class JobListingViewModel : ViewModelBase
         {
             JobManager manager = new();
 
-            try
-            {
-                manager.AddJobsFromFile(jobFilePath?.FullName);
-            }
-            catch
-            {
-                // Only catch the exception if the default job file path was used
-                if (jobFilePath is not null)
-                {
-                    throw;
-                }
-            }
+            manager.AddJobsFromFile();
 
             // Add jobs to the collection
             foreach (Job job in manager.Jobs)

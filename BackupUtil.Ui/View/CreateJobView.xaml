@@ -3,8 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
         mc:Ignorable="d"
         Title="ConfigureJobWindow" Height="300" Width="300">
+
+    <Window.DataContext>
+        <viewModel:JobCreationViewModel/>
+    </Window.DataContext>
+
     <Grid>
         <StackPanel Orientation="Vertical" Margin="40,30,40,30" VerticalAlignment="Center">
             <StackPanel.Resources>
