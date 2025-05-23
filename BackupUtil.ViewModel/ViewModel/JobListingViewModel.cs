@@ -2,13 +2,13 @@ using System.Collections.ObjectModel;
 using BackupUtil.Core.Job;
 using BackupUtil.I18n;
 
-namespace BackupUtil.ViewModel;
+namespace BackupUtil.ViewModel.ViewModel;
 
-public class JobListViewModel : ViewModelBase
+public class JobListingViewModel : ViewModelBase
 {
     // public ICommand AddJobCommand { get; }
 
-    public JobListViewModel()
+    public JobListingViewModel()
     {
         // Create the default directories if they doesn't exist
         Directory.CreateDirectory(
@@ -70,7 +70,6 @@ public class JobListViewModel : ViewModelBase
 
     public void ChangeJobsPath(string filename)
     {
-        //TODO: linux version + implement in view
         try
         {
             jobFilePath = new FileInfo(filename);
@@ -92,7 +91,6 @@ public class JobListViewModel : ViewModelBase
         }
     }
 
-    //TODO: implement in view + add creation of file if not exist
     public void AddJob(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive, bool differential,
         string name = null)
     {

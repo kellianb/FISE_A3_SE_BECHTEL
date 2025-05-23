@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace BackupUtil.ViewModel;
+namespace BackupUtil.ViewModel.ViewModel;
 
 public class ViewModelBase : INotifyPropertyChanged
 {
