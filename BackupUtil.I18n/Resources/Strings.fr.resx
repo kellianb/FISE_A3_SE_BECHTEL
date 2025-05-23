@@ -123,4 +123,7 @@
     <data name="changeJobFile" xml:space="preserve">
         <value>Changer de fichier de jobs</value>
     </data>
+    <data name="invalidPath" xml:space="preserve">
+        <value>Chemin selectionne invalide</value>
+    </data>
 </root>
