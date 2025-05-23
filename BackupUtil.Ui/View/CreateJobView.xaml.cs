@@ -17,9 +17,7 @@ public partial class CreateJobView : Window
     public CreateJobView(JobListingViewModel jobListingViewModel)
     {
         InitializeComponent();
-        this._jobListingViewModel = jobListingViewModel;
-        DataContext = jobListingViewModel;
-        encryptionTypes = enum EncryptionType
+        _jobListingViewModel = jobListingViewModel;
     }
 
     public void SelectSourcePath(object sender, RoutedEventArgs routedEventArgs)
@@ -60,7 +58,6 @@ public partial class CreateJobView : Window
 
     public void SendJobData(object sender, RoutedEventArgs routedEventArgs)
     {
-        //TODO: mandatory fields + add encryptor type (not mandatory) and encryptor key (mandatory if type is not null) + refresh job list on send
         _jobListingViewModel.AddJob(
             _sourcePath,
             _targetPath,
