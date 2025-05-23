@@ -1,5 +1,6 @@
 using System.Text.Json;
 using BackupUtil.Core.Transaction.FileMask.Strategy;
+using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Transaction.FileMask;
 
@@ -29,7 +30,7 @@ public class FileMaskBuilder
 
     public static FileMaskBuilder FromString(string serialized)
     {
-        return new FileMaskBuilder(JsonSerializer.Deserialize<FileMask>(serialized));
+        return new FileMaskBuilder(JsonSerializer.Deserialize<FileMask>(serialized, JsonBackupUtilSerializerContext.Default.FileMask));
     }
 
     internal FileMask Build()

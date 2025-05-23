@@ -19,6 +19,7 @@ jobs:
 
     env:
       Solution_Name: BackupUtil.sln
+      Project_Name_Cli: BackupUtil.Cli
 
     steps:
     - name: Checkout code
@@ -36,14 +37,8 @@ jobs:
     - name: Execute unit tests
       run: dotnet test
 
-    - name: Build solution
-      run: dotnet publish $Solution_Name -r linux-x64 --configuration Release --no-restore
-
-    - name: Upload BackupUtil.Core build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: BackupUtil.Core Build (linux-x64)
-        path: 'BackupUtil.Core/bin/Release/net9.0/linux-x64/publish'
+    - name: Build BackupUtil.Cli
+      run: dotnet publish $Project_Name_Cli -r linux-x64 --configuration Release --no-restore
 
     - name: Upload BackupUtil.Cli build artifacts
       uses: actions/upload-artifact@v4
