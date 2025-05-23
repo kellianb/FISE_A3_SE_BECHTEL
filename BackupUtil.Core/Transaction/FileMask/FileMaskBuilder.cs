@@ -30,7 +30,21 @@ public class FileMaskBuilder
 
     public static FileMaskBuilder FromString(string serialized)
     {
-        return new FileMaskBuilder(JsonSerializer.Deserialize<FileMask>(serialized, JsonBackupUtilSerializerContext.Default.FileMask));
+        return new FileMaskBuilder(
+            JsonSerializer.Deserialize<FileMask>(serialized, JsonBackupUtilSerializerContext.Default.FileMask));
+    }
+
+    public static bool ValidateSerialized(string serialized)
+    {
+        try
+        {
+            JsonSerializer.Deserialize<FileMask>(serialized, JsonBackupUtilSerializerContext.Default.FileMask);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     internal FileMask Build()

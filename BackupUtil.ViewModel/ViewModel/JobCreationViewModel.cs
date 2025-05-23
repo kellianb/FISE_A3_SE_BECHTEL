@@ -1,5 +1,6 @@
 using System.Collections;
 using System.ComponentModel;
+using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Crypto;
 
 namespace BackupUtil.ViewModel.ViewModel;
@@ -13,7 +14,8 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                                 && TargetPathOutsideOfSourcePath
                                 && TargetPathSameTypeAsSourcePath
                                 && SourcePathOutsideOfTargetPath
-                                && EncryptionKeyOk;
+                                && EncryptionKeyOk
+                                && ValidFileMask;
 
     public IEnumerable GetErrors(string? propertyName)
     {
@@ -69,6 +71,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             _name = value;
             OnPropertyChanged(nameof(Name));
 
+            // Determine errors
             ClearErrors(nameof(Name));
 
             if (!HasName)
@@ -102,17 +105,17 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             {
                 _sourcePath = new DirectoryInfo(value);
             }
-            else
-            {
-                _sourcePath = new DirectoryInfo(".");
-            }
+            OnPropertyChanged(nameof(SourcePath));
+
+            // Determine errors
+            ClearErrors(nameof(Name));
 
             if (!SourcePathOutsideOfTargetPath)
             {
-
+                AddError("errorSourceInTarget", nameof(Name));
             }
 
-            OnPropertyChanged(nameof(SourcePath));
+            OnPropertyChanged(nameof(CanCreateJob));
         }
     }
 
@@ -145,12 +148,30 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             {
                 _targetPath = new DirectoryInfo(value);
             }
-            else
+            OnPropertyChanged(nameof(TargetPath));
+
+            // Determine errors
+            ClearErrors(nameof(Name));
+
+            if (!TargetPathDifferentFromSourcePath)
             {
-                _targetPath = new DirectoryInfo(".");
+                AddError("errorSameSourceTarget", nameof(Name));
             }
 
-            OnPropertyChanged(nameof(TargetPath));
+            if (!TargetPathOutsideOfSourcePath)
+            {
+                AddError("errorTargetInSource", nameof(Name));
+            }
+
+            if (!TargetPathSameTypeAsSourcePath)
+            {
+                AddError(
+                    _sourcePath.Attributes.HasFlag(FileAttributes.Directory)
+                        ? "errorSourceDirTargetFile"
+                        : "errorSourceFileTargetDir", nameof(Name));
+            }
+
+            OnPropertyChanged(nameof(CanCreateJob));
         }
     }
 
@@ -218,6 +239,16 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         {
             _encryptionKey = value;
             OnPropertyChanged(nameof(EncryptionKey));
+
+            ClearErrors(nameof(Name));
+
+            if(!EncryptionKeyOk)
+            {
+                // Determine errors
+                AddError("errorEncryptionKeyEmpty", nameof(Name));
+            }
+
+            OnPropertyChanged(nameof(CanCreateJob));
         }
     }
 
@@ -226,6 +257,8 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
     #region FileMask
 
     private string _fileMask = "";
+
+    private bool ValidFileMask => FileMaskBuilder.ValidateSerialized(FileMask);
 
     public string FileMask
     {
