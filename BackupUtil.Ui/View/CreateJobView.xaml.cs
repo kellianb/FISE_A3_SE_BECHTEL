@@ -58,7 +58,6 @@ public partial class CreateJobView : Window
 
     public void SendJobData(object sender, RoutedEventArgs routedEventArgs)
     {
-        //TODO: mandatory fields + add encryptor type (not mandatory) and encryptor key (mandatory if type is not null) + refresh job list on send
         _jobListingViewModel.AddJob(
             _sourcePath,
             _targetPath,
