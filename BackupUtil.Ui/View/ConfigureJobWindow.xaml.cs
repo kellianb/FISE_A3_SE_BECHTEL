@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
-using BackupUtil.ViewModel;
 using BackupUtil.I18n;
+using BackupUtil.ViewModel;
 using Microsoft.Win32;
 
 namespace BackupUtil.Ui.View;
@@ -10,7 +10,7 @@ public partial class ConfigureJobWindow : Window
 {
     private FileSystemInfo _sourcePath;
     private FileSystemInfo _targetPath;
-    private JobListViewModel jobListViewModel;
+    private readonly JobListViewModel jobListViewModel;
 
     public ConfigureJobWindow(JobListViewModel jobListViewModel)
     {
@@ -20,7 +20,7 @@ public partial class ConfigureJobWindow : Window
 
     public void SelectSourcePath(object sender, RoutedEventArgs routedEventArgs)
     {
-        OpenFolderDialog dialog = new OpenFolderDialog();
+        OpenFolderDialog dialog = new();
 
         // Show the dialog
         if (dialog.ShowDialog() == true)
@@ -38,7 +38,7 @@ public partial class ConfigureJobWindow : Window
 
     public void SelectTargetPath(object sender, RoutedEventArgs routedEventArgs)
     {
-        OpenFolderDialog dialog = new OpenFolderDialog();
+        OpenFolderDialog dialog = new();
 
         // Show the dialog
         if (dialog.ShowDialog() == true)
@@ -68,4 +68,3 @@ public partial class ConfigureJobWindow : Window
         Close();
     }
 }
-

@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="EasySave" Height="450" Width="800">
     <Grid>
-        <view:JobListingView DataContext="{Binding CurrentViewModel}"/>
+        <view:JobListingView DataContext="{Binding CurrentViewModel}" />
     </Grid>
 </Window>
