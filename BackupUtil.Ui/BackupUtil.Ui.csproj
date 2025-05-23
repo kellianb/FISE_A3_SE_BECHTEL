@@ -11,20 +11,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Page Update="View\JobListingView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-        <XamlRuntime>Wpf</XamlRuntime>
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Update="View\TransactionView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-        <XamlRuntime>Wpf</XamlRuntime>
-        <SubType>Designer</SubType>
-      </Page>
+        <Page Update="View\JobListingView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="View\TransactionView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BackupUtil.ViewModel\BackupUtil.ViewModel.csproj" />
+        <ProjectReference Include="..\BackupUtil.ViewModel\BackupUtil.ViewModel.csproj"/>
     </ItemGroup>
 
 </Project>

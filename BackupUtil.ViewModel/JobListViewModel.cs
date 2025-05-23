@@ -6,24 +6,6 @@ namespace BackupUtil.ViewModel;
 
 public class JobListViewModel : ViewModelBase
 {
-    static private ObservableCollection<JobViewModel> _jobs { get; set; }
-    public LanguageSelectorViewModel LanguageSelectorViewModel { get; }
-
-    public FileInfo jobFilePath { get; set; }
-
-    public Dictionary<string, string> LocalizedMessages => new()
-    {
-        { "jobName", I18N.GetLocalizedMessage("jobName") },
-        { "jobTargetPath", I18N.GetLocalizedMessage("jobTargetPath") },
-        { "jobSourcePath", I18N.GetLocalizedMessage("jobSourcePath") },
-        { "jobRecursive", I18N.GetLocalizedMessage("jobRecursive") },
-        { "jobDifferential", I18N.GetLocalizedMessage("jobDifferential") },
-        { "addJob", I18N.GetLocalizedMessage("addJob") },
-        { "changeJobFile", I18N.GetLocalizedMessage("changeJobFile") }
-    };
-
-    public IEnumerable<JobViewModel> Jobs => _jobs;
-
     // public ICommand AddJobCommand { get; }
 
     public JobListViewModel()
@@ -60,48 +42,66 @@ public class JobListViewModel : ViewModelBase
             {
                 _jobs.Add(new JobViewModel(job));
             }
-
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             // Handle errors (e.g., invalid file format)
             Console.WriteLine(ex.Message);
         }
     }
 
+    private static ObservableCollection<JobViewModel> _jobs { get; set; }
+    public LanguageSelectorViewModel LanguageSelectorViewModel { get; }
+
+    public FileInfo jobFilePath { get; set; }
+
+    public Dictionary<string, string> LocalizedMessages => new()
+    {
+        { "jobName", I18N.GetLocalizedMessage("jobName") },
+        { "jobTargetPath", I18N.GetLocalizedMessage("jobTargetPath") },
+        { "jobSourcePath", I18N.GetLocalizedMessage("jobSourcePath") },
+        { "jobRecursive", I18N.GetLocalizedMessage("jobRecursive") },
+        { "jobDifferential", I18N.GetLocalizedMessage("jobDifferential") },
+        { "addJob", I18N.GetLocalizedMessage("addJob") },
+        { "changeJobFile", I18N.GetLocalizedMessage("changeJobFile") }
+    };
+
+    public IEnumerable<JobViewModel> Jobs => _jobs;
+
     public void ChangeJobsPath(string filename)
     {
         //TODO: linux version + implement in view
-            try
-                {
-                    jobFilePath = new FileInfo(filename);
-                    // Load jobs from the selected file
-                    JobManager manager = new();
-                    manager.AddJobsFromFile(filename);
+        try
+        {
+            jobFilePath = new FileInfo(filename);
+            // Load jobs from the selected file
+            JobManager manager = new();
+            manager.AddJobsFromFile(filename);
 
-                    // Clear the current jobs and add the new ones
-                    _jobs.Clear();
-                    foreach (Job job in manager.Jobs)
-                    {
-                        _jobs.Add(new JobViewModel(job));
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    // Handle errors (e.g., invalid file format)
-                    Console.WriteLine(ex.Message);
-                }
+            // Clear the current jobs and add the new ones
+            _jobs.Clear();
+            foreach (Job job in manager.Jobs)
+            {
+                _jobs.Add(new JobViewModel(job));
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle errors (e.g., invalid file format)
+            Console.WriteLine(ex.Message);
+        }
     }
 
     //TODO: implement in view + add creation of file if not exist
-    public void AddJob(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive, bool differential, string name = null)
+    public void AddJob(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive, bool differential,
+        string name = null)
     {
         if (!jobFilePath.Exists)
         {
             // Create the file and initialize it with empty JSON brackets
-            using (StreamWriter writer = new StreamWriter(jobFilePath.FullName))
+            using (StreamWriter writer = new(jobFilePath.FullName))
             {
-                writer.Write("{}");
+                writer.Write("[]");
             }
         }
 
