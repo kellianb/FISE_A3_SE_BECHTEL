@@ -10,7 +10,7 @@
         <WrapPanel VerticalAlignment="Top">
             <Button Click="SelectJobsPath" Content="{Binding LocalizedMessages[changeJobFile], Mode=TwoWay}" />
             <Button Click="CreateJob" Content="{Binding LocalizedMessages[addJob], Mode=TwoWay}" />
-            <local:LanguageSelectorView DataContext="{Binding LanguageSelectorViewModel, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="10" />
+            <local:LanguageSelectorView DataContext="{Binding LanguageSelectorViewModel}" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="10" />
         </WrapPanel>
         <DataGrid x:Name="JobGrid" Grid.Row="0" AutoGenerateColumns="False"
                   IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single" ItemsSource="{Binding Jobs}">
