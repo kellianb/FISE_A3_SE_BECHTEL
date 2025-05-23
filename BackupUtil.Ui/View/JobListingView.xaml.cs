@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using BackupUtil.I18n;
-using BackupUtil.ViewModel;
+using BackupUtil.ViewModel.ViewModel;
 using Microsoft.Win32;
 
 namespace BackupUtil.Ui.View;
@@ -11,7 +11,7 @@ public partial class JobListingView : UserControl
     public JobListingView()
     {
         InitializeComponent();
-        if (DataContext is JobListViewModel viewModel)
+        if (DataContext is JobListingViewModel viewModel)
         {
             viewModel.LanguageSelectorViewModel.PropertyChanged += (s, e) =>
             {
@@ -39,7 +39,7 @@ public partial class JobListingView : UserControl
         if (result == true)
         {
             string filename = dialog.FileName;
-            if (DataContext is JobListViewModel viewModel)
+            if (DataContext is JobListingViewModel viewModel)
             {
                 viewModel.ChangeJobsPath(filename);
             }
@@ -48,8 +48,8 @@ public partial class JobListingView : UserControl
 
     public void CreateJob(object sender, RoutedEventArgs routedEventArgs)
     {
-        ConfigureJobWindow window = new(DataContext as JobListViewModel);
-        window.Owner = Window.GetWindow(this);
-        window.ShowDialog();
+        CreateJobView view = new(DataContext as JobListingViewModel);
+        view.Owner = Window.GetWindow(this);
+        view.ShowDialog();
     }
 }

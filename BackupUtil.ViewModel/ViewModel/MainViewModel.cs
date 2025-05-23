@@ -1,10 +1,10 @@
-namespace BackupUtil.ViewModel;
+namespace BackupUtil.ViewModel.ViewModel;
 
 public class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
-        CurrentViewModel = new JobListViewModel();
+        CurrentViewModel = new JobListingViewModel();
     }
 
     public ViewModelBase CurrentViewModel { get; }

@@ -1,21 +1,21 @@
 ﻿using System.IO;
 using System.Windows;
 using BackupUtil.I18n;
-using BackupUtil.ViewModel;
+using BackupUtil.ViewModel.ViewModel;
 using Microsoft.Win32;
 
 namespace BackupUtil.Ui.View;
 
-public partial class ConfigureJobWindow : Window
+public partial class CreateJobView : Window
 {
     private FileSystemInfo _sourcePath;
     private FileSystemInfo _targetPath;
-    private readonly JobListViewModel jobListViewModel;
+    private readonly JobListingViewModel _jobListingViewModel;
 
-    public ConfigureJobWindow(JobListViewModel jobListViewModel)
+    public CreateJobView(JobListingViewModel jobListingViewModel)
     {
         InitializeComponent();
-        this.jobListViewModel = jobListViewModel;
+        _jobListingViewModel = jobListingViewModel;
     }
 
     public void SelectSourcePath(object sender, RoutedEventArgs routedEventArgs)
@@ -57,7 +57,7 @@ public partial class ConfigureJobWindow : Window
     public void SendJobData(object sender, RoutedEventArgs routedEventArgs)
     {
         //TODO: mandatory fields + add encryptor type (not mandatory) and encryptor key (mandatory if type is not null)
-        jobListViewModel.AddJob(
+        _jobListingViewModel.AddJob(
             _sourcePath,
             _targetPath,
             RecursiveInput.IsChecked ?? false,

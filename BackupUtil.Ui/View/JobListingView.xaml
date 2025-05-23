@@ -4,8 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:BackupUtil.Ui.View"
+             xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.DataContext>
+        <viewModel:JobListingViewModel />
+    </UserControl.DataContext>
+
     <Grid>
         <WrapPanel VerticalAlignment="Top">
             <Button Click="SelectJobsPath" Content="{Binding LocalizedMessages[changeJobFile], Mode=TwoWay}" />

@@ -126,4 +126,7 @@
     <data name="invalidPath" xml:space="preserve">
         <value>Chemin selectionne invalide</value>
     </data>
+    <data name="errorNameEmpty" xml:space="preserve">
+        <value>Le nom ne peut être vide</value>
+    </data>
 </root>
