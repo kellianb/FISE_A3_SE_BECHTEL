@@ -10,7 +10,6 @@ public partial class LanguageSelectorView : UserControl
     public LanguageSelectorView()
     {
         InitializeComponent();
-        DataContext = new LanguageSelectorViewModel();
     }
 
     public void SelectLanguage(object sender, RoutedEventArgs routedEventArgs)
