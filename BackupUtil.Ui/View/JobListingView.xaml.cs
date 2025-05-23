@@ -39,13 +39,19 @@ public partial class JobListingView : UserControl
         if (result == true)
         {
             string filename = dialog.FileName;
-            JobListViewModel.ChangeJobsPath(filename);
+            if (DataContext is JobListViewModel viewModel)
+            {
+                viewModel.ChangeJobsPath(filename);
+            }
+
         }
     }
 
     public void CreateJob(object sender, RoutedEventArgs routedEventArgs)
     {
-
+        ConfigureJobWindow window = new ConfigureJobWindow(DataContext as JobListViewModel);
+        window.Owner = Window.GetWindow(this);
+        window.ShowDialog();
     }
 }
 
