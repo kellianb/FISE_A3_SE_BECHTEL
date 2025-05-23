@@ -20,6 +20,7 @@ jobs:
     env:
       Solution_Name: BackupUtil.sln
       Project_Name_Cli: BackupUtil.Cli
+      Project_Name_Ui: BackupUtil.Ui
 
     steps:
     - name: Checkout code
@@ -40,8 +41,17 @@ jobs:
     - name: Build BackupUtil.Cli
       run: dotnet publish $Project_Name_Cli -r win-x64 --configuration Release --no-restore
 
+    - name: Build BackupUtil.Ui
+      run: dotnet publish $Project_Name_Ui -r win-x64 --configuration Release --no-restore
+
     - name: Upload BackupUtil.Cli build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: BackupUtil.Cli Build (win-x64)
         path: 'BackupUtil.Cli/bin/Release/net9.0/win-x64/publish'
+
+    - name: Upload BackupUtil.Ui build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: BackupUtil.Ui Build (win-x64)
+        path: 'BackupUtil.Ui/bin/Release/net9.0-windows/win-x64/publish'
