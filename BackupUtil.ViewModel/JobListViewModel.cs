@@ -7,11 +7,9 @@ namespace BackupUtil.ViewModel;
 public class JobListViewModel : ViewModelBase
 {
     static private ObservableCollection<JobViewModel> _jobs { get; set; }
-    public LanguageSelectorViewModel LanguageSelectorViewModel { get; set; } = new LanguageSelectorViewModel();
+    public LanguageSelectorViewModel LanguageSelectorViewModel { get; }
 
-    public FileInfo jobFilePath = new FileInfo(Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "EasySave", "jobs", "BackupJobs.json"));
+    public FileInfo jobFilePath { get; set; }
 
     public Dictionary<string, string> LocalizedMessages => new()
     {
@@ -30,6 +28,14 @@ public class JobListViewModel : ViewModelBase
 
     public JobListViewModel()
     {
+        // Create the default directories if they doesn't exist
+        Directory.CreateDirectory(
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "EasySave", "jobs"));
+        jobFilePath = new FileInfo(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "EasySave", "jobs", "BackupJobs.json"));
+        LanguageSelectorViewModel = new LanguageSelectorViewModel();
         _jobs = new ObservableCollection<JobViewModel>();
 
         try
@@ -62,11 +68,12 @@ public class JobListViewModel : ViewModelBase
         }
     }
 
-    public static void ChangeJobsPath(string filename)
+    public void ChangeJobsPath(string filename)
     {
         //TODO: linux version + implement in view
             try
                 {
+                    jobFilePath = new FileInfo(filename);
                     // Load jobs from the selected file
                     JobManager manager = new();
                     manager.AddJobsFromFile(filename);
@@ -89,6 +96,15 @@ public class JobListViewModel : ViewModelBase
     //TODO: implement in view + add creation of file if not exist
     public void AddJob(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive, bool differential, string name = null)
     {
+        if (!jobFilePath.Exists)
+        {
+            // Create the file and initialize it with empty JSON brackets
+            using (StreamWriter writer = new StreamWriter(jobFilePath.FullName))
+            {
+                writer.Write("{}");
+            }
+        }
+
         Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential, name);
 
         try
