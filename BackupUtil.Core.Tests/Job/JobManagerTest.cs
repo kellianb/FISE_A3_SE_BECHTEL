@@ -1,4 +1,5 @@
 using BackupUtil.Core.Job;
+using BackupUtil.Crypto;
 using FluentAssertions;
 
 namespace BackupUtil.Core.Tests.Job;
@@ -98,7 +99,8 @@ public class JobManagerTest
                                                "TargetPath": "/tmp/test/2",
                                                "Recursive": false,
                                                "Differential": true,
-                                               "EncryptionKey": "abc"
+                                               "EncryptionKey": "abc",
+                                               "EncryptionType": "Xor"
                                              }
                                            ]
                                    """;
@@ -109,6 +111,7 @@ public class JobManagerTest
             false,
             true,
             "Hello World",
+            EncryptionType.Xor,
             "abc");
 
         string jobFilePath = Path.Combine(_sourceFolder, "jobs.json");

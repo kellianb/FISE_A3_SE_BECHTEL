@@ -7,7 +7,6 @@ internal class DirectoryCompare : ICompare
 {
     private readonly FileCompare _compare;
     private readonly bool _differential;
-    private readonly string? _encryptionKey;
     private readonly bool _recursive;
     private readonly DirectoryInfo _sourceDirectory;
     private readonly string _targetDirectoryPath;
@@ -16,15 +15,13 @@ internal class DirectoryCompare : ICompare
         string targetDirectoryPath,
         bool recursive,
         bool differential,
-        FileCompare compare,
-        string? encryptionKey)
+        FileCompare compare)
     {
         _sourceDirectory = sourceDirectory;
         _targetDirectoryPath = targetDirectoryPath;
         _recursive = recursive;
         _differential = differential;
         _compare = compare;
-        _encryptionKey = encryptionKey;
     }
 
     public BackupTransactionEditor Compare(BackupTransactionEditor transaction)
@@ -132,8 +129,7 @@ internal class DirectoryCompare : ICompare
         foreach (FileInfo fileInfo in sourceFiles.ExceptBy(targetFiles.Select(f => f.Name),
                      f => f.Name))
         {
-            transaction.AddFileCreation(fileInfo, Path.Combine(targetDirectory.FullName, fileInfo.Name),
-                _encryptionKey);
+            transaction.AddFileCreation(fileInfo, Path.Combine(targetDirectory.FullName, fileInfo.Name));
         }
 
         // -- Get files to update --
@@ -148,12 +144,12 @@ internal class DirectoryCompare : ICompare
             // Get the corresponding target file
             FileInfo targetFile = targetFilesByName[sourceFile.Name];
 
-            if (_compare.AreFilesEqual(sourceFile, targetFile, _encryptionKey))
+            if (_compare.AreFilesEqual(sourceFile, targetFile))
             {
                 continue;
             }
 
-            transaction.AddFileUpdate(sourceFile, targetFile, _encryptionKey);
+            transaction.AddFileUpdate(sourceFile, targetFile);
         }
 
         // -- Get files to delete --
@@ -175,7 +171,7 @@ internal class DirectoryCompare : ICompare
     {
         foreach (FileInfo file in sourceDirectory.GetFiles())
         {
-            transaction.AddFileCreation(file, Path.Combine(targetDirectoryPath, file.Name), _encryptionKey);
+            transaction.AddFileCreation(file, Path.Combine(targetDirectoryPath, file.Name));
         }
 
         return transaction;

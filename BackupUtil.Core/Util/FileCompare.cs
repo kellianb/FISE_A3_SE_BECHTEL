@@ -1,22 +1,21 @@
 using System.Security.Cryptography;
 using System.Text;
-using BackupUtil.Core.Encryptor;
+using BackupUtil.Crypto.Encryptor;
 
 namespace BackupUtil.Core.Util;
 
-internal class FileCompare(IEncryptor encryptor)
+internal class FileCompare(IEncryptor? encryptor = null)
 {
     /// <summary>
     ///     Compare an unencrypted file with an encrypted file with the same key
     /// </summary>
     /// <param name="file1">FileInfo of the unencrypted file</param>
     /// <param name="file2">FileInfo of the encrypted file</param>
-    /// <param name="key">Key to encrypt file1 with</param>
     /// <returns>Whether the two files are equal</returns>
-    public bool AreFilesEqual(FileInfo file1, FileInfo file2, string? key)
+    public bool AreFilesEqual(FileInfo file1, FileInfo file2)
     {
         string hash1;
-        if (key is null)
+        if (encryptor is null)
         {
             if (file1.Length != file2.Length)
             {
@@ -32,7 +31,7 @@ internal class FileCompare(IEncryptor encryptor)
             string encryptedFile1;
             using (StreamReader reader = file1.OpenText())
             {
-                encryptedFile1 = encryptor.Encrypt(reader.ReadToEnd(), key);
+                encryptedFile1 = encryptor.Encrypt(reader.ReadToEnd());
             }
 
             using (MemoryStream stream = new(Encoding.UTF8.GetBytes(encryptedFile1)))

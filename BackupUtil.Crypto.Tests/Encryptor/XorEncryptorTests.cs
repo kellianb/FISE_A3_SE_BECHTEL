@@ -1,6 +1,6 @@
-using BackupUtil.Core.Encryptor;
+using BackupUtil.Crypto.Encryptor;
 
-namespace BackupUtil.Core.Tests.Encryptor;
+namespace BackupUtil.Crypto.Tests.Encryptor;
 
 public class XorEncryptorTests
 {
@@ -33,14 +33,16 @@ public class XorEncryptorTests
     [TestCaseSource(nameof(TestCases))]
     public void Encrypt_WhenGivenInput_ShouldReturnExpectedResult(string input, string key, string expected)
     {
-        XorEncryptor encryptor = new();
+        Console.WriteLine($"Input: {input}, key: {key}, expected: {expected}");
+
+        XorEncryptor encryptor = new(key);
 
         // Act
         // Encrypt string
-        string result1 = encryptor.Encrypt(input, key);
+        string result1 = encryptor.Encrypt(input);
 
         // Decrypt string
-        string result2 = encryptor.Encrypt(result1, key);
+        string result2 = encryptor.Encrypt(result1);
 
         // Assert
         Assert.Multiple(() =>

@@ -7,8 +7,7 @@ internal class SingleFileCompare(
     FileInfo sourceFile,
     string targetFilePath,
     bool differential,
-    FileCompare compare,
-    string? encryptionKey)
+    FileCompare compare)
     : ICompare
 {
     public BackupTransactionEditor Compare(BackupTransactionEditor transaction)
@@ -23,13 +22,13 @@ internal class SingleFileCompare(
         {
             FileInfo targetFile = new(targetFilePath);
 
-            return compare.AreFilesEqual(sourceFile, targetFile, encryptionKey)
+            return compare.AreFilesEqual(sourceFile, targetFile)
                 ? transaction
-                : transaction.AddFileUpdate(sourceFile, targetFile, encryptionKey);
+                : transaction.AddFileUpdate(sourceFile, targetFile);
         }
 
         // Create the file
-        transaction.AddFileCreation(sourceFile, targetFilePath, encryptionKey);
+        transaction.AddFileCreation(sourceFile, targetFilePath);
 
         string? targetDirectoryName = Path.GetDirectoryName(targetFilePath);
 
@@ -51,6 +50,6 @@ internal class SingleFileCompare(
             transaction.AddDirectoryCreation(targetDirectoryName);
         }
 
-        return transaction.AddFileCreation(sourceFile, targetFilePath, encryptionKey);
+        return transaction.AddFileCreation(sourceFile, targetFilePath);
     }
 }

@@ -1,4 +1,3 @@
-using BackupUtil.Core.Encryptor;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.Core.Transaction.Compare;
@@ -76,7 +75,8 @@ public class DirectoryCompareTest
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(targetSubFolder);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), targetSubFolder, false, differential, new FileCompare(new XorEncryptor()), null);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), targetSubFolder, false, differential,
+            new FileCompare());
 
         // Act
         BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
@@ -119,7 +119,8 @@ public class DirectoryCompareTest
             FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, new FileCompare(new XorEncryptor()), null);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true,
+            new FileCompare());
 
         // Act
         BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
@@ -157,7 +158,8 @@ public class DirectoryCompareTest
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, new FileCompare(new XorEncryptor()), null);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false,
+            new FileCompare());
 
         // Act
         BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
@@ -197,10 +199,12 @@ public class DirectoryCompareTest
         File.WriteAllText(targetFilePath, oldContent);
 
         // Expected file change
-        FileChange expectedFileChange = FileChange.Modification(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange =
+            FileChange.Modification(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, new FileCompare(new XorEncryptor()), null);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true,
+            new FileCompare());
 
         // Act
         BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
@@ -232,13 +236,15 @@ public class DirectoryCompareTest
         File.WriteAllText(targetFilePath, newContent);
 
         // Expected file change
-        FileChange expectedFileChange = FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+        FileChange expectedFileChange =
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
 
         // Expected folder change
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, new FileCompare(new XorEncryptor()), null);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false,
+            new FileCompare());
 
         // Act
         BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
@@ -276,7 +282,8 @@ public class DirectoryCompareTest
         File.WriteAllText(targetFilePath, fileContent);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true, new FileCompare(new XorEncryptor()), null);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, true,
+            new FileCompare());
 
         // Act
         BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();
@@ -311,7 +318,8 @@ public class DirectoryCompareTest
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
 
         // Create compare object
-        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false, new FileCompare(new XorEncryptor()), null);
+        DirectoryCompare compare = new(new DirectoryInfo(_sourceFolder), _targetFolder, false, false,
+            new FileCompare());
 
         // Act
         BackupTransaction transaction = compare.Compare(BackupTransactionEditor.New()).Get();

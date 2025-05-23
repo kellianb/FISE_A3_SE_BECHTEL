@@ -1,17 +1,23 @@
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.Core.Transaction.FileMask;
+using BackupUtil.Crypto.Encryptor;
 
 namespace BackupUtil.Core.Transaction.Editor;
 
 internal class BackupTransactionEditor
 {
     private readonly BackupTransaction _transaction;
+    private IEncryptor? _encryptor;
     private FileMask.FileMask _fileMask;
 
-    private BackupTransactionEditor(BackupTransaction? transaction = null, FileMask.FileMask? fileMask = null)
+    private BackupTransactionEditor(
+        BackupTransaction? transaction = null,
+        FileMask.FileMask? fileMask = null,
+        IEncryptor? encryptor = null)
     {
         _fileMask = fileMask ?? FileMaskBuilder.Empty();
         _transaction = transaction ?? new BackupTransaction();
+        _encryptor = encryptor;
     }
 
     public static BackupTransactionEditor New()
@@ -19,19 +25,27 @@ internal class BackupTransactionEditor
         return new BackupTransactionEditor();
     }
 
-    public static BackupTransactionEditor WithMask(FileMask.FileMask fileMask)
+    public static BackupTransactionEditor WithMaskAndEncryptor(FileMask.FileMask fileMask,
+        IEncryptor? encryptor = null)
     {
-        return new BackupTransactionEditor(fileMask: fileMask);
+        return new BackupTransactionEditor(fileMask: fileMask, encryptor: encryptor);
     }
 
-    public static BackupTransactionEditor FromTransaction(BackupTransaction transaction, FileMask.FileMask fileMask)
+    public static BackupTransactionEditor FromTransaction(BackupTransaction transaction, FileMask.FileMask fileMask,
+        IEncryptor encryptor)
     {
-        return new BackupTransactionEditor(transaction, fileMask);
+        return new BackupTransactionEditor(transaction, fileMask, encryptor);
     }
 
     public BackupTransactionEditor SetMask(FileMask.FileMask mask)
     {
         _fileMask = mask;
+        return this;
+    }
+
+    public BackupTransactionEditor SetEncryptor(IEncryptor? encryptor)
+    {
+        _encryptor = encryptor;
         return this;
     }
 
@@ -59,44 +73,44 @@ internal class BackupTransactionEditor
 
     #region Add file Changes
 
-    public BackupTransactionEditor AddFileCreation(FileInfo sourceFile, string targetFilePath, string? encryptionKey)
+    public BackupTransactionEditor AddFileCreation(FileInfo sourceFile, string targetFilePath)
     {
         if (!_fileMask.ShouldCopy(sourceFile))
         {
             return this;
         }
 
-        if (encryptionKey != null && !_fileMask.ShouldEncrypt(sourceFile))
-        {
-            encryptionKey = null;
-        }
+        // Only encrypt if the file should be encrypted and the encryptor is not null
+        IEncryptor? encryptor = _encryptor is null || _fileMask.ShouldEncrypt(sourceFile)
+            ? _encryptor
+            : null;
 
         FileChange change = FileChange.Creation(sourceFile.FullName,
             targetFilePath,
             sourceFile.Length,
-            encryptionKey);
+            encryptor);
 
         _transaction.AddFileChange(change);
 
         return this;
     }
 
-    public BackupTransactionEditor AddFileUpdate(FileInfo sourceFile, FileInfo targetFile, string? encryptionKey)
+    public BackupTransactionEditor AddFileUpdate(FileInfo sourceFile, FileInfo targetFile)
     {
         if (!_fileMask.ShouldCopy(sourceFile))
         {
             return this;
         }
 
-        if (encryptionKey != null && !_fileMask.ShouldEncrypt(sourceFile))
-        {
-            encryptionKey = null;
-        }
+        // Only encrypt if the file should be encrypted and the encryptor is not null
+        IEncryptor? encryptor = _encryptor is null || _fileMask.ShouldEncrypt(sourceFile)
+            ? _encryptor
+            : null;
 
         FileChange change = FileChange.Modification(sourceFile.FullName,
             targetFile.FullName,
             sourceFile.Length,
-            encryptionKey);
+            encryptor);
 
         _transaction.AddFileChange(change);
 

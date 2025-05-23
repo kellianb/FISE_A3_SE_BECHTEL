@@ -2,10 +2,12 @@ using BackupUtil.Core.Transaction.Compare;
 using BackupUtil.Core.Transaction.Editor;
 using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Core.Util;
+using BackupUtil.Crypto;
+using BackupUtil.Crypto.Encryptor;
 
 namespace BackupUtil.Core.Transaction;
 
-internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransactionBuilder
+internal class BackupTransactionBuilder : IBackupTransactionBuilder
 {
     public BackupTransaction Build(Job.Job job)
     {
@@ -13,7 +15,14 @@ internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransa
             ? FileMaskBuilder.Empty()
             : FileMaskBuilder.FromString(job.FileMask).Build();
 
-        return AddJobToTransaction(job, BackupTransactionEditor.WithMask(mask)).Get();
+        IEncryptor? encryptor = job.EncryptionType == null
+            ? null
+            : EncryptorBuilder.New(job.EncryptionType.Value, job.EncryptionKey!);
+
+        FileCompare fileCompare = new(encryptor);
+
+        return AddJobToTransaction(job, BackupTransactionEditor.WithMaskAndEncryptor(mask, encryptor), fileCompare)
+            .Get();
     }
 
     public BackupTransaction Build(List<Job.Job> jobs)
@@ -24,11 +33,16 @@ internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransa
                 ? FileMaskBuilder.Empty()
                 : FileMaskBuilder.FromString(next.FileMask).Build();
 
-            return AddJobToTransaction(next, acc.SetMask(mask));
+            IEncryptor? encryptor = next.EncryptionType == null
+                ? null
+                : EncryptorBuilder.New(next.EncryptionType.Value, next.EncryptionKey!);
+
+            return AddJobToTransaction(next, acc.SetMask(mask).SetEncryptor(encryptor), new FileCompare(encryptor));
         }).Get();
     }
 
-    private BackupTransactionEditor AddJobToTransaction(Job.Job job, BackupTransactionEditor editor)
+    private BackupTransactionEditor AddJobToTransaction(Job.Job job, BackupTransactionEditor editor,
+        FileCompare fileCompare)
     {
         try
         {
@@ -79,8 +93,7 @@ internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransa
                     new FileInfo(job.SourcePath),
                     job.TargetPath,
                     job.Differential,
-                    fileCompare,
-                    job.EncryptionKey)
+                    fileCompare)
                 .Compare(editor);
         }
 
@@ -96,8 +109,7 @@ internal class BackupTransactionBuilder(FileCompare fileCompare) : IBackupTransa
                     job.TargetPath,
                     job.Recursive,
                     job.Differential,
-                    fileCompare,
-                    job.EncryptionKey)
+                    fileCompare)
                 .Compare(editor);
         }
 

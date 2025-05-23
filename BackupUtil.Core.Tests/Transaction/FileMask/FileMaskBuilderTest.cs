@@ -1,4 +1,3 @@
-using System.Text.Json;
 using BackupUtil.Core.Transaction.FileMask;
 using FluentAssertions;
 
@@ -8,7 +7,6 @@ namespace BackupUtil.Core.Tests.Transaction.FileMask;
 [TestOf(typeof(FileMaskBuilder))]
 public class FileMaskBuilderTest
 {
-
     [Test]
     public void SerializeAndDeserializeFileMask_EmptyFileMask_ReturnsSameMask()
     {

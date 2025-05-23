@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using BackupUtil.Crypto;
+
 namespace BackupUtil.Core.Job;
 
 public class Job
@@ -7,6 +10,7 @@ public class Job
         bool recursive = false,
         bool differential = false,
         string? name = null,
+        EncryptionType? encryptionType = null,
         string? encryptionKey = null,
         string? fileMask = null
     )
@@ -17,6 +21,7 @@ public class Job
         FileMask = fileMask;
         Recursive = recursive;
         Differential = differential;
+        EncryptionType = encryptionType;
         EncryptionKey = encryptionKey;
     }
 
@@ -27,6 +32,7 @@ public class Job
         TargetPath = "";
         Recursive = false;
         Differential = false;
+        EncryptionType = null;
         EncryptionKey = null;
         FileMask = null;
     }
@@ -37,7 +43,9 @@ public class Job
     public string TargetPath { get; set; }
     public bool Recursive { get; set; }
     public bool Differential { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public EncryptionType? EncryptionType { get; set; }
     public string? EncryptionKey { get; set; }
     public string? FileMask { get; set; }
-
 }
