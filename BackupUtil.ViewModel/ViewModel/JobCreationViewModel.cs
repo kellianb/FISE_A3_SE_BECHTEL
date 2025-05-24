@@ -38,6 +38,17 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                                 && SourcePathOutsideOfTargetPath
                                 && EncryptionKeyOk;
 
+    public Dictionary<string, string> LocalizedMessages => new()
+    {
+        { "jobName", I18N.GetLocalizedMessage("jobName") },
+        { "jobTargetPath", I18N.GetLocalizedMessage("jobTargetPath") },
+        { "jobSourcePath", I18N.GetLocalizedMessage("jobSourcePath") },
+        { "jobRecursive", I18N.GetLocalizedMessage("jobRecursive") },
+        { "jobDifferential", I18N.GetLocalizedMessage("jobDifferential") },
+        { "encryptionType", I18N.GetLocalizedMessage("encryptionType") },
+        { "addJob", I18N.GetLocalizedMessage("addJob") }
+    };
+
     public JobCreationViewModel()
     {
         SelectedType = I18N.GetLocalizedMessage("noEncryption");

@@ -135,4 +135,7 @@
     <data name="encryptionKeyLabel" xml:space="preserve">
         <value>Clé de chiffrement</value>
     </data>
+    <data name="encryptionType" xml:space="preserve">
+        <value>Type de chiffrement</value>
+    </data>
 </root>

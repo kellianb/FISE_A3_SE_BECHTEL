@@ -135,4 +135,7 @@
     <data name="encryptionKeyLabel" xml:space="preserve">
         <value>Encryption key</value>
     </data>
+    <data name="encryptionType" xml:space="preserve">
+        <value>Encryption Type</value>
+    </data>
 </root>

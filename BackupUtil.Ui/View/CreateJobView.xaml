@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
         mc:Ignorable="d"
-        Title="ConfigureJobWindow" Height="300" Width="300">
+        Title="ConfigureJobWindow" Height="350" Width="300">
     <Window.DataContext>
         <viewModel:JobCreationViewModel/>
     </Window.DataContext>
@@ -21,8 +21,11 @@
                 <Style TargetType="{x:Type CheckBox}">
                     <Setter Property="Margin" Value="10,0,0,10" />
                 </Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Margin" Value="0,0,0,5" />
+                </Style>
             </StackPanel.Resources>
-            <TextBlock Text="{Binding LocalizedMessages[jobName], Mode=TwoWay}" Margin="0,0,0,5" />
+            <TextBlock Text="{Binding LocalizedMessages[jobName], Mode=TwoWay}" />
             <TextBox x:Name="NameInput"
                      HorizontalAlignment="Stretch" />
             <Button x:Name="TargetPathInput" Click="SelectTargetPath"
@@ -30,17 +33,18 @@
             <Button x:Name="SourcePathInput" Click="SelectSourcePath"
                    Content="{Binding LocalizedMessages[jobSourcePath], Mode=TwoWay}" />
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding LocalizedMessages[jobRecursive], Mode=TwoWay}" Margin="0,0,0,5" />
+                <TextBlock Text="{Binding LocalizedMessages[jobRecursive], Mode=TwoWay}" />
                 <CheckBox x:Name="RecursiveInput"
                           HorizontalAlignment="Center" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding LocalizedMessages[jobDifferential], Mode=TwoWay}" Margin="0,0,0,5" />
+                <TextBlock Text="{Binding LocalizedMessages[jobDifferential], Mode=TwoWay}" />
                 <CheckBox x:Name="DifferentialInput"
                           HorizontalAlignment="Center" />
             </StackPanel>
 
             <StackPanel x:Name="EncryptionPanel">
+                <TextBlock Text="{Binding LocalizedMessages[encryptionType], Mode=TwoWay}" />
                 <ComboBox x:Name="EncryptionTypeInput" SelectionChanged="SelectEncryptionType" ItemsSource="{Binding AvailableTypes}" SelectedItem="{Binding SelectedType, Mode=TwoWay}" Margin="0,0,0,10" />
             </StackPanel>
 

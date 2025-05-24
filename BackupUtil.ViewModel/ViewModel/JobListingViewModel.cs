@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using BackupUtil.Core.Job;
+using BackupUtil.Crypto;
 using BackupUtil.I18n;
 
 namespace BackupUtil.ViewModel.ViewModel;
@@ -10,6 +11,12 @@ public class JobListingViewModel : ViewModelBase
 
     public JobListingViewModel()
     {
+        Directory.CreateDirectory(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "EasySave", "jobs"));
+        jobFilePath = new FileInfo(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "EasySave", "jobs", "BackupJobs.json"));
         LanguageSelectorViewModel = new LanguageSelectorViewModel();
         _jobs = new ObservableCollection<JobViewModel>();
 
@@ -74,7 +81,7 @@ public class JobListingViewModel : ViewModelBase
     }
 
     public void AddJob(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive, bool differential,
-        string name = null)
+        string name = null, EncryptionType? encryptionType = null, string encryptionKey = null)
     {
         if (!jobFilePath.Exists)
         {
@@ -85,7 +92,7 @@ public class JobListingViewModel : ViewModelBase
             }
         }
 
-        Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential, name);
+        Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential, name, encryptionType, encryptionKey);
 
         try
         {
@@ -106,6 +113,16 @@ public class JobListingViewModel : ViewModelBase
 
             manager.AddJob(job)
                 .ExportAll(jobFilePath?.FullName);
+
+            _jobs.Clear();
+
+            // Add jobs to the collection
+            foreach (Job managerJob in manager.Jobs)
+            {
+                _jobs.Add(new JobViewModel(managerJob));
+            }
+
+            OnPropertyChanged(nameof(Jobs));
         }
         catch (Exception e)
         {
