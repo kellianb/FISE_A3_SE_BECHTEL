@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Encryptor\" />
         <Folder Include="obj\"/>
     </ItemGroup>
 

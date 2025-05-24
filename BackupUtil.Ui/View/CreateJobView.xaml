@@ -8,7 +8,7 @@
         Title="ConfigureJobWindow" Height="280" Width="200">
 
     <Window.DataContext>
-        <viewModel:JobCreationViewModel/>
+        <viewModel:JobCreationViewModel />
     </Window.DataContext>
 
     <Grid>
@@ -24,27 +24,25 @@
                     <Setter Property="Margin" Value="10,0,0,10" />
                 </Style>
             </StackPanel.Resources>
-            <TextBlock Text="{Binding LocalizedMessages[jobName], Mode=TwoWay}" Margin="0,0,0,5" />
-            <TextBox x:Name="NameInput"
-                     Width="140" HorizontalAlignment="Center" />
-            <TextBlock Text="{Binding LocalizedMessages[jobTargetPath], Mode=TwoWay}" Margin="0,0,0,5" />
-            <Button x:Name="TargetPathInput" Click="SelectTargetPath"
-                    Width="140" HorizontalAlignment="Center" />
-            <TextBlock Text="{Binding LocalizedMessages[jobSourcePath], Mode=TwoWay}" Margin="0,0,0,5" />
-            <Button x:Name="SourcePathInput" Click="SelectSourcePath"
+            <TextBlock Text="jobName" Margin="0,0,0,5" />
+            <TextBox
+                     Width="140" HorizontalAlignment="Center"
+                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="jobTargetPath" Margin="0,0,0,5" />
+            <Button  Width="140" HorizontalAlignment="Center" />
+            <TextBlock Text="Binding jobSourcePath" Margin="0,0,0,5" />
+            <Button
                     Width="140" HorizontalAlignment="Center" />
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding LocalizedMessages[jobRecursive], Mode=TwoWay}" Margin="0,0,0,5" />
-                <CheckBox x:Name="RecursiveInput"
-                          HorizontalAlignment="Center" />
+                <TextBlock Text="" Margin="0,0,0,5" />
+                <CheckBox IsChecked="{Binding Recursive, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Center" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding LocalizedMessages[jobDifferential], Mode=TwoWay}" Margin="0,0,0,5" />
-                <CheckBox x:Name="DifferentialInput"
-                          HorizontalAlignment="Center" />
+                <TextBlock Text="jobDifferential" Margin="0,0,0,5" />
+                <CheckBox x:Name="DifferentialInput" HorizontalAlignment="Center" />
             </StackPanel>
 
-            <Button Content="{Binding LocalizedMessages[addJob], Mode=TwoWay}" Click="SendJobData" />
+            <Button Content="addJob" />
         </StackPanel>
 
     </Grid>
