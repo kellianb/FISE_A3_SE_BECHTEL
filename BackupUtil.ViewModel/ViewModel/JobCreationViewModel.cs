@@ -1,13 +1,23 @@
 using System.Collections;
 using System.ComponentModel;
+using System.Windows.Input;
+using BackupUtil.Core.Job;
 using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Crypto;
+using BackupUtil.ViewModel.Command;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
-    private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new();
+    private readonly JobManager _jobManager;
+
+    public JobCreationViewModel(JobManager jobManager)
+    {
+        _jobManager = jobManager;
+
+        SubmitCommand = new CreateJobCommand(this, jobManager);
+    }
 
     public bool CanCreateJob => HasName
                                 && TargetPathDifferentFromSourcePath
@@ -16,6 +26,14 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                                 && SourcePathOutsideOfTargetPath
                                 && EncryptionKeyOk
                                 && ValidFileMask;
+
+    public AsyncCommandBase SubmitCommand { get; }
+    public ICommand CancelCommand { get; }
+
+
+    #region Error handling
+
+    private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new();
 
     public IEnumerable GetErrors(string? propertyName)
     {
@@ -56,6 +74,8 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
     {
         ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
     }
+
+    #endregion
 
     #region Name
 
@@ -105,14 +125,15 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             {
                 _sourcePath = new DirectoryInfo(value);
             }
+
             OnPropertyChanged(nameof(SourcePath));
 
             // Determine errors
-            ClearErrors(nameof(Name));
+            ClearErrors(nameof(SourcePath));
 
             if (!SourcePathOutsideOfTargetPath)
             {
-                AddError("errorSourceInTarget", nameof(Name));
+                AddError("errorSourceInTarget", nameof(SourcePath));
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -148,19 +169,20 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             {
                 _targetPath = new DirectoryInfo(value);
             }
+
             OnPropertyChanged(nameof(TargetPath));
 
             // Determine errors
-            ClearErrors(nameof(Name));
+            ClearErrors(nameof(TargetPath));
 
             if (!TargetPathDifferentFromSourcePath)
             {
-                AddError("errorSameSourceTarget", nameof(Name));
+                AddError("errorSameSourceTarget", nameof(TargetPath));
             }
 
             if (!TargetPathOutsideOfSourcePath)
             {
-                AddError("errorTargetInSource", nameof(Name));
+                AddError("errorTargetInSource", nameof(TargetPath));
             }
 
             if (!TargetPathSameTypeAsSourcePath)
@@ -168,7 +190,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                 AddError(
                     _sourcePath.Attributes.HasFlag(FileAttributes.Directory)
                         ? "errorSourceDirTargetFile"
-                        : "errorSourceFileTargetDir", nameof(Name));
+                        : "errorSourceFileTargetDir", nameof(TargetPath));
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -220,6 +242,17 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         {
             _encryptionType = value;
             OnPropertyChanged(nameof(EncryptionType));
+
+            // Update encryption key error state
+            ClearErrors(nameof(EncryptionKey));
+
+            if (!EncryptionKeyOk)
+            {
+                // Determine errors
+                AddError("errorEncryptionKeyEmpty", nameof(EncryptionKey));
+            }
+
+            OnPropertyChanged(nameof(CanCreateJob));
         }
     }
 
@@ -229,7 +262,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     private string _encryptionKey = "";
 
-    // Encryption key cannot be empty if EncryptionType is set
+    // Encryption key cannot be empty if an EncryptionType is set
     private bool EncryptionKeyOk => EncryptionType == null || !string.IsNullOrEmpty(EncryptionKey);
 
     public string EncryptionKey
@@ -240,12 +273,12 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             _encryptionKey = value;
             OnPropertyChanged(nameof(EncryptionKey));
 
-            ClearErrors(nameof(Name));
+            ClearErrors(nameof(EncryptionKey));
 
-            if(!EncryptionKeyOk)
+            if (!EncryptionKeyOk)
             {
                 // Determine errors
-                AddError("errorEncryptionKeyEmpty", nameof(Name));
+                AddError("errorEncryptionKeyEmpty", nameof(EncryptionKey));
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -266,6 +299,16 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _fileMask = value;
+            OnPropertyChanged(nameof(FileMask));
+
+            ClearErrors(nameof(FileMask));
+
+            if (!ValidFileMask)
+            {
+                // Determine errors
+                AddError("errorInvalidFileMask", nameof(FileMask));
+            }
+
             OnPropertyChanged(nameof(FileMask));
         }
     }

@@ -9,7 +9,7 @@ public class CreateJobCommand : AsyncCommandBase
     private readonly JobManager _jobManager;
     private readonly JobCreationViewModel _jobCreationViewModel;
 
-    public CreateJobCommand(JobManager jobManager, JobCreationViewModel jobCreationViewModel)
+    public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobManager jobManager)
     {
         _jobManager = jobManager;
         _jobCreationViewModel = jobCreationViewModel;
@@ -29,7 +29,7 @@ public class CreateJobCommand : AsyncCommandBase
             _jobManager.AddJob(job);
         }
         catch {}
-        
+
         return Task.CompletedTask;
     }
 
