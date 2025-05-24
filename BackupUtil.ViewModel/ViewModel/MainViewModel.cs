@@ -1,11 +1,22 @@
+using BackupUtil.ViewModel.Store;
+
 namespace BackupUtil.ViewModel.ViewModel;
 
 public class MainViewModel : ViewModelBase
 {
-    public MainViewModel()
+    private readonly NavigationStore _navigationStore;
+
+    public ViewModelBase? CurrentViewModel => _navigationStore.CurrentViewModel;
+
+    public MainViewModel(NavigationStore navigationStore)
     {
-        CurrentViewModel = new JobListingViewModel();
+        _navigationStore = navigationStore;
+
+        _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
     }
 
-    public ViewModelBase CurrentViewModel { get; }
+    private void OnCurrentViewModelChanged()
+    {
+        OnPropertyChanged(nameof(CurrentViewModel));
+    }
 }

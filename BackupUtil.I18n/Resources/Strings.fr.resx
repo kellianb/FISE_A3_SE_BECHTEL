@@ -129,4 +129,7 @@
     <data name="errorNameEmpty" xml:space="preserve">
         <value>Le nom ne peut être vide</value>
     </data>
+    <data name="errorInvalidFileMask" xml:space="preserve">
+        <value>Le masque de fichiers fourni n'est pas valide.</value>
+    </data>
 </root>

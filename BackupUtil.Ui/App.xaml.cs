@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.Ui;
@@ -10,7 +11,7 @@ public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
-        MainWindow = new MainWindow { DataContext = new MainViewModel() };
+        MainWindow = new MainWindow { DataContext = new MainViewModel(NavigationStore.Instance) };
 
         MainWindow.Show();
 
