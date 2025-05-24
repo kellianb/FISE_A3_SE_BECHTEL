@@ -1,6 +1,7 @@
 using System.Collections;
 using System.ComponentModel;
 using BackupUtil.Crypto;
+using BackupUtil.I18n;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
@@ -8,12 +9,43 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
     private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new();
 
+    private List<string> _availableTypes;
+    public List<string> AvailableTypes
+    {
+        get => _availableTypes;
+        set
+        {
+            _availableTypes = value;
+            OnPropertyChanged(nameof(AvailableTypes));
+        }
+    }
+
+    private string _selectedType;
+
+    public string SelectedType {
+        get => _selectedType;
+        set
+        {
+            _selectedType = value;
+            OnPropertyChanged(nameof(SelectedType));
+        }
+    }
+
     public bool CanCreateJob => HasName
                                 && TargetPathDifferentFromSourcePath
                                 && TargetPathOutsideOfSourcePath
                                 && TargetPathSameTypeAsSourcePath
                                 && SourcePathOutsideOfTargetPath
                                 && EncryptionKeyOk;
+
+    public JobCreationViewModel()
+    {
+        SelectedType = I18N.GetLocalizedMessage("noEncryption");
+        // Populate the ComboBox items
+        AvailableTypes = new List<string> { _selectedType }
+            .Concat(System.Enum.GetNames(typeof(EncryptionType)))
+            .ToList();
+    }
 
     public IEnumerable GetErrors(string? propertyName)
     {

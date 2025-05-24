@@ -129,4 +129,7 @@
     <data name="errorNameEmpty" xml:space="preserve">
         <value>Name cannot be empty</value>
     </data>
+    <data name="noEncryption" xml:space="preserve">
+        <value>No encryption</value>
+    </data>
 </root>

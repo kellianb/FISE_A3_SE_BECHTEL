@@ -129,4 +129,7 @@
     <data name="errorNameEmpty" xml:space="preserve">
         <value>Le nom ne peut être vide</value>
     </data>
+    <data name="noEncryption" xml:space="preserve">
+        <value>Pas de chiffrement</value>
+    </data>
 </root>

@@ -42,7 +42,7 @@
             </StackPanel>
 
             <StackPanel x:Name="EncryptionPanel">
-                <ComboBox x:Name="EncryptionTypeInput" SelectionChanged="SelectEncryptionType" ItemsSource="{Binding AvailableTypes}" SelectedItem="{Binding NoEncryption, Mode=TwoWay}" Margin="0,0,0,10" />
+                <ComboBox x:Name="EncryptionTypeInput" SelectionChanged="SelectEncryptionType" ItemsSource="{Binding AvailableTypes}" SelectedItem="{Binding SelectedType, Mode=TwoWay}" Margin="0,0,0,10" />
             </StackPanel>
 
             <Button Content="{Binding LocalizedMessages[addJob], Mode=TwoWay}" Click="SendJobData" />

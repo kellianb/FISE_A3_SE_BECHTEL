@@ -17,8 +17,8 @@ public partial class CreateJobView : Window
     public CreateJobView(JobListingViewModel jobListingViewModel)
     {
         InitializeComponent();
+        this._jobListingViewModel = jobListingViewModel;
         DataContext = jobListingViewModel;
-        _jobListingViewModel = jobListingViewModel;
     }
 
     public void SelectSourcePath(object sender, RoutedEventArgs routedEventArgs)
@@ -96,4 +96,19 @@ public partial class CreateJobView : Window
                 EncryptionPanel.Children.Remove(encryptionKeyLabel);
             }
     }
+
+    EncryptionType? MapToEncryptionType(EncryptionOptions type)
+    {
+        return type switch
+        {
+            EncryptionOptions.Xor => EncryptionType.Xor,
+            _ => null
+        };
+    }
+}
+
+enum EncryptionOptions
+{
+    NoEncryption,
+    Xor
 }
