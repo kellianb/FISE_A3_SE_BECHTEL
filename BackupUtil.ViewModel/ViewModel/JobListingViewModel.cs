@@ -10,25 +10,39 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobListingViewModel : ViewModelBase
 {
-    private readonly ObservableCollection<JobViewModel> _jobs;
+    private ObservableCollection<JobViewModel> _jobs;
+
+    private JobManager _jobManager;
 
     public JobListingViewModel(JobManager jobManager, NavigationService<JobCreationViewModel> navigationService)
     {
-        CreateJobCommand = new NavigateCommand<JobCreationViewModel>(navigationService);
-        LoadJobsCommand = new LoadJobsCommand(this, jobManager);
+        _jobManager = jobManager;
 
+        CreateJobCommand = new NavigateCommand<JobCreationViewModel>(navigationService);
+        LoadJobsCommand = new LoadJobsCommand(this, _jobManager);
+        ExportJobsCommand = new ExportJobsCommand(this, _jobManager);
+
+        LoadJobs();
+    }
+
+    public void LoadJobs()
+    {
         _jobs = [];
 
-        foreach (Job job in jobManager.Jobs)
+        foreach (Job job in _jobManager.Jobs)
         {
             _jobs.Add(new JobViewModel(job));
         }
+
+        OnPropertyChanged(nameof(Jobs));
     }
 
     public IEnumerable<JobViewModel> Jobs => _jobs;
 
     public ICommand CreateJobCommand { get; }
     public ICommand LoadJobsCommand { get; }
+
+    public ICommand ExportJobsCommand { get; }
 
     public LanguageSelectionViewModel LanguageSelectionViewModel { get; } = new();
 
