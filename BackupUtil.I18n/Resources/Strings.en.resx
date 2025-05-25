@@ -150,4 +150,10 @@
     <data name="execute" xml:space="preserve">
         <value>Execute</value>
     </data>
+    <data name="exportJobs" xml:space="preserve">
+        <value>Save</value>
+    </data>
+    <data name="loadJobs" xml:space="preserve">
+        <value>Load</value>
+    </data>
 </root>

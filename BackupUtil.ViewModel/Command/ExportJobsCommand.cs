@@ -4,12 +4,13 @@ using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command;
 
-public class LoadJobsCommand : CommandBase
+public class ExportJobsCommand : CommandBase
 {
+
     private readonly JobListingViewModel _jobListingViewModel;
     private readonly JobManager _jobManager;
 
-    public LoadJobsCommand(JobListingViewModel jobListingViewModel, JobManager jobManager)
+    public ExportJobsCommand(JobListingViewModel jobListingViewModel, JobManager jobManager)
     {
         _jobManager = jobManager;
         _jobListingViewModel = jobListingViewModel;
@@ -23,9 +24,7 @@ public class LoadJobsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobManager.RemoveAll();
-        _jobManager.AddJobsFromFile(_jobListingViewModel.JobFilePath);
-        _jobListingViewModel.LoadJobs();
+        _jobManager.ExportAll(_jobListingViewModel.JobFilePath);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

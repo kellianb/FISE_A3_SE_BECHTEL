@@ -13,7 +13,7 @@ public abstract class CommandBase : ICommand
 
     public abstract void Execute(object? parameter);
 
-    public void OnCanExecuteChanged()
+    protected void OnCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }

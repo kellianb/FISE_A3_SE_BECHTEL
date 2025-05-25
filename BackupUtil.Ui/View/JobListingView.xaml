@@ -18,8 +18,13 @@
     <Grid>
         <WrapPanel VerticalAlignment="Top">
 
+
+            <!-- Export jobs to file -->
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[exportJobs]}"
+                    Command="{Binding ExportJobsCommand}" />
+
             <!-- Load jobs from file -->
-            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[changeJobFile]}"
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[loadJobs]}"
                     Command="{Binding LoadJobsCommand}" />
 
             <TextBox Width="140"
