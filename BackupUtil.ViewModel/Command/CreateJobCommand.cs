@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using BackupUtil.Core.Job;
+using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command;
@@ -8,10 +9,12 @@ public class CreateJobCommand : CommandBase
 {
     private readonly JobCreationViewModel _jobCreationViewModel;
     private readonly JobManager _jobManager;
+    private readonly NavigationService _navigationService;
 
-    public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobManager jobManager)
+    public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobManager jobManager, NavigationService navigationService)
     {
         _jobManager = jobManager;
+        _navigationService = navigationService;
         _jobCreationViewModel = jobCreationViewModel;
         _jobCreationViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
@@ -28,11 +31,12 @@ public class CreateJobCommand : CommandBase
             _jobCreationViewModel.Recursive,
             _jobCreationViewModel.Differential,
             _jobCreationViewModel.Name,
-            _jobCreationViewModel.EncryptionType,
+            EncryptionTypeOptionsUtils.To(_jobCreationViewModel.EncryptionType),
             _jobCreationViewModel.EncryptionKey,
             _jobCreationViewModel.FileMask);
 
         _jobManager.AddJob(job);
+        _navigationService.Navigate();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

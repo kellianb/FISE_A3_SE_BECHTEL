@@ -141,4 +141,13 @@
     <data name="jobEncryptionType" xml:space="preserve">
         <value>Encryption type</value>
     </data>
+    <data name="cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="create" xml:space="preserve">
+        <value>Create</value>
+    </data>
+    <data name="execute" xml:space="preserve">
+        <value>Execute</value>
+    </data>
 </root>

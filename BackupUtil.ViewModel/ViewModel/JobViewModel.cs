@@ -53,4 +53,34 @@ public class JobViewModel(Job job) : ViewModelBase
             OnPropertyChanged(nameof(Differential));
         }
     }
+
+    public EncryptionTypeOptions EncryptionType
+    {
+        get => EncryptionTypeOptionsUtils.From(job.EncryptionType);
+        set
+        {
+            job.EncryptionType = EncryptionTypeOptionsUtils.To(value);
+            OnPropertyChanged(nameof(EncryptionType));
+        }
+    }
+
+    public string EncryptionKey
+    {
+        get => job.EncryptionKey ?? "";
+        set
+        {
+            job.EncryptionKey = value;
+            OnPropertyChanged(nameof(EncryptionKey));
+        }
+    }
+
+    public string FileMask
+    {
+        get => job.FileMask ?? "";
+        set
+        {
+            job.FileMask = value;
+            OnPropertyChanged(nameof(FileMask));
+        }
+    }
 }
