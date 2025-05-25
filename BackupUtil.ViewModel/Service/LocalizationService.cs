@@ -16,9 +16,19 @@ public class LocalizationService : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public void ChangeLanguage(CultureInfo culture)
+    public void SetCulture(CultureInfo culture)
     {
         I18N.SetCulture(culture);
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+    }
+
+    public CultureInfo GetCurrentCulture()
+    {
+        return I18N.GetCurrentCulture();
+    }
+
+    public List<CultureInfo> GetSupportedCultures()
+    {
+        return I18N.GetSupportedCultures();
     }
 }

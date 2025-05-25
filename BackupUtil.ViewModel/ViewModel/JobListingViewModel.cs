@@ -30,6 +30,8 @@ public class JobListingViewModel : ViewModelBase
     public ICommand CreateJobCommand { get; }
     public ICommand LoadJobsCommand { get; }
 
+    public LanguageSelectionViewModel LanguageSelectionViewModel { get; } = new();
+
     public bool CanAccessJobFile => JobFileExists;
 
     #region Error handling
@@ -88,7 +90,7 @@ public class JobListingViewModel : ViewModelBase
         set
         {
             _jobFilePath = value;
-            OnPropertyChanged(nameof(JobFilePath));
+            OnPropertyChanged();
 
             // Determine errors
             ClearErrors(nameof(JobFilePath));
