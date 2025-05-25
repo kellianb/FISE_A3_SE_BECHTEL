@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="BackupUtil.Ui.View.JobCreationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:service="clr-namespace:BackupUtil.ViewModel.Service;assembly=BackupUtil.ViewModel"
+             xmlns:crypto="clr-namespace:BackupUtil.Crypto;assembly=BackupUtil.Crypto"
+             mc:Ignorable="d" Height="440" Width="200">
+
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="LocalizationService"
+                            ObjectType="{x:Type service:LocalizationService}"
+                            MethodName="get_Instance" />
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Orientation="Vertical" Margin="30,30,30,30" VerticalAlignment="Center">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBox}">
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                </Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                </Style>
+                <Style TargetType="{x:Type CheckBox}">
+                    <Setter Property="Margin" Value="10,0,0,10" />
+                </Style>
+                <Style TargetType="{x:Type ComboBox}">
+                    <Setter Property="Margin" Value="0,0,0,10" />
+                </Style>
+            </StackPanel.Resources>
+
+            <!-- Job name  -->
+            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}" Margin="0,0,0,5" />
+            <TextBox
+                Width="140" HorizontalAlignment="Center"
+                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Target path -->
+            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
+                       Margin="0,0,0,5" />
+            <TextBox Width="140" HorizontalAlignment="Center"
+                     Text="{Binding TargetPath, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Source path -->
+            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
+                       Margin="0,0,0,5" />
+            <TextBox Width="140" HorizontalAlignment="Center"
+                     Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Recursive -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobRecursive]}"
+                           Margin="0,0,0,5" />
+                <CheckBox IsChecked="{Binding Recursive, UpdateSourceTrigger=PropertyChanged}"
+                          HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Differential -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
+                           Margin="0,0,0,5" />
+                <CheckBox IsChecked="{Binding Differential, UpdateSourceTrigger=PropertyChanged}"
+                          HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Encryption Type -->
+            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionType]}"
+                       Margin="0,0,0,5" />
+            <ComboBox Width="140" HorizontalAlignment="Center"
+                      SelectedItem="{Binding EncryptionType, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedValuePath="Tag">
+                <!-- TODO improve -->
+                <ComboBoxItem Content="No Encryption" Tag="{x:Null}" />
+                <ComboBoxItem Content="Xor" Tag="{x:Static crypto:EncryptionType.Xor}" />
+            </ComboBox>
+
+            <!-- Encryption Key -->
+            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
+                       Margin="0,0,0,5" />
+            <TextBox Width="140" HorizontalAlignment="Center"
+                     Text="{Binding EncryptionKey, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- File Mask -->
+            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobFileMask]}"
+                       Margin="0,0,0,5" />
+            <TextBox Width="140" HorizontalAlignment="Center"
+                     Text="{Binding FileMask, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Button Command="{Binding SubmitCommand}"
+                    Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}" />
+        </StackPanel>
+
+    </Grid>
+</UserControl>

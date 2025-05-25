@@ -108,10 +108,10 @@
     <data name="langLabel" xml:space="preserve">
         <value>Langue :</value>
     </data>
-    <data name="french" xml:space="preserve">
+    <data name="langFrench" xml:space="preserve">
         <value>Français</value>
     </data>
-    <data name="english" xml:space="preserve">
+    <data name="langEnglish" xml:space="preserve">
         <value>Anglais</value>
     </data>
     <data name="selectJobsDialogTitle" xml:space="preserve">
@@ -131,5 +131,14 @@
     </data>
     <data name="errorInvalidFileMask" xml:space="preserve">
         <value>Le masque de fichiers fourni n'est pas valide.</value>
+    </data>
+    <data name="jobFileMask" xml:space="preserve">
+        <value>Masque de fichiers</value>
+    </data>
+    <data name="jobEncryptionKey" xml:space="preserve">
+        <value>Clé de chiffrage</value>
+    </data>
+    <data name="jobEncryptionType" xml:space="preserve">
+        <value>Type de chiffrage</value>
     </data>
 </root>

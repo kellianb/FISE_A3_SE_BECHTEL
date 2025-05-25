@@ -4,10 +4,10 @@ using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command;
 
-public class CreateJobCommand : AsyncCommandBase
+public class CreateJobCommand : CommandBase
 {
-    private readonly JobManager _jobManager;
     private readonly JobCreationViewModel _jobCreationViewModel;
+    private readonly JobManager _jobManager;
 
     public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobManager jobManager)
     {
@@ -16,26 +16,28 @@ public class CreateJobCommand : AsyncCommandBase
         _jobCreationViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
-    public override void Execute(object? parameter)
+    public override bool CanExecute(object? parameter)
     {
+        return _jobCreationViewModel.CanCreateJob && base.CanExecute(parameter);
     }
 
-    public override Task ExecuteAsync(object? parameter)
+    public override void Execute(object? parameter)
     {
-        Job job = new("", "", false, false);
+        Job job = new(_jobCreationViewModel.SourcePath,
+            _jobCreationViewModel.TargetPath,
+            _jobCreationViewModel.Recursive,
+            _jobCreationViewModel.Differential,
+            _jobCreationViewModel.Name,
+            _jobCreationViewModel.EncryptionType,
+            _jobCreationViewModel.EncryptionKey,
+            _jobCreationViewModel.FileMask);
 
-        try
-        {
-            _jobManager.AddJob(job);
-        }
-        catch {}
-
-        return Task.CompletedTask;
+        _jobManager.AddJob(job);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if(e.PropertyName == nameof(_jobCreationViewModel.CanCreateJob))
+        if (e.PropertyName == nameof(_jobCreationViewModel.CanCreateJob))
         {
             OnCanExecuteChanged();
         }

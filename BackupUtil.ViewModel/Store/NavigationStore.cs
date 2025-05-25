@@ -4,12 +4,12 @@ namespace BackupUtil.ViewModel.Store;
 
 public class NavigationStore
 {
-    private static readonly Lazy<NavigationStore> s_instance
-        = new(() => new NavigationStore());
+    // private static readonly Lazy<NavigationStore> s_instance
+    //     = new(() => new NavigationStore());
 
     private ViewModelBase? _currentViewModel;
 
-    private NavigationStore() { }
+    // private NavigationStore() { }
 
     public ViewModelBase? CurrentViewModel
     {
@@ -22,7 +22,7 @@ public class NavigationStore
         }
     }
 
-    public static NavigationStore Instance => s_instance.Value;
+    // public static NavigationStore Instance => s_instance.Value;
 
     public event Action? CurrentViewModelChanged;
 
