@@ -92,7 +92,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _name = value;
-            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged();
 
             // Determine errors
             ClearErrors(nameof(Name));
@@ -123,7 +123,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _sourcePath = value;
-            OnPropertyChanged(nameof(SourcePath));
+            OnPropertyChanged();
 
             // Determine errors
             ClearErrors(nameof(SourcePath));
@@ -165,7 +165,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _targetPath = value;
-            OnPropertyChanged(nameof(TargetPath));
+            OnPropertyChanged();
 
             // Determine errors
             ClearErrors(nameof(TargetPath));
@@ -204,7 +204,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _recursive = value;
-            OnPropertyChanged(nameof(Recursive));
+            OnPropertyChanged();
         }
     }
 
@@ -220,7 +220,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _differential = value;
-            OnPropertyChanged(nameof(Differential));
+            OnPropertyChanged();
         }
     }
 
@@ -236,7 +236,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _encryptionType = EncryptionTypeOptionsUtils.To(value);
-            OnPropertyChanged(nameof(EncryptionType));
+            OnPropertyChanged();
 
             // Update encryption key error state
             ClearErrors(nameof(EncryptionKey));
@@ -267,7 +267,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _encryptionKey = value;
-            OnPropertyChanged(nameof(EncryptionKey));
+            OnPropertyChanged();
 
             ClearErrors(nameof(EncryptionKey));
 
@@ -295,7 +295,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         set
         {
             _fileMask = value;
-            OnPropertyChanged(nameof(FileMask));
+            OnPropertyChanged();
 
             ClearErrors(nameof(FileMask));
 
@@ -305,7 +305,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                 AddError("errorInvalidFileMask", nameof(FileMask));
             }
 
-            OnPropertyChanged(nameof(FileMask));
+            OnPropertyChanged(nameof(CanCreateJob));
         }
     }
 

@@ -10,7 +10,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.Name = value;
-            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged();
         }
     }
 
@@ -20,7 +20,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.SourcePath = value;
-            OnPropertyChanged(nameof(SourcePath));
+            OnPropertyChanged();
         }
     }
 
@@ -30,7 +30,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.TargetPath = value;
-            OnPropertyChanged(nameof(TargetPath));
+            OnPropertyChanged();
         }
     }
 
@@ -40,7 +40,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.Recursive = value;
-            OnPropertyChanged(nameof(Recursive));
+            OnPropertyChanged();
         }
     }
 
@@ -50,7 +50,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.Differential = value;
-            OnPropertyChanged(nameof(Differential));
+            OnPropertyChanged();
         }
     }
 
@@ -60,7 +60,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.EncryptionType = EncryptionTypeOptionsUtils.To(value);
-            OnPropertyChanged(nameof(EncryptionType));
+            OnPropertyChanged();
         }
     }
 
@@ -70,7 +70,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.EncryptionKey = value;
-            OnPropertyChanged(nameof(EncryptionKey));
+            OnPropertyChanged();
         }
     }
 
@@ -80,7 +80,7 @@ public class JobViewModel(Job job) : ViewModelBase
         set
         {
             job.FileMask = value;
-            OnPropertyChanged(nameof(FileMask));
+            OnPropertyChanged();
         }
     }
 }
