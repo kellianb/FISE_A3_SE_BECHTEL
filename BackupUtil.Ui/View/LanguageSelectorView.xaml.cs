@@ -1,6 +1,7 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
-using BackupUtil.ViewModel.ViewModel;
+using BackupUtil.ViewModel.Service;
 
 namespace BackupUtil.Ui.View;
 
@@ -13,10 +14,13 @@ public partial class LanguageSelectorView : UserControl
 
     public void SelectLanguage(object sender, RoutedEventArgs routedEventArgs)
     {
-        Console.WriteLine("selection " + languageComboBox.SelectedItem);
-        if (DataContext is LanguageSelectorViewModel viewModel)
+        string? lang = languageComboBox.SelectedItem.ToString();
+
+        if (lang is null)
         {
-            viewModel.ChangeLanguage(languageComboBox.SelectedItem.ToString());
+            return;
         }
+
+        LocalizationService.Instance.ChangeLanguage(new CultureInfo(lang));
     }
 }

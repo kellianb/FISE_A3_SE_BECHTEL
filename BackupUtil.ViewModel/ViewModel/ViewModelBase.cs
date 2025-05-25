@@ -11,5 +11,5 @@ public class ViewModelBase : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public virtual void Dispose() {}
+    public virtual void Dispose() { }
 }

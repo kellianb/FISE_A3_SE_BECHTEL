@@ -3,35 +3,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:BackupUtil.Ui.View"
-             xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
+             xmlns:service="clr-namespace:BackupUtil.ViewModel.Service;assembly=BackupUtil.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <UserControl.DataContext>
-        <viewModel:JobListingViewModel />
-    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="LocalizationService"
+                            ObjectType="{x:Type service:LocalizationService}"
+                            MethodName="get_Instance" />
+    </UserControl.Resources>
 
     <Grid>
         <WrapPanel VerticalAlignment="Top">
-            <Button Click="SelectJobsPath" Content="{Binding LocalizedMessages[changeJobFile], Mode=TwoWay}" />
-            <Button Click="CreateJob" Content="{Binding LocalizedMessages[addJob], Mode=TwoWay}" />
-            <local:LanguageSelectorView DataContext="{Binding LanguageSelectorViewModel}" HorizontalAlignment="Right"
-                                        VerticalAlignment="Top" Panel.ZIndex="10" />
+            <!-- <Button Click="SelectJobsPath" Content="{Binding LocalizedMessages[changeJobFile], Mode=TwoWay}" /> -->
+            <!-- <view:LanguageSelectorView DataContext="{Binding LanguageSelectorViewModel}" HorizontalAlignment="Right" -->
+            <!--                             VerticalAlignment="Top" Panel.ZIndex="10" /> -->
+
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}"
+                    Command="{Binding CreateJobCommand}" />
         </WrapPanel>
-        <DataGrid x:Name="JobGrid" Grid.Row="0" AutoGenerateColumns="False"
-                  IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single" ItemsSource="{Binding Jobs}">
+        <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single"
+                  ItemsSource="{Binding Jobs}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{Binding LocalizedMessages[jobName], Mode=TwoWay}" Binding="{Binding Name}"
+                <!-- Job name  -->
+                <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
+                                    Binding="{Binding Name}"
                                     Width="200" />
-                <DataGridTextColumn Header="{Binding LocalizedMessages[jobTargetPath], Mode=TwoWay}"
-                                    Binding="{Binding TargetPath}" Width="80" />
-                <DataGridTextColumn Header="{Binding LocalizedMessages[jobSourcePath], Mode=TwoWay}"
-                                    Binding="{Binding SourcePath}" Width="100" />
-                <DataGridCheckBoxColumn Header="{Binding LocalizedMessages[jobRecursive], Mode=TwoWay}"
-                                        Binding="{Binding Recursive}" />
-                <DataGridCheckBoxColumn Header="{Binding LocalizedMessages[jobDifferential], Mode=TwoWay}"
-                                        Binding="{Binding Differential}" />
+
+                <!-- Target path -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
+                    Binding="{Binding TargetPath}" Width="80" />
+
+                <!-- Source path -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
+                    Binding="{Binding SourcePath}" Width="100" />
+
+                <!-- Recursive -->
+                <DataGridCheckBoxColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobRecursive]}"
+                    Binding="{Binding Recursive}" />
+
+                <!-- Differential -->
+                <DataGridCheckBoxColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
+                    Binding="{Binding Differential}" />
+
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

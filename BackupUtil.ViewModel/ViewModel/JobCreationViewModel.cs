@@ -27,7 +27,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                                 && EncryptionKeyOk
                                 && ValidFileMask;
 
-    public AsyncCommandBase SubmitCommand { get; }
+    public ICommand SubmitCommand { get; }
     public ICommand CancelCommand { get; }
 
 
@@ -289,7 +289,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     #region FileMask
 
-    private string _fileMask = "";
+    private string _fileMask = FileMaskBuilder.New().BuildSerialized();
 
     private bool ValidFileMask => FileMaskBuilder.ValidateSerialized(FileMask);
 
