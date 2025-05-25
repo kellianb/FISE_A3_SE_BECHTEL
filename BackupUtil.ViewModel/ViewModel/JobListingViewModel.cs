@@ -5,7 +5,6 @@ using System.Windows.Input;
 using BackupUtil.Core.Job;
 using BackupUtil.ViewModel.Command;
 using BackupUtil.ViewModel.Service;
-using BackupUtil.ViewModel.Store;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
@@ -13,9 +12,9 @@ public class JobListingViewModel : ViewModelBase
 {
     private readonly ObservableCollection<JobViewModel> _jobs;
 
-    public JobListingViewModel(JobManager jobManager, NavigationService navigationService)
+    public JobListingViewModel(JobManager jobManager, NavigationService<JobCreationViewModel> navigationService)
     {
-        CreateJobCommand = new NavigateCommand(navigationService);
+        CreateJobCommand = new NavigateCommand<JobCreationViewModel>(navigationService);
         LoadJobsCommand = new LoadJobsCommand(this, jobManager);
 
         _jobs = [];

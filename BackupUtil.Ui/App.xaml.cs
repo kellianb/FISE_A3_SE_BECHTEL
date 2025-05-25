@@ -31,12 +31,12 @@ public partial class App : Application
     private JobListingViewModel CreateJobListingViewModel()
     {
         return new JobListingViewModel(_jobManager,
-            new NavigationService(_navigationStore, CreateJobCreationViewModel));
+            new NavigationService<JobCreationViewModel>(_navigationStore, CreateJobCreationViewModel));
     }
 
     private JobCreationViewModel CreateJobCreationViewModel()
     {
         return new JobCreationViewModel(_jobManager,
-            new NavigationService(_navigationStore, CreateJobListingViewModel));
+            new NavigationService<JobListingViewModel>(_navigationStore, CreateJobListingViewModel));
     }
 }

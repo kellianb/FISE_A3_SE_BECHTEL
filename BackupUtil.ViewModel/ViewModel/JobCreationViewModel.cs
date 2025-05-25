@@ -6,20 +6,15 @@ using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Crypto;
 using BackupUtil.ViewModel.Command;
 using BackupUtil.ViewModel.Service;
-using BackupUtil.ViewModel.Store;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
-    private readonly JobManager _jobManager;
-
-    public JobCreationViewModel(JobManager jobManager, NavigationService navigationService)
+    public JobCreationViewModel(JobManager jobManager, NavigationService<JobListingViewModel> navigationService)
     {
-        _jobManager = jobManager;
-
-        SubmitCommand = new CreateJobCommand(this, jobManager, navigationService);
-        CancelCommand = new NavigateCommand(navigationService);
+        SubmitCommand = new CreateJobCommand<JobListingViewModel>(this, jobManager, navigationService);
+        CancelCommand = new NavigateCommand<JobListingViewModel>(navigationService);
     }
 
     public bool CanCreateJob => HasName
