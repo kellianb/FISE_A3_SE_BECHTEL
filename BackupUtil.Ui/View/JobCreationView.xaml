@@ -6,7 +6,7 @@
              xmlns:service="clr-namespace:BackupUtil.ViewModel.Service;assembly=BackupUtil.ViewModel"
              xmlns:System="clr-namespace:System;assembly=System.Runtime"
              xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
-             mc:Ignorable="d" Height="470" Width="200">
+             mc:Ignorable="d" Height="470" Width="400">
 
 
     <UserControl.Resources>
@@ -40,64 +40,72 @@
 
             <!-- Job name  -->
             <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}" Margin="0,0,0,5" />
-            <TextBox
-                Width="140" HorizontalAlignment="Center"
-                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Width="140" HorizontalAlignment="Left" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
-            <!-- Source path -->
-            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
-                       Margin="0,0,0,5" />
-            <TextBox Width="140" HorizontalAlignment="Center"
-                     Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged}" />
-
-            <!-- Target path -->
-            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
-                       Margin="0,0,0,5" />
-            <TextBox Width="140" HorizontalAlignment="Center"
-                     Text="{Binding TargetPath, UpdateSourceTrigger=PropertyChanged}" />
-
-            <!-- Recursive -->
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobRecursive]}"
-                           Margin="0,0,0,5" />
-                <CheckBox IsChecked="{Binding Recursive, UpdateSourceTrigger=PropertyChanged}"
-                          HorizontalAlignment="Center" />
+                <!-- Source path -->
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
+                               Margin="0,0,0,5" />
+                    <TextBox Width="140" Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <!-- Target path -->
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
+                               Margin="0,0,0,5" />
+                    <TextBox Width="140" Text="{Binding TargetPath, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
             </StackPanel>
 
-            <!-- Differential -->
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
-                           Margin="0,0,0,5" />
-                <CheckBox IsChecked="{Binding Differential, UpdateSourceTrigger=PropertyChanged}"
-                          HorizontalAlignment="Center" />
+                <!-- Recursive -->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobRecursive]}"
+                               Margin="0,0,0,5" />
+                    <CheckBox IsChecked="{Binding Recursive, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <!-- Differential -->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
+                               Margin="0,0,0,5" />
+                    <CheckBox IsChecked="{Binding Differential, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
             </StackPanel>
 
-            <!-- Encryption Type -->
-            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionType]}"
-                       Margin="0,0,0,5" />
-            <ComboBox Width="140" HorizontalAlignment="Center"
-                      SelectedItem="{Binding EncryptionType, UpdateSourceTrigger=PropertyChanged}"
-                      ItemsSource="{Binding Source={StaticResource EncryptionTypeOptions}}" />
+            <StackPanel Orientation="Horizontal">
+                <!-- Encryption Type -->
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionType]}"
+                               Margin="0,0,0,5" />
+                    <ComboBox Width="140" HorizontalAlignment="Left"
+                              SelectedItem="{Binding EncryptionType, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding Source={StaticResource EncryptionTypeOptions}}" />
+                </StackPanel>
 
-            <!-- Encryption Key -->
-            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
-                       Margin="0,0,0,5" />
-            <TextBox Width="140" HorizontalAlignment="Center"
-                     Text="{Binding EncryptionKey, UpdateSourceTrigger=PropertyChanged}" />
+                <!-- Encryption Key -->
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
+                               Margin="0,0,0,5" />
+                    <TextBox Width="140" HorizontalAlignment="Left"
+                             Text="{Binding EncryptionKey, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </StackPanel>
 
             <!-- File Mask -->
             <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobFileMask]}"
                        Margin="0,0,0,5" />
-            <TextBox Width="140" HorizontalAlignment="Center"
+            <TextBox Width="140" HorizontalAlignment="Left"
                      Text="{Binding FileMask, UpdateSourceTrigger=PropertyChanged}" />
 
             <!-- Submit -->
-            <Button Command="{Binding SubmitCommand}"
-                    Content="{Binding Source={StaticResource LocalizationService}, Path=[create]}" />
-
-            <Button Command="{Binding CancelCommand}"
-                    Content="{Binding Source={StaticResource LocalizationService}, Path=[cancel]}" />
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding SubmitCommand}"
+                        Content="{Binding Source={StaticResource LocalizationService}, Path=[create]}" />
+                <Button Command="{Binding CancelCommand}"
+                        Content="{Binding Source={StaticResource LocalizationService}, Path=[cancel]}" />
+            </StackPanel>
         </StackPanel>
-
     </Grid>
 </UserControl>
