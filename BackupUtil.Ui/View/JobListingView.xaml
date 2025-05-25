@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:service="clr-namespace:BackupUtil.ViewModel.Service;assembly=BackupUtil.ViewModel"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="540" d:DesignWidth="800">
 
 
     <UserControl.Resources>
@@ -16,12 +16,21 @@
 
     <Grid>
         <WrapPanel VerticalAlignment="Top">
-            <!-- <Button Click="SelectJobsPath" Content="{Binding LocalizedMessages[changeJobFile], Mode=TwoWay}" /> -->
+
+            <!-- Load jobs from file -->
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[changeJobFile]}"
+                    Command="{Binding LoadJobsCommand}" />
+
+            <TextBox Width="140"
+                     Text="{Binding JobFilePath, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Open job creation menu -->
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}"
+                    Command="{Binding CreateJobCommand}" />
+
             <!-- <view:LanguageSelectorView DataContext="{Binding LanguageSelectorViewModel}" HorizontalAlignment="Right" -->
             <!--                             VerticalAlignment="Top" Panel.ZIndex="10" /> -->
 
-            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}"
-                    Command="{Binding CreateJobCommand}" />
         </WrapPanel>
         <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single"
                   ItemsSource="{Binding Jobs}">
@@ -50,6 +59,21 @@
                 <DataGridCheckBoxColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
                     Binding="{Binding Differential}" />
+
+                <!-- Encryption type -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionType]}"
+                    Binding="{Binding EncryptionType}" />
+
+                <!-- Encryption key -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
+                    Binding="{Binding EncryptionKey}" />
+
+                <!-- File mask -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobFileMask]}"
+                    Binding="{Binding FileMask}" />
 
             </DataGrid.Columns>
         </DataGrid>

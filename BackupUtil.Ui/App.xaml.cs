@@ -2,6 +2,7 @@
 using System.Windows;
 using BackupUtil.Core.Job;
 using BackupUtil.I18n;
+using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
@@ -18,13 +19,24 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         I18N.SetCulture(new CultureInfo("fr-fr"));
-        _navigationStore.CurrentViewModel = new JobListingViewModel(_jobManager, _navigationStore);
-        // _navigationStore.CurrentViewModel = new JobCreationViewModel(_jobManager);
+        _navigationStore.CurrentViewModel = CreateJobListingViewModel();
 
         MainWindow = new MainWindow { DataContext = new MainViewModel(_navigationStore) };
 
         MainWindow.Show();
 
         base.OnStartup(e);
+    }
+
+    private JobListingViewModel CreateJobListingViewModel()
+    {
+        return new JobListingViewModel(_jobManager,
+            new NavigationService(_navigationStore, CreateJobCreationViewModel));
+    }
+
+    private JobCreationViewModel CreateJobCreationViewModel()
+    {
+        return new JobCreationViewModel(_jobManager,
+            new NavigationService(_navigationStore, CreateJobListingViewModel));
     }
 }

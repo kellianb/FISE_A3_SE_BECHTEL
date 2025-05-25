@@ -32,6 +32,8 @@ public class JobManager
         MaxJobs = Config.DefaultMaxJobCount;
     }
 
+    public static string DefaultJobFilePath => Path.GetFullPath(Config.DefaultJobFilePath);
+
     public uint MaxJobs { get; }
 
     public List<Job> Jobs { get; } = [];

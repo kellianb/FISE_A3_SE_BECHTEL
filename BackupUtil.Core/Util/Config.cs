@@ -8,7 +8,7 @@ internal static class Config
         "EasySave", "Jobs", "BackupJobs.json");
 
     // Default max job count for the job manager
-    public static uint DefaultMaxJobCount { get; } = 5;
+    public static uint DefaultMaxJobCount => uint.MaxValue;
 
     // Logging directory path
     public static string LoggingDirectory { get; } = Path.Combine(

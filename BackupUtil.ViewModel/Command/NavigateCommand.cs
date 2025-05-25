@@ -1,21 +1,11 @@
-using BackupUtil.Core.Job;
-using BackupUtil.ViewModel.Store;
-using BackupUtil.ViewModel.ViewModel;
+using BackupUtil.ViewModel.Service;
 
 namespace BackupUtil.ViewModel.Command;
 
-public class NavigateCommand : CommandBase
-// where TViewModel : ViewModelBase
+public class NavigateCommand(NavigationService navigationService) : CommandBase
 {
-    private readonly NavigationStore _navigationStore;
-
-    public NavigateCommand(NavigationStore navigationStore)
-    {
-        _navigationStore = navigationStore;
-    }
-
     public override void Execute(object? parameter)
     {
-        _navigationStore.CurrentViewModel = new JobCreationViewModel(new JobManager());
+        navigationService.Navigate();
     }
 }

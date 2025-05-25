@@ -4,14 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:service="clr-namespace:BackupUtil.ViewModel.Service;assembly=BackupUtil.ViewModel"
-             xmlns:crypto="clr-namespace:BackupUtil.Crypto;assembly=BackupUtil.Crypto"
-             mc:Ignorable="d" Height="440" Width="200">
+             xmlns:System="clr-namespace:System;assembly=System.Runtime"
+             xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
+             mc:Ignorable="d" Height="470" Width="200">
 
 
     <UserControl.Resources>
         <ObjectDataProvider x:Key="LocalizationService"
                             ObjectType="{x:Type service:LocalizationService}"
                             MethodName="get_Instance" />
+        <ObjectDataProvider x:Key="EncryptionTypeOptions"
+                            MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="viewModel:EncryptionTypeOptions" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </UserControl.Resources>
 
     <Grid>
@@ -37,17 +44,17 @@
                 Width="140" HorizontalAlignment="Center"
                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 
-            <!-- Target path -->
-            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
-                       Margin="0,0,0,5" />
-            <TextBox Width="140" HorizontalAlignment="Center"
-                     Text="{Binding TargetPath, UpdateSourceTrigger=PropertyChanged}" />
-
             <!-- Source path -->
             <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
                        Margin="0,0,0,5" />
             <TextBox Width="140" HorizontalAlignment="Center"
                      Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Target path -->
+            <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
+                       Margin="0,0,0,5" />
+            <TextBox Width="140" HorizontalAlignment="Center"
+                     Text="{Binding TargetPath, UpdateSourceTrigger=PropertyChanged}" />
 
             <!-- Recursive -->
             <StackPanel Orientation="Horizontal">
@@ -70,11 +77,7 @@
                        Margin="0,0,0,5" />
             <ComboBox Width="140" HorizontalAlignment="Center"
                       SelectedItem="{Binding EncryptionType, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedValuePath="Tag">
-                <!-- TODO improve -->
-                <ComboBoxItem Content="No Encryption" Tag="{x:Null}" />
-                <ComboBoxItem Content="Xor" Tag="{x:Static crypto:EncryptionType.Xor}" />
-            </ComboBox>
+                      ItemsSource="{Binding Source={StaticResource EncryptionTypeOptions}}" />
 
             <!-- Encryption Key -->
             <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
@@ -88,8 +91,12 @@
             <TextBox Width="140" HorizontalAlignment="Center"
                      Text="{Binding FileMask, UpdateSourceTrigger=PropertyChanged}" />
 
+            <!-- Submit -->
             <Button Command="{Binding SubmitCommand}"
-                    Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}" />
+                    Content="{Binding Source={StaticResource LocalizationService}, Path=[create]}" />
+
+            <Button Command="{Binding CancelCommand}"
+                    Content="{Binding Source={StaticResource LocalizationService}, Path=[cancel]}" />
         </StackPanel>
 
     </Grid>

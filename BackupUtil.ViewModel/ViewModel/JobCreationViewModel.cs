@@ -5,6 +5,8 @@ using BackupUtil.Core.Job;
 using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Crypto;
 using BackupUtil.ViewModel.Command;
+using BackupUtil.ViewModel.Service;
+using BackupUtil.ViewModel.Store;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
@@ -12,19 +14,25 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
     private readonly JobManager _jobManager;
 
-    public JobCreationViewModel(JobManager jobManager)
+    public JobCreationViewModel(JobManager jobManager, NavigationService navigationService)
     {
         _jobManager = jobManager;
 
-        SubmitCommand = new CreateJobCommand(this, jobManager);
+        SubmitCommand = new CreateJobCommand(this, jobManager, navigationService);
+        CancelCommand = new NavigateCommand(navigationService);
     }
 
     public bool CanCreateJob => HasName
+                                // Source path
+                                && SourcePathExists
+                                && SourcePathOutsideOfTargetPath
+                                // Target path
                                 && TargetPathDifferentFromSourcePath
                                 && TargetPathOutsideOfSourcePath
                                 && TargetPathSameTypeAsSourcePath
-                                && SourcePathOutsideOfTargetPath
+                                // Encryption
                                 && EncryptionKeyOk
+                                // File mask
                                 && ValidFileMask;
 
     public ICommand SubmitCommand { get; }
@@ -107,29 +115,28 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     #region SourcePath
 
-    private FileSystemInfo _sourcePath = new DirectoryInfo(".");
+    private string _sourcePath = new DirectoryInfo(".").FullName;
+
+    private bool SourcePathExists => Directory.Exists(SourcePath) || File.Exists(SourcePath);
 
     private bool SourcePathOutsideOfTargetPath =>
-        !_sourcePath.FullName.StartsWith(_targetPath.FullName, StringComparison.OrdinalIgnoreCase);
+        !SourcePath.StartsWith(TargetPath, StringComparison.OrdinalIgnoreCase);
 
     public string SourcePath
     {
-        get => _sourcePath.FullName;
+        get => _sourcePath;
         set
         {
-            if (File.Exists(value))
-            {
-                _sourcePath = new FileInfo(value);
-            }
-            else if (Directory.Exists(value))
-            {
-                _sourcePath = new DirectoryInfo(value);
-            }
-
+            _sourcePath = value;
             OnPropertyChanged(nameof(SourcePath));
 
             // Determine errors
             ClearErrors(nameof(SourcePath));
+
+            if (!SourcePathExists)
+            {
+                AddError("errorSourcePath", nameof(SourcePath));
+            }
 
             if (!SourcePathOutsideOfTargetPath)
             {
@@ -144,7 +151,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     #region TargetPath
 
-    private FileSystemInfo _targetPath = new DirectoryInfo(".");
+    private string _targetPath = new DirectoryInfo(".").FullName;
 
     private bool TargetPathDifferentFromSourcePath =>
         !string.Equals(SourcePath, TargetPath, StringComparison.OrdinalIgnoreCase);
@@ -153,23 +160,16 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         !TargetPath.StartsWith(SourcePath, StringComparison.OrdinalIgnoreCase);
 
     // Source and target both have to be either files or directories
-    private bool TargetPathSameTypeAsSourcePath => _sourcePath.Attributes.HasFlag(FileAttributes.Directory) ==
-                                                   _targetPath.Attributes.HasFlag(FileAttributes.Directory);
+    private bool TargetPathSameTypeAsSourcePath => File.Exists(SourcePath)
+        ? !Directory.Exists(TargetPath)
+        : !File.Exists(TargetPath);
 
     public string TargetPath
     {
-        get => _targetPath.FullName;
+        get => _targetPath;
         set
         {
-            if (File.Exists(value))
-            {
-                _targetPath = new FileInfo(value);
-            }
-            else if (Directory.Exists(value))
-            {
-                _targetPath = new DirectoryInfo(value);
-            }
-
+            _targetPath = value;
             OnPropertyChanged(nameof(TargetPath));
 
             // Determine errors
@@ -188,9 +188,9 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             if (!TargetPathSameTypeAsSourcePath)
             {
                 AddError(
-                    _sourcePath.Attributes.HasFlag(FileAttributes.Directory)
-                        ? "errorSourceDirTargetFile"
-                        : "errorSourceFileTargetDir", nameof(TargetPath));
+                    File.Exists(SourcePath)
+                        ? "errorSourceFileTargetDir"
+                        : "errorSourceDirTargetFile", nameof(TargetPath));
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -235,12 +235,12 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     private EncryptionType? _encryptionType;
 
-    public EncryptionType? EncryptionType
+    public EncryptionTypeOptions EncryptionType
     {
-        get => _encryptionType;
+        get => EncryptionTypeOptionsUtils.From(_encryptionType);
         set
         {
-            _encryptionType = value;
+            _encryptionType = EncryptionTypeOptionsUtils.To(value);
             OnPropertyChanged(nameof(EncryptionType));
 
             // Update encryption key error state
@@ -263,7 +263,8 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
     private string _encryptionKey = "";
 
     // Encryption key cannot be empty if an EncryptionType is set
-    private bool EncryptionKeyOk => EncryptionType == null || !string.IsNullOrEmpty(EncryptionKey);
+    private bool EncryptionKeyOk =>
+        EncryptionType == EncryptionTypeOptions.None || !string.IsNullOrEmpty(EncryptionKey);
 
     public string EncryptionKey
     {
@@ -291,7 +292,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     private string _fileMask = FileMaskBuilder.New().BuildSerialized();
 
-    private bool ValidFileMask => FileMaskBuilder.ValidateSerialized(FileMask);
+    private bool ValidFileMask => string.IsNullOrWhiteSpace(FileMask) || FileMaskBuilder.ValidateSerialized(FileMask);
 
     public string FileMask
     {
