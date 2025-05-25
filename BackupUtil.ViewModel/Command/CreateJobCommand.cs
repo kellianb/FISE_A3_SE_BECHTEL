@@ -5,13 +5,14 @@ using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command;
 
-public class CreateJobCommand : CommandBase
+public class CreateJobCommand<TViewModel> : CommandBase where TViewModel : ViewModelBase
 {
     private readonly JobCreationViewModel _jobCreationViewModel;
     private readonly JobManager _jobManager;
-    private readonly NavigationService _navigationService;
+    private readonly NavigationService<TViewModel> _navigationService;
 
-    public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobManager jobManager, NavigationService navigationService)
+    public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobManager jobManager,
+        NavigationService<TViewModel> navigationService)
     {
         _jobManager = jobManager;
         _navigationService = navigationService;

@@ -3,7 +3,8 @@ using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Service;
 
-public class NavigationService(NavigationStore navigationStore, Func<ViewModelBase> viewModelSource)
+public class NavigationService<TViewModel>(NavigationStore navigationStore, Func<TViewModel> viewModelSource)
+    where TViewModel : ViewModelBase
 {
     public void Navigate()
     {
