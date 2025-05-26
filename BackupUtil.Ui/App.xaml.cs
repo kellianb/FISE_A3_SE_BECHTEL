@@ -22,11 +22,13 @@ public partial class App : Application
         // Shared objects
         services.AddSingleton<JobManager>();
         services.AddSingleton<NavigationStore>();
+        services.AddSingleton<ProgramFilterStore>();
 
         // ViewModels
         services.AddTransient(CreateMainViewModel);
         services.AddTransient(CreateJobCreationViewModel);
         services.AddTransient(CreateJobListingViewModel);
+        services.AddTransient(CreateSettingsViewModel);
 
         _serviceProvider = services.BuildServiceProvider();
     }
@@ -34,7 +36,6 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        I18N.SetCulture(new CultureInfo("fr-fr"));
         _serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
             _serviceProvider.GetRequiredService<JobListingViewModel>();
 
@@ -53,12 +54,19 @@ public partial class App : Application
     private JobListingViewModel CreateJobListingViewModel(IServiceProvider serviceProvider)
     {
         return new JobListingViewModel(serviceProvider.GetRequiredService<JobManager>(),
-            CreateNavigationService<JobCreationViewModel>(serviceProvider));
+            CreateNavigationService<JobCreationViewModel>(serviceProvider),
+            CreateNavigationService<SettingsViewModel>(serviceProvider));
     }
 
     private JobCreationViewModel CreateJobCreationViewModel(IServiceProvider serviceProvider)
     {
         return new JobCreationViewModel(serviceProvider.GetRequiredService<JobManager>(),
+            CreateNavigationService<JobListingViewModel>(serviceProvider));
+    }
+
+    private SettingsViewModel CreateSettingsViewModel(IServiceProvider serviceProvider)
+    {
+        return new SettingsViewModel(serviceProvider.GetRequiredService<ProgramFilterStore>(),
             CreateNavigationService<JobListingViewModel>(serviceProvider));
     }
 

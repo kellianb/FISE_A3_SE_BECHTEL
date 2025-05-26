@@ -106,7 +106,7 @@
         <value>Encryption key cannot be empty</value>
     </data>
     <data name="langLabel" xml:space="preserve">
-        <value>Language:</value>
+        <value>Language</value>
     </data>
     <data name="langFrench" xml:space="preserve">
         <value>French</value>
@@ -158,5 +158,14 @@
     </data>
     <data name="errorBannedProgramRunning" xml:space="preserve">
         <value>A banned program is currently running</value>
+    </data>
+    <data name="settings" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="apply" xml:space="preserve">
+        <value>Apply</value>
+    </data>
+    <data name="bannedPrograms" xml:space="preserve">
+        <value>Banned programs</value>
     </data>
 </root>

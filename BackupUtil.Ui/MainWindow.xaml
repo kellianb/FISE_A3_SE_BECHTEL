@@ -6,18 +6,28 @@
         xmlns:view="clr-namespace:BackupUtil.Ui.View"
         xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
         mc:Ignorable="d"
-        Title="EasySave" Height="500" Width="800">
+        Title="EasySave" Height="600" Width="800">
 
     <Grid>
         <Grid.Resources>
+            <!-- Job listing view -->
             <DataTemplate DataType="{x:Type viewModel:JobListingViewModel}">
                 <view:JobListingView />
             </DataTemplate>
+
+            <!-- Job creation view -->
             <DataTemplate DataType="{x:Type viewModel:JobCreationViewModel}">
                 <view:JobCreationView />
             </DataTemplate>
+
+            <!-- Transaction view -->
             <DataTemplate DataType="{x:Type viewModel:TransactionViewModel}">
                 <view:TransactionView />
+            </DataTemplate>
+
+            <!-- Settings -->
+            <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+                <view:SettingsView />
             </DataTemplate>
         </Grid.Resources>
 

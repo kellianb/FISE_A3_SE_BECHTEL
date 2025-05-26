@@ -30,9 +30,15 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                                 // File mask
                                 && ValidFileMask;
 
+    #region Commands
+
+    // Submit the job creation and navigate back to the job listing view model
     public ICommand SubmitCommand { get; }
+
+    // Navigate back to the job listing view model
     public ICommand CancelCommand { get; }
 
+    #endregion
 
     #region Error handling
 

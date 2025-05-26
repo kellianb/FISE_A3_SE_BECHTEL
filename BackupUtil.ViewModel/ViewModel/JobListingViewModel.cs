@@ -13,11 +13,15 @@ public class JobListingViewModel : ViewModelBase
     private readonly JobManager _jobManager;
     private ObservableCollection<JobViewModel> _jobs = [];
 
-    public JobListingViewModel(JobManager jobManager, NavigationService<JobCreationViewModel> navigationService)
+    public JobListingViewModel(JobManager jobManager,
+        NavigationService<JobCreationViewModel> jobCreationNavigationService,
+        NavigationService<SettingsViewModel> settingsNavigationService)
     {
         _jobManager = jobManager;
 
-        CreateJobCommand = new NavigateCommand<JobCreationViewModel>(navigationService);
+        CreateJobCommand = new NavigateCommand<JobCreationViewModel>(jobCreationNavigationService);
+        OpenSettingsCommand = new NavigateCommand<SettingsViewModel>(settingsNavigationService);
+
         LoadJobsCommand = new LoadJobsCommand(this, _jobManager);
         ExportJobsCommand = new ExportJobsCommand(this, _jobManager);
 
@@ -25,13 +29,6 @@ public class JobListingViewModel : ViewModelBase
     }
 
     public IEnumerable<JobViewModel> Jobs => _jobs;
-
-    public ICommand CreateJobCommand { get; }
-    public ICommand LoadJobsCommand { get; }
-
-    public ICommand ExportJobsCommand { get; }
-
-    public LanguageSelectionViewModel LanguageSelectionViewModel { get; } = new();
 
     public bool CanAccessJobFile => JobFileExists;
 
@@ -46,6 +43,22 @@ public class JobListingViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(Jobs));
     }
+
+    #region Commands
+
+    // Opens the job creation view model
+    public ICommand CreateJobCommand { get; }
+
+    // Opens the settings view model
+    public ICommand OpenSettingsCommand { get; }
+
+    // Loads jobs from the job file
+    public ICommand LoadJobsCommand { get; }
+
+    // Save jobs to the job file
+    public ICommand ExportJobsCommand { get; }
+
+    #endregion
 
     #region Error handling
 

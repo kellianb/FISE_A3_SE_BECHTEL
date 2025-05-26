@@ -2,16 +2,21 @@
 
 namespace BackupUtil.ViewModel.Store;
 
-public class ProgramFilterStore(ProgramFilter programFilter)
+public class ProgramFilterStore
 {
-    private ProgramFilter _programFilter = programFilter;
-
-    public ProgramFilter ProgramFilter
+    public ProgramFilterStore(ProgramFilter? programFilter = null)
     {
-        get => _programFilter;
+        ProgramFilter = programFilter ?? new ProgramFilter([]);
+    }
+
+    public ProgramFilter ProgramFilter { get; }
+
+    public List<string> BannedPrograms
+    {
+        get => ProgramFilter.BannedPrograms;
         set
         {
-            _programFilter = value;
+            ProgramFilter.BannedPrograms = value;
             OnProgramFilterChanged();
         }
     }

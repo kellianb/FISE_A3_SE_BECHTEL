@@ -2,9 +2,9 @@
 
 namespace BackupUtil.Ui.View;
 
-public partial class LanguageSelectionView : UserControl
+public partial class SettingsView : UserControl
 {
-    public LanguageSelectionView()
+    public SettingsView()
     {
         InitializeComponent();
     }
