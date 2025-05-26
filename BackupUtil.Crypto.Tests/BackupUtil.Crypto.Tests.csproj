@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BackupUtil.Crypto\BackupUtil.Crypto.csproj" />
+        <ProjectReference Include="..\BackupUtil.Crypto\BackupUtil.Crypto.csproj"/>
     </ItemGroup>
 
 </Project>
