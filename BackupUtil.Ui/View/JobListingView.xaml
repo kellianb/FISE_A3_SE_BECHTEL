@@ -46,9 +46,9 @@
             <TextBox Grid.Column="2" HorizontalAlignment="Stretch"
                      Text="{Binding JobFilePath, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
-
+        <WrapPanel>
         <!-- Job list display -->
-        <DataGrid Grid.Row="1" Grid.Column="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,0,0"
+        <DataGrid AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,0"
                   SelectionMode="Extended"
                   ItemsSource="{Binding Jobs}" SelectionChanged="Selector_OnSelectionChanged">
             <DataGrid.Columns>
@@ -94,6 +94,15 @@
 
             </DataGrid.Columns>
         </DataGrid>
+            <!-- Transaction details (total file size) -->
+        <DataGrid>
+            <DataGrid.Columns>
+                <!-- Type (file or directory) -->
+                <!-- Name -->
+            </DataGrid.Columns>
+
+        </DataGrid>
+        </WrapPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1">
             <!-- Delete Selected Jobs Button -->
