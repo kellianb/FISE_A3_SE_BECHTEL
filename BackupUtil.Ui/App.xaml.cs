@@ -14,10 +14,11 @@ namespace BackupUtil.Ui;
 /// </summary>
 public partial class App : Application
 {
-    private IServiceCollection services = new ServiceCollection();
+    private readonly IServiceProvider _serviceProvider;
 
     public App()
     {
+        IServiceCollection services = new ServiceCollection();
         // Shared objects
         services.AddSingleton<JobManager>();
         services.AddSingleton<NavigationStore>();
@@ -26,18 +27,18 @@ public partial class App : Application
         services.AddTransient(CreateMainViewModel);
         services.AddTransient(CreateJobCreationViewModel);
         services.AddTransient(CreateJobListingViewModel);
+
+        _serviceProvider = services.BuildServiceProvider();
     }
 
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        IServiceProvider serviceProvider = services.BuildServiceProvider();
-
         I18N.SetCulture(new CultureInfo("fr-fr"));
-        serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
-            serviceProvider.GetRequiredService<JobListingViewModel>();
+        _serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
+            _serviceProvider.GetRequiredService<JobListingViewModel>();
 
-        MainWindow = new MainWindow { DataContext = serviceProvider.GetRequiredService<MainViewModel>() };
+        MainWindow = new MainWindow { DataContext = _serviceProvider.GetRequiredService<MainViewModel>() };
 
         MainWindow.Show();
 
