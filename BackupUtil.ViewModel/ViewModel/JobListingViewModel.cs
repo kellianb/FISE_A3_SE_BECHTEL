@@ -10,9 +10,9 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobListingViewModel : ViewModelBase
 {
-    private ObservableCollection<JobViewModel> _jobs;
+    private ObservableCollection<JobViewModel> _jobs = [];
 
-    private JobManager _jobManager;
+    private readonly JobManager _jobManager;
 
     public JobListingViewModel(JobManager jobManager, NavigationService<JobCreationViewModel> navigationService)
     {
