@@ -16,7 +16,6 @@ internal class AllowedFileExtensionsStrategy(List<string> allowedExtensions) : F
 
     public override bool IsOk(FileInfo file)
     {
-        Console.WriteLine($"Checking file {file.FullName}");
         return AllowedExtensions.Contains(file.Extension);
     }
 }

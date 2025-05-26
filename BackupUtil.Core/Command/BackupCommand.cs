@@ -8,15 +8,25 @@ public class BackupCommand
 {
     private readonly IBackupTransactionExecutor _receiver;
     private readonly BackupTransaction _transaction;
+    private ProgramFilter? _programFilter;
 
-    internal BackupCommand(IBackupTransactionExecutor receiver, BackupTransaction transaction)
+    internal BackupCommand(IBackupTransactionExecutor receiver, BackupTransaction transaction,
+        ProgramFilter? programFilter = null)
     {
         _receiver = receiver;
         _transaction = transaction;
+        _programFilter = programFilter;
+    }
+
+    public void SetProgramFilter(ProgramFilter? programFilter)
+    {
+        _programFilter = programFilter;
     }
 
     public void Execute()
     {
+        _programFilter?.CheckForBannedPrograms();
+
         _receiver.Execute(_transaction);
     }
 
