@@ -156,4 +156,7 @@
     <data name="loadJobs" xml:space="preserve">
         <value>Charger</value>
     </data>
+    <data name="errorBannedProgramRunning" xml:space="preserve">
+        <value>Un logiciel interdit est ouvert</value>
+    </data>
 </root>
