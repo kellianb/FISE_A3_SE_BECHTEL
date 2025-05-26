@@ -92,7 +92,7 @@ public class JobManager
 
     public JobManager RemoveByIndices(HashSet<int> jobIndices)
     {
-        foreach (int jobIndex in jobIndices)
+        foreach (int jobIndex in jobIndices.OrderDescending())
         {
             Jobs.RemoveAt(jobIndex);
         }
