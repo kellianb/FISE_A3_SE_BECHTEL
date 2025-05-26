@@ -156,4 +156,7 @@
     <data name="loadJobs" xml:space="preserve">
         <value>Load</value>
     </data>
+    <data name="errorBannedProgramRunning" xml:space="preserve">
+        <value>A banned program is currently running</value>
+    </data>
 </root>
