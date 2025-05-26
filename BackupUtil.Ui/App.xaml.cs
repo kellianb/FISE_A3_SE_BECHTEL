@@ -5,6 +5,7 @@ using BackupUtil.I18n;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BackupUtil.Ui;
 
@@ -13,30 +14,57 @@ namespace BackupUtil.Ui;
 /// </summary>
 public partial class App : Application
 {
-    private readonly JobManager _jobManager = new();
-    private readonly NavigationStore _navigationStore = new();
+    private IServiceCollection services = new ServiceCollection();
+
+    public App()
+    {
+        // Shared objects
+        services.AddSingleton<JobManager>();
+        services.AddSingleton<NavigationStore>();
+
+        // ViewModels
+        services.AddTransient(CreateMainViewModel);
+        services.AddTransient(CreateJobCreationViewModel);
+        services.AddTransient(CreateJobListingViewModel);
+    }
+
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        I18N.SetCulture(new CultureInfo("fr-fr"));
-        _navigationStore.CurrentViewModel = CreateJobListingViewModel();
+        IServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        MainWindow = new MainWindow { DataContext = new MainViewModel(_navigationStore) };
+        I18N.SetCulture(new CultureInfo("fr-fr"));
+        serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
+            serviceProvider.GetRequiredService<JobListingViewModel>();
+
+        MainWindow = new MainWindow { DataContext = serviceProvider.GetRequiredService<MainViewModel>() };
 
         MainWindow.Show();
 
         base.OnStartup(e);
     }
 
-    private JobListingViewModel CreateJobListingViewModel()
+    private MainViewModel CreateMainViewModel(IServiceProvider serviceProvider)
     {
-        return new JobListingViewModel(_jobManager,
-            new NavigationService<JobCreationViewModel>(_navigationStore, CreateJobCreationViewModel));
+        return new MainViewModel(serviceProvider.GetRequiredService<NavigationStore>());
     }
 
-    private JobCreationViewModel CreateJobCreationViewModel()
+    private JobListingViewModel CreateJobListingViewModel(IServiceProvider serviceProvider)
     {
-        return new JobCreationViewModel(_jobManager,
-            new NavigationService<JobListingViewModel>(_navigationStore, CreateJobListingViewModel));
+        return new JobListingViewModel(serviceProvider.GetRequiredService<JobManager>(),
+            CreateNavigationService<JobCreationViewModel>(serviceProvider));
+    }
+
+    private JobCreationViewModel CreateJobCreationViewModel(IServiceProvider serviceProvider)
+    {
+        return new JobCreationViewModel(serviceProvider.GetRequiredService<JobManager>(),
+            CreateNavigationService<JobListingViewModel>(serviceProvider));
+    }
+
+    private NavigationService<TViewModel> CreateNavigationService<TViewModel>(IServiceProvider serviceProvider)
+        where TViewModel : ViewModelBase
+    {
+        return new NavigationService<TViewModel>(serviceProvider.GetRequiredService<NavigationStore>(),
+            serviceProvider.GetRequiredService<TViewModel>);
     }
 }
