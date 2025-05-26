@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:service="clr-namespace:BackupUtil.ViewModel.Service;assembly=BackupUtil.ViewModel"
-             xmlns:view="clr-namespace:BackupUtil.Ui.View"
              mc:Ignorable="d"
              d:DesignHeight="540" d:DesignWidth="800">
 
@@ -34,9 +33,14 @@
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}"
                     Command="{Binding CreateJobCommand}" />
 
-            <view:LanguageSelectionView HorizontalAlignment="Right"
-                                        VerticalAlignment="Top" Panel.ZIndex="10"
-                                        DataContext="{Binding LanguageSelectionViewModel}" />
+
+            <!-- Open settings -->
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[settings]}"
+                    Command="{Binding OpenSettingsCommand}" />
+
+            <!-- <view:LanguageSelectionView HorizontalAlignment="Right" -->
+            <!--                             VerticalAlignment="Top" Panel.ZIndex="10" -->
+            <!--                             DataContext="{Binding LanguageSelectionViewModel}" /> -->
 
         </WrapPanel>
         <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single"
