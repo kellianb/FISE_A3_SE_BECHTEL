@@ -3,7 +3,7 @@ using BackupUtil.Core.Transaction.ChangeType;
 namespace BackupUtil.Core.Transaction;
 
 // Class to hold all the changes that need to be applied
-internal class BackupTransaction()
+internal class BackupTransaction
 {
     public List<FileChange> FileChanges { get; } = [];
     public List<DirectoryChange> DirectoryChanges { get; } = [];

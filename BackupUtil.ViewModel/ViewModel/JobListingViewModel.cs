@@ -10,9 +10,8 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobListingViewModel : ViewModelBase
 {
-    private ObservableCollection<JobViewModel> _jobs = [];
-
     private readonly JobManager _jobManager;
+    private ObservableCollection<JobViewModel> _jobs = [];
 
     public JobListingViewModel(JobManager jobManager, NavigationService<JobCreationViewModel> navigationService)
     {
@@ -25,6 +24,17 @@ public class JobListingViewModel : ViewModelBase
         LoadJobs();
     }
 
+    public IEnumerable<JobViewModel> Jobs => _jobs;
+
+    public ICommand CreateJobCommand { get; }
+    public ICommand LoadJobsCommand { get; }
+
+    public ICommand ExportJobsCommand { get; }
+
+    public LanguageSelectionViewModel LanguageSelectionViewModel { get; } = new();
+
+    public bool CanAccessJobFile => JobFileExists;
+
     public void LoadJobs()
     {
         _jobs = [];
@@ -36,17 +46,6 @@ public class JobListingViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(Jobs));
     }
-
-    public IEnumerable<JobViewModel> Jobs => _jobs;
-
-    public ICommand CreateJobCommand { get; }
-    public ICommand LoadJobsCommand { get; }
-
-    public ICommand ExportJobsCommand { get; }
-
-    public LanguageSelectionViewModel LanguageSelectionViewModel { get; } = new();
-
-    public bool CanAccessJobFile => JobFileExists;
 
     #region Error handling
 

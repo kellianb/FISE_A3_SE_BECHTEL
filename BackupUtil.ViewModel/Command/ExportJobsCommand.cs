@@ -6,7 +6,6 @@ namespace BackupUtil.ViewModel.Command;
 
 public class ExportJobsCommand : CommandBase
 {
-
     private readonly JobListingViewModel _jobListingViewModel;
     private readonly JobManager _jobManager;
 

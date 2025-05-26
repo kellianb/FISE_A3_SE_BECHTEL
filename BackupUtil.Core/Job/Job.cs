@@ -46,6 +46,7 @@ public class Job
 
     [JsonConverter(typeof(JsonStringEnumConverter<EncryptionType>))]
     public EncryptionType? EncryptionType { get; set; }
+
     public string? EncryptionKey { get; set; }
     public string? FileMask { get; set; }
 }
