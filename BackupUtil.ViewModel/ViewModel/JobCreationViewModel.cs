@@ -1,5 +1,6 @@
 using System.Collections;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using BackupUtil.Core.Job;
 using BackupUtil.Core.Transaction.FileMask;
@@ -9,6 +10,7 @@ using BackupUtil.ViewModel.Service;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
+// TODO switch to jobManager
 public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
     public JobCreationViewModel(JobManager jobManager, NavigationService<HomeViewModel> navigationService)
@@ -40,51 +42,6 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     #endregion
 
-    #region Error handling
-
-    private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new();
-
-    public IEnumerable GetErrors(string? propertyName)
-    {
-        if (propertyName == null ||
-            !_propertyNameToErrorsDictionary.TryGetValue(propertyName, out List<string>? errors))
-        {
-            return new List<string>();
-        }
-
-        return errors;
-    }
-
-    public bool HasErrors => _propertyNameToErrorsDictionary.Count != 0;
-
-    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
-
-    private void AddError(string errorMessage, string propertyName)
-    {
-        if (!_propertyNameToErrorsDictionary.TryGetValue(propertyName, out List<string>? value))
-        {
-            value = [];
-            _propertyNameToErrorsDictionary.Add(propertyName, value);
-        }
-
-        value.Add(errorMessage);
-
-        OnErrorsChanged(propertyName);
-    }
-
-    private void ClearErrors(string propertyName)
-    {
-        _propertyNameToErrorsDictionary.Remove(propertyName);
-
-        OnErrorsChanged(propertyName);
-    }
-
-    private void OnErrorsChanged(string propertyName)
-    {
-        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-    }
-
-    #endregion
 
     #region Name
 
@@ -101,11 +58,11 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             OnPropertyChanged();
 
             // Determine errors
-            ClearErrors(nameof(Name));
+            ClearErrors();
 
             if (!HasName)
             {
-                AddError("errorNameEmpty", nameof(Name));
+                AddError("errorNameEmpty");
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -132,16 +89,16 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             OnPropertyChanged();
 
             // Determine errors
-            ClearErrors(nameof(SourcePath));
+            ClearErrors();
 
             if (!SourcePathExists)
             {
-                AddError("errorSourcePath", nameof(SourcePath));
+                AddError("errorSourcePath");
             }
 
             if (!SourcePathOutsideOfTargetPath)
             {
-                AddError("errorSourceInTarget", nameof(SourcePath));
+                AddError("errorSourceInTarget");
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -174,16 +131,16 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             OnPropertyChanged();
 
             // Determine errors
-            ClearErrors(nameof(TargetPath));
+            ClearErrors();
 
             if (!TargetPathDifferentFromSourcePath)
             {
-                AddError("errorSameSourceTarget", nameof(TargetPath));
+                AddError("errorSameSourceTarget");
             }
 
             if (!TargetPathOutsideOfSourcePath)
             {
-                AddError("errorTargetInSource", nameof(TargetPath));
+                AddError("errorTargetInSource");
             }
 
             if (!TargetPathSameTypeAsSourcePath)
@@ -191,7 +148,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
                 AddError(
                     File.Exists(SourcePath)
                         ? "errorSourceFileTargetDir"
-                        : "errorSourceDirTargetFile", nameof(TargetPath));
+                        : "errorSourceDirTargetFile");
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -275,12 +232,12 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             _encryptionKey = value;
             OnPropertyChanged();
 
-            ClearErrors(nameof(EncryptionKey));
+            ClearErrors();
 
             if (!EncryptionKeyOk)
             {
                 // Determine errors
-                AddError("errorEncryptionKeyEmpty", nameof(EncryptionKey));
+                AddError("errorEncryptionKeyEmpty");
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
@@ -303,16 +260,77 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
             _fileMask = value;
             OnPropertyChanged();
 
-            ClearErrors(nameof(FileMask));
+            ClearErrors();
 
             if (!ValidFileMask)
             {
                 // Determine errors
-                AddError("errorInvalidFileMask", nameof(FileMask));
+                AddError("errorInvalidFileMask");
             }
 
             OnPropertyChanged(nameof(CanCreateJob));
         }
+    }
+
+    #endregion
+
+    #region Error handling
+
+    private readonly Dictionary<string, List<string>> _propertyNameToErrorsDictionary = new();
+
+    public IEnumerable GetErrors(string? propertyName)
+    {
+        if (propertyName == null ||
+            !_propertyNameToErrorsDictionary.TryGetValue(propertyName, out List<string>? errors))
+        {
+            return new List<string>();
+        }
+
+        return errors;
+    }
+
+    public bool HasErrors => _propertyNameToErrorsDictionary.Count != 0;
+
+    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+    private void AddError(string errorMessage, [CallerMemberName] string? propertyName = null)
+    {
+        if (propertyName is null)
+        {
+            return;
+        }
+
+        if (!_propertyNameToErrorsDictionary.TryGetValue(propertyName, out List<string>? value))
+        {
+            value = [];
+            _propertyNameToErrorsDictionary.Add(propertyName, value);
+        }
+
+        value.Add(errorMessage);
+
+        OnErrorsChanged(propertyName);
+    }
+
+    private void ClearErrors([CallerMemberName] string? propertyName = null)
+    {
+        if (propertyName is null)
+        {
+            return;
+        }
+
+        _propertyNameToErrorsDictionary.Remove(propertyName);
+
+        OnErrorsChanged(propertyName);
+    }
+
+    private void OnErrorsChanged([CallerMemberName] string? propertyName = null)
+    {
+        if (propertyName is null)
+        {
+            return;
+        }
+
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
     }
 
     #endregion

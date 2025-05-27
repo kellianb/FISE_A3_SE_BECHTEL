@@ -1,42 +1,76 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using BackupUtil.Core.Job;
 using BackupUtil.ViewModel.Command;
+using BackupUtil.ViewModel.Store;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobListingViewModel : ViewModelBase
 {
-    private readonly JobManager _jobManager;
+    private readonly JobStore _jobStore;
     private ObservableCollection<JobViewModel> _jobs = [];
 
-    public JobListingViewModel(JobManager jobManager)
+    public JobListingViewModel(JobStore jobStore)
     {
-        _jobManager = jobManager;
+        _jobStore = jobStore;
 
-        LoadJobsCommand = new LoadJobsCommand(this, _jobManager);
-        ExportJobsCommand = new ExportJobsCommand(this, _jobManager);
+        _jobStore.PropertyChanged += OnJobStorePropertyChanged;
+
+        LoadJobsCommand = new LoadJobsCommand(this, _jobStore);
+        ExportJobsCommand = new ExportJobsCommand(this, _jobStore);
 
         LoadJobs();
     }
 
     public IEnumerable<JobViewModel> Jobs => _jobs;
 
-    public bool CanAccessJobFile => JobFileExists;
+    public bool CanAccessJobFile => _jobStore.CanAccessJobFile;
+
+    #region JobFilePath
+
+    public string JobFilePath
+    {
+        get => _jobStore.JobFilePath;
+        set => _jobStore.JobFilePath = value;
+    }
+
+    #endregion
 
     public void LoadJobs()
     {
         _jobs = [];
 
-        foreach (Job job in _jobManager.Jobs)
+        foreach (Job job in _jobStore.Jobs)
         {
             _jobs.Add(new JobViewModel(job));
         }
 
         OnPropertyChanged(nameof(Jobs));
     }
+
+    #region Handle JobStore events
+
+    private void OnJobStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(JobStore.Jobs):
+                LoadJobs(); // LoadJobs calls OnPropertyChanged
+                break;
+            case nameof(JobStore.JobFilePath):
+                OnPropertyChanged(nameof(JobFilePath));
+                break;
+            case nameof(JobStore.CanAccessJobFile):
+                OnPropertyChanged(nameof(CanAccessJobFile));
+                break;
+        }
+    }
+
+    #endregion
 
     #region Commands
 
@@ -63,10 +97,17 @@ public class JobListingViewModel : ViewModelBase
         return errors;
     }
 
+    public bool HasErrors => _propertyNameToErrorsDictionary.Count != 0;
+
     public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
-    private void AddError(string errorMessage, string propertyName)
+    private void AddError(string errorMessage, [CallerMemberName] string? propertyName = null)
     {
+        if (propertyName is null)
+        {
+            return;
+        }
+
         if (!_propertyNameToErrorsDictionary.TryGetValue(propertyName, out List<string>? value))
         {
             value = [];
@@ -78,44 +119,26 @@ public class JobListingViewModel : ViewModelBase
         OnErrorsChanged(propertyName);
     }
 
-    private void ClearErrors(string propertyName)
+    private void ClearErrors([CallerMemberName] string? propertyName = null)
     {
+        if (propertyName is null)
+        {
+            return;
+        }
+
         _propertyNameToErrorsDictionary.Remove(propertyName);
 
         OnErrorsChanged(propertyName);
     }
 
-    private void OnErrorsChanged(string propertyName)
+    private void OnErrorsChanged([CallerMemberName] string? propertyName = null)
     {
-        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-    }
-
-    #endregion
-
-    #region JobFilePath
-
-    private string _jobFilePath = JobManager.DefaultJobFilePath;
-
-    private bool JobFileExists => File.Exists(_jobFilePath);
-
-    public string JobFilePath
-    {
-        get => _jobFilePath;
-        set
+        if (propertyName is null)
         {
-            _jobFilePath = value;
-            OnPropertyChanged();
-
-            // Determine errors
-            ClearErrors(nameof(JobFilePath));
-
-            if (!JobFileExists)
-            {
-                AddError("errorInvalidJobFile", nameof(JobFilePath));
-            }
-
-            OnPropertyChanged(nameof(CanAccessJobFile));
+            return;
         }
+
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
     }
 
     #endregion

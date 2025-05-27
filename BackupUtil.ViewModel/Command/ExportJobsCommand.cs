@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using BackupUtil.Core.Job;
+using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command;
@@ -7,9 +7,9 @@ namespace BackupUtil.ViewModel.Command;
 public class ExportJobsCommand : CommandBase
 {
     private readonly JobListingViewModel _jobListingViewModel;
-    private readonly JobManager _jobManager;
+    private readonly JobStore _jobManager;
 
-    public ExportJobsCommand(JobListingViewModel jobListingViewModel, JobManager jobManager)
+    public ExportJobsCommand(JobListingViewModel jobListingViewModel, JobStore jobManager)
     {
         _jobManager = jobManager;
         _jobListingViewModel = jobListingViewModel;
@@ -23,7 +23,7 @@ public class ExportJobsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobManager.ExportAll(_jobListingViewModel.JobFilePath);
+        _jobManager.ExportAll();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

@@ -15,6 +15,12 @@ public class MainViewModel : ViewModelBase
 
     public ViewModelBase? CurrentViewModel => _navigationStore.CurrentViewModel;
 
+    public override void Dispose()
+    {
+        _navigationStore.CurrentViewModelChanged -= OnCurrentViewModelChanged;
+        base.Dispose();
+    }
+
     private void OnCurrentViewModelChanged()
     {
         OnPropertyChanged(nameof(CurrentViewModel));
