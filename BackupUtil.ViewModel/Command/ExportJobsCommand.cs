@@ -16,11 +16,6 @@ public class ExportJobsCommand : CommandBase
         _jobListingViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
-    public override bool CanExecute(object? parameter)
-    {
-        return _jobListingViewModel.CanAccessJobFile && base.CanExecute(parameter);
-    }
-
     public override void Execute(object? parameter)
     {
         _jobManager.ExportAll();

@@ -25,7 +25,7 @@
                     Command="{Binding LoadJobsCommand}" />
 
             <!-- Set the job file path -->
-            <TextBox Width="140"
+            <TextBox Width="600"
                      Text="{Binding JobFilePath, UpdateSourceTrigger=PropertyChanged}" />
         </WrapPanel>
         <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single"
