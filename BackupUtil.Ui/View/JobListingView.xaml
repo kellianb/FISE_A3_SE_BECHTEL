@@ -27,14 +27,6 @@
             <!-- Set the job file path -->
             <TextBox Width="140"
                      Text="{Binding JobFilePath, UpdateSourceTrigger=PropertyChanged}" />
-
-            <!-- Open job creation menu -->
-            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}"
-                    Command="{Binding CreateJobCommand}" />
-
-            <!-- Open settings -->
-            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[settings]}"
-                    Command="{Binding OpenSettingsCommand}" />
         </WrapPanel>
         <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single"
                   ItemsSource="{Binding Jobs}">

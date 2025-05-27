@@ -10,9 +10,9 @@
 
     <Grid>
         <Grid.Resources>
-            <!-- Job listing view -->
-            <DataTemplate DataType="{x:Type viewModel:JobListingViewModel}">
-                <view:JobListingView />
+            <!-- Home view -->
+            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+                <view:HomeView />
             </DataTemplate>
 
             <!-- Job creation view -->

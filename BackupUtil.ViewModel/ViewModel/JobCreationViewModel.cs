@@ -11,10 +11,10 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
-    public JobCreationViewModel(JobManager jobManager, NavigationService<JobListingViewModel> navigationService)
+    public JobCreationViewModel(JobManager jobManager, NavigationService<HomeViewModel> navigationService)
     {
-        SubmitCommand = new CreateJobCommand<JobListingViewModel>(this, jobManager, navigationService);
-        CancelCommand = new NavigateCommand<JobListingViewModel>(navigationService);
+        SubmitCommand = new CreateJobCommand<HomeViewModel>(this, jobManager, navigationService);
+        CancelCommand = new NavigateCommand<HomeViewModel>(navigationService);
     }
 
     public bool CanCreateJob => HasName
