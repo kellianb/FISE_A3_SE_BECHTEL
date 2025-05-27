@@ -89,6 +89,7 @@ public class JobStore : INotifyPropertyChanged
     public void ExportAll()
     {
         _jobManager.ExportAll(JobFilePath);
+        OnPropertyChanged(nameof(CanAccessJobFile));
     }
 
     #endregion
