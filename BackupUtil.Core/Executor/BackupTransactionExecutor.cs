@@ -1,5 +1,6 @@
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
+using BackupUtil.I18n;
 using Serilog;
 using SerilogTimings.Extensions;
 
@@ -13,7 +14,7 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         ExecuteAsync(transaction).GetAwaiter().GetResult();
     }
 
-    public static async Task ExecuteAsync(BackupTransaction transaction,
+    public async Task ExecuteAsync(BackupTransaction transaction,
         IProgress<BackupProgress>? progress = null,
         CancellationToken cancellationToken = default)
     {
@@ -27,7 +28,7 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            await ExecuteDirectoryChangeAsync(change, cancellationToken);
+            ExecuteDirectoryChange(change);
 
             Interlocked.Increment(ref completedOperations);
 
@@ -55,7 +56,9 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         }
     }
 
-    private static async Task ExecuteDirectoryChangeAsync(DirectoryChange change, CancellationToken cancellationToken)
+    #region Directory changes
+
+    private static void ExecuteDirectoryChange(DirectoryChange change)
     {
         switch (change.ChangeType)
         {
@@ -70,12 +73,15 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         }
     }
 
+    #endregion
+
+    #region File changes
+
     private static async Task ExecuteFileChangeAsyncWithRetry(FileChange change, CancellationToken cancellationToken)
     {
         using IDisposable _ = change.Encryptor is null
             ? Log.Logger.TimeOperation("Copying file: {@string}", change.SourcePath ?? "")
-            : Log.Logger.TimeOperation("Copying and encrypting file: {@string}",
-                change.SourcePath ?? "");
+            : Log.Logger.TimeOperation("Copying and encrypting file: {@string}", change.SourcePath ?? "");
 
         const int maxRetries = 3;
         const int delayMs = 500;
@@ -140,6 +146,10 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         }
     }
 
+    #endregion
+
+    #region Report progress
+
     private static void ReportProgress(IProgress<BackupProgress> progress, int completed, int total, string currentItem,
         CurrentOperation currentOperation)
     {
@@ -163,12 +173,14 @@ public struct BackupProgress
     public int TotalOperations { get; set; }
     public int PercentComplete { get; set; }
     public string CurrentItem { get; set; }
-
     public CurrentOperation CurrentOperation { get; set; }
 }
 
 public enum CurrentOperation
 {
-    CreatingDirectories,
-    CopyingFiles
+    [I18NKey("executingDirectoryChanges")] CreatingDirectories,
+    [I18NKey("executingPriorityFileChanges")] CopyingPriorityFiles,
+    [I18NKey("executingFileChanges")] CopyingFiles
 }
+
+#endregion
