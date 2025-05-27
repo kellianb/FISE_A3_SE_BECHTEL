@@ -54,6 +54,7 @@ public class JobListingViewModel : ViewModelBase
 
     #region Handle JobStore events
 
+    // Transmit events emitted in the JobStore to the view
     private void OnJobStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
