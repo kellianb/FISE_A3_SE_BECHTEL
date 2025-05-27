@@ -17,6 +17,7 @@ public partial class App : Application
     public App()
     {
         IServiceCollection services = new ServiceCollection();
+
         // Shared objects
         services.AddSingleton<JobManager>();
         services.AddSingleton<NavigationStore>();
@@ -24,6 +25,7 @@ public partial class App : Application
 
         // ViewModels
         services.AddTransient(CreateMainViewModel);
+        services.AddTransient(CreateHomeViewModel);
         services.AddTransient(CreateJobCreationViewModel);
         services.AddTransient(CreateJobListingViewModel);
         services.AddTransient(CreateSettingsViewModel);
@@ -35,7 +37,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         _serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
-            _serviceProvider.GetRequiredService<JobListingViewModel>();
+            _serviceProvider.GetRequiredService<HomeViewModel>();
 
         MainWindow = new MainWindow { DataContext = _serviceProvider.GetRequiredService<MainViewModel>() };
 
@@ -51,21 +53,32 @@ public partial class App : Application
 
     private JobListingViewModel CreateJobListingViewModel(IServiceProvider serviceProvider)
     {
-        return new JobListingViewModel(serviceProvider.GetRequiredService<JobManager>(),
-            CreateNavigationService<JobCreationViewModel>(serviceProvider),
-            CreateNavigationService<SettingsViewModel>(serviceProvider));
+        return new JobListingViewModel(serviceProvider.GetRequiredService<JobManager>());
     }
 
     private JobCreationViewModel CreateJobCreationViewModel(IServiceProvider serviceProvider)
     {
         return new JobCreationViewModel(serviceProvider.GetRequiredService<JobManager>(),
-            CreateNavigationService<JobListingViewModel>(serviceProvider));
+            CreateNavigationService<HomeViewModel>(serviceProvider));
     }
 
     private SettingsViewModel CreateSettingsViewModel(IServiceProvider serviceProvider)
     {
         return new SettingsViewModel(serviceProvider.GetRequiredService<ProgramFilterStore>(),
-            CreateNavigationService<JobListingViewModel>(serviceProvider));
+            CreateNavigationService<HomeViewModel>(serviceProvider));
+    }
+
+    private HomeViewModel CreateHomeViewModel(IServiceProvider serviceProvider)
+    {
+        return new HomeViewModel(CreateJobListingViewModel(serviceProvider),
+            CreateTransactionViewModel(serviceProvider),
+            CreateNavigationService<JobCreationViewModel>(serviceProvider),
+            CreateNavigationService<SettingsViewModel>(serviceProvider));
+    }
+
+    private TransactionViewModel CreateTransactionViewModel(IServiceProvider serviceProvider)
+    {
+        return new TransactionViewModel();
     }
 
     private NavigationService<TViewModel> CreateNavigationService<TViewModel>(IServiceProvider serviceProvider)

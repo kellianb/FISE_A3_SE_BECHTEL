@@ -15,7 +15,7 @@ public class SettingsViewModel : ViewModelBase
     private readonly ProgramFilterStore _programFilterStore;
 
     public SettingsViewModel(ProgramFilterStore programFilterStore,
-        NavigationService<JobListingViewModel> navigationService)
+        NavigationService<HomeViewModel> navigationService)
     {
         _programFilterStore = programFilterStore;
 
@@ -25,12 +25,12 @@ public class SettingsViewModel : ViewModelBase
         // Fetch banned programs
         _bannedPrograms = string.Join(Environment.NewLine, _programFilterStore.BannedPrograms);
 
-        ApplyCommand = new ApplySettingsCommand<JobListingViewModel>(this,
+        ApplyCommand = new ApplySettingsCommand<HomeViewModel>(this,
             _localizationService,
             _programFilterStore,
             navigationService);
 
-        CancelCommand = new NavigateCommand<JobListingViewModel>(navigationService);
+        CancelCommand = new NavigateCommand<HomeViewModel>(navigationService);
     }
 
     public bool CanSaveSettings => true;

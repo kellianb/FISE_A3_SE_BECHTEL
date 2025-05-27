@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Windows.Input;
 using BackupUtil.Core.Job;
 using BackupUtil.ViewModel.Command;
-using BackupUtil.ViewModel.Service;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
@@ -13,14 +12,9 @@ public class JobListingViewModel : ViewModelBase
     private readonly JobManager _jobManager;
     private ObservableCollection<JobViewModel> _jobs = [];
 
-    public JobListingViewModel(JobManager jobManager,
-        NavigationService<JobCreationViewModel> jobCreationNavigationService,
-        NavigationService<SettingsViewModel> settingsNavigationService)
+    public JobListingViewModel(JobManager jobManager)
     {
         _jobManager = jobManager;
-
-        CreateJobCommand = new NavigateCommand<JobCreationViewModel>(jobCreationNavigationService);
-        OpenSettingsCommand = new NavigateCommand<SettingsViewModel>(settingsNavigationService);
 
         LoadJobsCommand = new LoadJobsCommand(this, _jobManager);
         ExportJobsCommand = new ExportJobsCommand(this, _jobManager);
@@ -45,12 +39,6 @@ public class JobListingViewModel : ViewModelBase
     }
 
     #region Commands
-
-    // Opens the job creation view model
-    public ICommand CreateJobCommand { get; }
-
-    // Opens the settings view model
-    public ICommand OpenSettingsCommand { get; }
 
     // Loads jobs from the job file
     public ICommand LoadJobsCommand { get; }

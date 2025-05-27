@@ -1,0 +1,38 @@
+<UserControl x:Class="BackupUtil.Ui.View.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:view="clr-namespace:BackupUtil.Ui.View"
+             xmlns:service="clr-namespace:BackupUtil.ViewModel.Service;assembly=BackupUtil.ViewModel"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="LocalizationService"
+                            ObjectType="{x:Type service:LocalizationService}"
+                            MethodName="get_Instance" />
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <WrapPanel VerticalAlignment="Top" Grid.Row="0">
+            <!-- Open the job creation menu -->
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}"
+                    Command="{Binding OpenJobCreationCommand}" />
+
+            <!-- Open settings -->
+            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[settings]}"
+                    Command="{Binding OpenSettingsCommand}" />
+        </WrapPanel>
+
+        <view:JobListingView Grid.Row="1" DataContext="{Binding JobListingViewModel}" />
+        <view:TransactionView Grid.Row="2" DataContext="{Binding TransactionViewModel}" />
+    </Grid>
+</UserControl>
