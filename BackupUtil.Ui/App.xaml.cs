@@ -1,7 +1,5 @@
-﻿using System.Globalization;
-using System.Windows;
+﻿using System.Windows;
 using BackupUtil.Core.Job;
-using BackupUtil.I18n;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;

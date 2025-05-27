@@ -16,8 +16,6 @@
 
     <Grid>
         <WrapPanel VerticalAlignment="Top">
-
-
             <!-- Export jobs to file -->
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[exportJobs]}"
                     Command="{Binding ExportJobsCommand}" />
@@ -26,6 +24,7 @@
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[loadJobs]}"
                     Command="{Binding LoadJobsCommand}" />
 
+            <!-- Set the job file path -->
             <TextBox Width="140"
                      Text="{Binding JobFilePath, UpdateSourceTrigger=PropertyChanged}" />
 
@@ -33,15 +32,9 @@
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[addJob]}"
                     Command="{Binding CreateJobCommand}" />
 
-
             <!-- Open settings -->
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[settings]}"
                     Command="{Binding OpenSettingsCommand}" />
-
-            <!-- <view:LanguageSelectionView HorizontalAlignment="Right" -->
-            <!--                             VerticalAlignment="Top" Panel.ZIndex="10" -->
-            <!--                             DataContext="{Binding LanguageSelectionViewModel}" /> -->
-
         </WrapPanel>
         <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single"
                   ItemsSource="{Binding Jobs}">
