@@ -2,20 +2,19 @@ using System.Collections;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using BackupUtil.Core.Job;
 using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Crypto;
 using BackupUtil.ViewModel.Command;
 using BackupUtil.ViewModel.Service;
+using BackupUtil.ViewModel.Store;
 
 namespace BackupUtil.ViewModel.ViewModel;
 
-// TODO switch to jobManager
 public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 {
-    public JobCreationViewModel(JobManager jobManager, NavigationService<HomeViewModel> navigationService)
+    public JobCreationViewModel(JobStore jobStore, NavigationService<HomeViewModel> navigationService)
     {
-        SubmitCommand = new CreateJobCommand<HomeViewModel>(this, jobManager, navigationService);
+        SubmitCommand = new CreateJobCommand<HomeViewModel>(this, jobStore, navigationService);
         CancelCommand = new NavigateCommand<HomeViewModel>(navigationService);
     }
 

@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using BackupUtil.Core.Job;
 using BackupUtil.ViewModel.Service;
+using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command;
@@ -8,13 +9,13 @@ namespace BackupUtil.ViewModel.Command;
 public class CreateJobCommand<TViewModel> : CommandBase where TViewModel : ViewModelBase
 {
     private readonly JobCreationViewModel _jobCreationViewModel;
-    private readonly JobManager _jobManager;
+    private readonly JobStore _jobStore;
     private readonly NavigationService<TViewModel> _navigationService;
 
-    public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobManager jobManager,
+    public CreateJobCommand(JobCreationViewModel jobCreationViewModel, JobStore jobStore,
         NavigationService<TViewModel> navigationService)
     {
-        _jobManager = jobManager;
+        _jobStore = jobStore;
         _navigationService = navigationService;
         _jobCreationViewModel = jobCreationViewModel;
         _jobCreationViewModel.PropertyChanged += OnViewModelPropertyChanged;
@@ -36,7 +37,7 @@ public class CreateJobCommand<TViewModel> : CommandBase where TViewModel : ViewM
             _jobCreationViewModel.EncryptionKey,
             _jobCreationViewModel.FileMask);
 
-        _jobManager.AddJob(job);
+        _jobStore.AddJob(job);
         _navigationService.Navigate();
     }
 
