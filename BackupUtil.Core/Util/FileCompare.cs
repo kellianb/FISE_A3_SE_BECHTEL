@@ -40,7 +40,12 @@ internal class FileCompare(IEncryptor? encryptor = null)
             }
         }
 
-        string hash2 = CalculateFileHash(file2.OpenRead());
+        string hash2;
+
+        using (FileStream stream = file2.OpenRead())
+        {
+            hash2 = CalculateFileHash(stream);
+        }
 
         return hash1.Equals(hash2, StringComparison.OrdinalIgnoreCase);
     }
