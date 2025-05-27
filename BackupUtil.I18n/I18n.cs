@@ -7,7 +7,7 @@ public static class I18N
 {
     private static readonly List<CultureInfo> s_supportedCultures =
     [
-        new("fr-FR"), new("en-GB")
+        new("fr-FR"), new("en-US")
     ];
 
     private static readonly ResourceManager s_resourceManager =
