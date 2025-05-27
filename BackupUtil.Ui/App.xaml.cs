@@ -19,7 +19,7 @@ public partial class App : Application
         IServiceCollection services = new ServiceCollection();
 
         // Shared objects
-        services.AddSingleton<JobManager>();
+        services.AddSingleton<JobStore>();
         services.AddSingleton<NavigationStore>();
         services.AddSingleton<ProgramFilterStore>();
 
@@ -53,7 +53,7 @@ public partial class App : Application
 
     private JobListingViewModel CreateJobListingViewModel(IServiceProvider serviceProvider)
     {
-        return new JobListingViewModel(serviceProvider.GetRequiredService<JobManager>());
+        return new JobListingViewModel(serviceProvider.GetRequiredService<JobStore>());
     }
 
     private JobCreationViewModel CreateJobCreationViewModel(IServiceProvider serviceProvider)

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using BackupUtil.Core.Job;
+using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command;
@@ -7,9 +7,9 @@ namespace BackupUtil.ViewModel.Command;
 public class LoadJobsCommand : CommandBase
 {
     private readonly JobListingViewModel _jobListingViewModel;
-    private readonly JobManager _jobManager;
+    private readonly JobStore _jobManager;
 
-    public LoadJobsCommand(JobListingViewModel jobListingViewModel, JobManager jobManager)
+    public LoadJobsCommand(JobListingViewModel jobListingViewModel, JobStore jobManager)
     {
         _jobManager = jobManager;
         _jobListingViewModel = jobListingViewModel;
@@ -24,7 +24,7 @@ public class LoadJobsCommand : CommandBase
     public override void Execute(object? parameter)
     {
         _jobManager.RemoveAll();
-        _jobManager.AddJobsFromFile(_jobListingViewModel.JobFilePath);
+        _jobManager.LoadJobs();
         _jobListingViewModel.LoadJobs();
     }
 
