@@ -143,6 +143,7 @@ public class JobListingViewModel : ViewModelBase
     // Save jobs to the job file
     public ICommand ExportJobsCommand { get; }
 
+
     // Delete all jobs for which IsSelected is true
     public ICommand DeleteSelectedJobsCommand { get; }
 
