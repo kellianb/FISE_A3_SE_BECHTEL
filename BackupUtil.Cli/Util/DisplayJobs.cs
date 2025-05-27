@@ -28,7 +28,7 @@ internal static class DisplayJobs
         AppendDetailLine("jobTargetPath", job.TargetPath);
         AppendDetailLine("jobRecursive", job.Recursive);
         AppendDetailLine("jobDifferential", job.Differential);
-        AppendDetailLine("jobEncrypted", job.EncryptionKey != null);
+        AppendDetailLine("jobEncrypted", job.EncryptionType != null);
 
 
         return display.ToString();

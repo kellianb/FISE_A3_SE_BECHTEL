@@ -168,4 +168,13 @@
     <data name="bannedPrograms" xml:space="preserve">
         <value>Programmes exclus</value>
     </data>
+    <data name="executingDirectoryChanges" xml:space="preserve">
+        <value>Création des dossiers</value>
+    </data>
+    <data name="executingFileChanges" xml:space="preserve">
+        <value>Copie de fichiers</value>
+    </data>
+    <data name="executingPriorityFileChanges" xml:space="preserve">
+        <value>Copie des fichiers prioritaires</value>
+    </data>
 </root>
