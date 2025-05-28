@@ -11,9 +11,8 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobListingViewModel : ViewModelBase
 {
-    private readonly JobStore _jobStore;
     private readonly BackupCommandStore _backupCommandStore;
-    private ObservableCollection<JobViewModel> _jobs = [];
+    private readonly JobStore _jobStore;
 
     public JobListingViewModel(JobStore jobStore, BackupCommandStore backupCommandStore)
     {
@@ -25,8 +24,10 @@ public class JobListingViewModel : ViewModelBase
         LoadJobsCommand = new LoadJobsCommand(this, _jobStore);
         ExportJobsCommand = new ExportJobsCommand(this, _jobStore);
         DeleteSelectedJobsCommand = new DeleteSelectedJobsCommand(this, _jobStore);
-        CreateTransactionsForAllJobsCommand = new CreateTransactionForAllJobsCommand(this, _jobStore, _backupCommandStore);
-        CreateTransactionsForSelectedJobsCommand = new CreateTransactionsForSelectedJobsCommand(this, _jobStore, _backupCommandStore);
+        CreateTransactionsForAllJobsCommand =
+            new CreateTransactionForAllJobsCommand(this, _jobStore, _backupCommandStore);
+        CreateTransactionsForSelectedJobsCommand =
+            new CreateTransactionsForSelectedJobsCommand(this, _jobStore, _backupCommandStore);
 
         LoadJobViewModels();
     }
