@@ -53,7 +53,8 @@ public partial class App : Application
 
     private JobListingViewModel CreateJobListingViewModel(IServiceProvider serviceProvider)
     {
-        return new JobListingViewModel(serviceProvider.GetRequiredService<JobStore>(), serviceProvider.GetRequiredService<BackupCommandStore>());
+        return new JobListingViewModel(serviceProvider.GetRequiredService<JobStore>(),
+            serviceProvider.GetRequiredService<BackupCommandStore>());
     }
 
     private JobCreationViewModel CreateJobCreationViewModel(IServiceProvider serviceProvider)

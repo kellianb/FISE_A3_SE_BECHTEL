@@ -52,9 +52,8 @@
                   SelectionMode="Extended"
                   ItemsSource="{Binding Jobs}" SelectionChanged="Selector_OnSelectionChanged">
             <DataGrid.Columns>
-                <!-- Job name  -->
-                <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
+                <!-- Job name -->
+                <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
                     Binding="{Binding Name}"
                     Width="200" />
 

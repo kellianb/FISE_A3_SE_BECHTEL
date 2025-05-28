@@ -22,18 +22,18 @@ public class TransactionListingViewModel : ViewModelBase
         LoadTransactionViewModels();
     }
 
+    #region Commands
+
+    public ICommand DeleteSelectedTransactionsCommand { get; }
+
+    #endregion
+
     public override void Dispose()
     {
         DisposeTransactionViewModels();
         _backupCommandStore.PropertyChanged -= OnBackupCommandStorePropertyChanged;
         base.Dispose();
     }
-
-    #region Commands
-
-    public ICommand DeleteSelectedTransactionsCommand { get; }
-
-    #endregion
 
     #region Handle BackupCommandStore events
 
