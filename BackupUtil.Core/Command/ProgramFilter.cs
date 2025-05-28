@@ -14,7 +14,7 @@ public class ProgramFilter(List<string> bannedPrograms)
     ///     Check if a banned program is running
     /// </summary>
     /// <exception cref="BannedProgramRunningException">a banned program is running</exception>
-    public void CheckForBannedPrograms()
+    public void ThrowIfBannedProgramDetected()
     {
         string? bannedProgramName = BannedPrograms.Find(x => RunningProcesses.Contains(x));
 

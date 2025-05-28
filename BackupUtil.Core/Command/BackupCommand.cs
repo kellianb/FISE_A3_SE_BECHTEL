@@ -4,72 +4,192 @@ using BackupUtil.Core.Transaction.ChangeType;
 
 namespace BackupUtil.Core.Command;
 
-// TODO support pausing, and stopping if banned programs are running
-public class BackupCommand
+public sealed class BackupCommand : IDisposable
 {
-    private readonly IBackupTransactionExecutor _receiver;
+    private readonly IBackupTransactionExecutor _executor;
+    private readonly Progress<BackupProgress> _progress;
     private readonly BackupTransaction _transaction;
-    private ProgramFilter? _programFilter;
     public readonly List<string> JobNames;
+    private readonly IProgress<BackupProgress> progressReport;
 
-    internal BackupCommand(IBackupTransactionExecutor receiver, BackupTransaction transaction, List<string> jobNames,
+    private CancellationTokenSource _cancellationTokenSource;
+
+    private bool _disposed;
+    private ProgramFilter? _programFilter;
+
+
+    internal BackupCommand(IBackupTransactionExecutor executor, BackupTransaction transaction, List<string> jobNames,
         ProgramFilter? programFilter = null)
     {
-        _receiver = receiver;
+        _executor = executor;
         _transaction = transaction;
         JobNames = jobNames;
         _programFilter = programFilter;
+
+        // Create initial cancellation token
+        _cancellationTokenSource = new CancellationTokenSource();
+
+        // Set totals
+        TotalFileSize = RemainingFileSize;
+        TotalFileCount = RemainingFileCount;
+        TotalDirectoriesCount = RemainingDirectoriesCount;
+
+        // Instantiate progress reporting types
+        _progress = new Progress<BackupProgress>();
+        progressReport = _progress;
     }
 
     public BackupCommandState State { get; private set; } = BackupCommandState.NotStarted;
+
+    public event EventHandler<BackupProgress>? ProgressChanged
+    {
+        add => _progress.ProgressChanged += value;
+        remove => _progress.ProgressChanged -= value;
+    }
 
     public void SetProgramFilter(ProgramFilter? programFilter)
     {
         _programFilter = programFilter;
     }
 
-    public void Execute()
-    {
-        _programFilter?.CheckForBannedPrograms();
+    #region Control ongoing backup
 
-        _receiver.Execute(_transaction);
-    }
-
-    public Task ExecuteAsync(
-        IProgress<BackupProgress>? progress = null,
-        CancellationToken cancellationToken = default)
+    public void Start()
     {
-        switch (State)
+        // If the command is already running, finished or paused because of a banned program, do nothing
+        if (State is BackupCommandState.Running
+            or BackupCommandState.Finished
+            or BackupCommandState.PausedBannedProgram)
         {
-            case BackupCommandState.Running:
-            case BackupCommandState.Finished:
-                return Task.CompletedTask;
-            case BackupCommandState.NotStarted:
-            case BackupCommandState.Paused:
-                State = BackupCommandState.Running;
-
-                try
-                {
-                    _receiver.ExecuteAsync(_transaction, progress, cancellationToken, _programFilter);
-                }
-                catch
-                {
-                    // TODO check if there are any changes left
-                    State = BackupCommandState.Paused;
-                    throw;
-                }
-
-                break;
+            return;
         }
 
-        State = BackupCommandState.Finished;
-        return Task.CompletedTask;
+        // If the Command is not running or paused, execute it
+        State = BackupCommandState.Running;
+
+        Task.Run(ExecuteAsync);
     }
 
-    public long GetTotalCopiedFileSize()
+    public void Pause()
     {
-        return _transaction.GetTotalCopiedFileSize();
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+        _cancellationTokenSource = new CancellationTokenSource();
+        State = BackupCommandState.Paused;
     }
+
+    #endregion
+
+    #region Dispose
+
+    public void Dispose()
+    {
+        Dispose(true);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _cancellationTokenSource.Dispose();
+        }
+
+        _disposed = true;
+    }
+
+    #endregion
+
+    #region Start backup
+
+    /// <summary>
+    ///     Execute this backup synchronously
+    /// </summary>
+    public void Execute()
+    {
+        _executor.Execute(_transaction);
+    }
+
+    /// <summary>
+    ///     Execute this backup asynchronously
+    /// </summary>
+    /// <returns></returns>
+    private async Task ExecuteAsync()
+    {
+        try
+        {
+            await _executor.ExecuteAsync(_transaction, ShouldCancel, UpdateProgress, _cancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            State = BackupCommandState.Paused;
+            UpdateProgress("");
+            return;
+        }
+        catch (BannedProgramRunningException)
+        {
+            State = BackupCommandState.PausedBannedProgram;
+            UpdateProgress("");
+            return;
+        }
+
+        State = _transaction.DirectoryChanges.Count + _transaction.FileChanges.Count == 0
+            ? BackupCommandState.Finished
+            : BackupCommandState.Paused;
+        UpdateProgress("");
+    }
+
+    private void ShouldCancel()
+    {
+        _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+        _programFilter?.ThrowIfBannedProgramDetected();
+    }
+
+    private void UpdateProgress(
+        string currentItem,
+        CurrentOperationType? currentOperationType = null
+    )
+    {
+        BackupProgress progress = new()
+        {
+            State = State,
+            Type = currentOperationType,
+            TotalFileSize = TotalFileSize,
+            CompletedFileSize = TotalFileSize - RemainingFileSize,
+            PercentComplete = TotalFileSize > 0 ? 100 * (TotalFileSize - RemainingFileSize) / TotalFileSize : 0,
+            CurrentItem = currentItem
+        };
+
+        progressReport.Report(progress);
+    }
+
+    #endregion
+
+    #region Statistics
+
+    // Size of files that will be copied
+    public long TotalFileSize { get; }
+
+    public long RemainingFileSize => _transaction.GetTotalCopiedFileSize();
+
+    // Number of files which will be copied
+    public long TotalFileCount { get; }
+
+    public long RemainingFileCount => _transaction.FileChanges.Count;
+
+    // Number of directories which will be copied
+    public long TotalDirectoriesCount { get; }
+
+    public long RemainingDirectoriesCount => _transaction.DirectoryChanges.Count;
+
+    #endregion
+
+    #region List concerned files and directories
 
     public Dictionary<FileChangeType, string[]> GetConcernedFiles()
     {
@@ -90,6 +210,8 @@ public class BackupCommand
                 group => group.Select(change => change.TargetPath).ToArray()
             );
     }
+
+    #endregion
 }
 
 public enum BackupCommandState
@@ -97,5 +219,17 @@ public enum BackupCommandState
     NotStarted,
     Running,
     Paused,
+    PausedBannedProgram,
     Finished
+}
+
+public struct BackupProgress
+{
+    public BackupCommandState State { get; set; }
+    public CurrentOperationType? Type { get; set; }
+    public long TotalFileSize { get; set; }
+    public long CompletedFileSize { get; set; }
+    public long PercentComplete { get; set; }
+
+    public string CurrentItem { get; set; }
 }
