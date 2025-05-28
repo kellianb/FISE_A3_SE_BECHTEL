@@ -53,7 +53,7 @@ public class TransactionListingViewModel : ViewModelBase
     {
         if (e.PropertyName == nameof(TransactionViewModel.IsSelected))
         {
-            OnPropertyChanged(nameof(SelectTransactionIndices));
+            OnPropertyChanged(nameof(SelectedTransactionIndices));
         }
     }
 
@@ -63,7 +63,7 @@ public class TransactionListingViewModel : ViewModelBase
 
     public ObservableCollection<TransactionViewModel> Transactions { get; } = [];
 
-    public List<int> SelectTransactionIndices
+    public List<int> SelectedTransactionIndices
     {
         get
         {
@@ -91,7 +91,7 @@ public class TransactionListingViewModel : ViewModelBase
             Transactions.Add(transactionViewModel);
         }
 
-        OnPropertyChanged(nameof(SelectTransactionIndices));
+        OnPropertyChanged(nameof(SelectedTransactionIndices));
     }
 
     /// <summary>

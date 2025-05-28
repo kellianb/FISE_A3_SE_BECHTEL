@@ -12,7 +12,6 @@ namespace BackupUtil.ViewModel.ViewModel;
 public class JobListingViewModel : ViewModelBase
 {
     private readonly JobStore _jobStore;
-    private ObservableCollection<JobViewModel> _jobs = [];
 
     public JobListingViewModel(JobStore jobStore)
     {
@@ -27,15 +26,6 @@ public class JobListingViewModel : ViewModelBase
         LoadJobViewModels();
     }
 
-    // Unsubscribe from eventHandlers when disposing this viewModel
-    public override void Dispose()
-    {
-        DisposeJobViewModels();
-        _jobStore.PropertyChanged -= OnJobStorePropertyChanged;
-        base.Dispose();
-    }
-
-    public IEnumerable<JobViewModel> Jobs => _jobs;
 
     public bool CanAccessJobFile => _jobStore.CanAccessJobFile;
 
@@ -48,6 +38,14 @@ public class JobListingViewModel : ViewModelBase
     }
 
     #endregion
+
+    // Unsubscribe from eventHandlers when disposing this viewModel
+    public override void Dispose()
+    {
+        DisposeJobViewModels();
+        _jobStore.PropertyChanged -= OnJobStorePropertyChanged;
+        base.Dispose();
+    }
 
     #region Handle JobStore events
 
@@ -76,7 +74,7 @@ public class JobListingViewModel : ViewModelBase
     {
         if (e.PropertyName == nameof(JobViewModel.IsSelected))
         {
-            OnPropertyChanged(nameof(SelectJobIndices));
+            OnPropertyChanged(nameof(SelectedJobIndices));
         }
     }
 
@@ -84,14 +82,17 @@ public class JobListingViewModel : ViewModelBase
 
     #region Jobs
 
-    public List<int> SelectJobIndices
+    public ObservableCollection<JobViewModel> Jobs { get; } = [];
+
+    // Determine the indices of selected JobViewModels
+    public HashSet<int> SelectedJobIndices
     {
         get
         {
-            List<int> indices = [];
-            for (int i = 0; i < _jobs.Count; i++)
+            HashSet<int> indices = [];
+            for (int i = 0; i < Jobs.Count; i++)
             {
-                if (_jobs[i].IsSelected)
+                if (Jobs[i].IsSelected)
                 {
                     indices.Add(i);
                 }
@@ -112,11 +113,10 @@ public class JobListingViewModel : ViewModelBase
         {
             JobViewModel jobViewModel = new(job);
             jobViewModel.PropertyChanged += OnJobViewModelPropertyChanged;
-            _jobs.Add(jobViewModel);
+            Jobs.Add(jobViewModel);
         }
 
-        OnPropertyChanged(nameof(SelectJobIndices));
-        OnPropertyChanged(nameof(Jobs));
+        OnPropertyChanged(nameof(SelectedJobIndices));
     }
 
     /// <summary>
@@ -124,13 +124,13 @@ public class JobListingViewModel : ViewModelBase
     /// </summary>
     private void DisposeJobViewModels()
     {
-        foreach (JobViewModel jobViewModel in _jobs)
+        foreach (JobViewModel jobViewModel in Jobs)
         {
             jobViewModel.PropertyChanged -= OnJobViewModelPropertyChanged;
             jobViewModel.Dispose();
         }
 
-        _jobs = [];
+        Jobs.Clear();
     }
 
     #endregion
