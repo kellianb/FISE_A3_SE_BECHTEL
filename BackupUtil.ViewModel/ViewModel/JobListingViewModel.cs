@@ -22,8 +22,17 @@ public class JobListingViewModel : ViewModelBase
 
         LoadJobsCommand = new LoadJobsCommand(this, _jobStore);
         ExportJobsCommand = new ExportJobsCommand(this, _jobStore);
+        DeleteSelectedJobsCommand = new DeleteSelectedJobsCommand(this, _jobStore);
 
-        LoadJobs();
+        LoadJobViewModels();
+    }
+
+    // Unsubscribe from eventHandlers when disposing this viewModel
+    public override void Dispose()
+    {
+        DisposeJobViewModels();
+        _jobStore.PropertyChanged -= OnJobStorePropertyChanged;
+        base.Dispose();
     }
 
     public IEnumerable<JobViewModel> Jobs => _jobs;
@@ -40,18 +49,6 @@ public class JobListingViewModel : ViewModelBase
 
     #endregion
 
-    public void LoadJobs()
-    {
-        _jobs = [];
-
-        foreach (Job job in _jobStore.Jobs)
-        {
-            _jobs.Add(new JobViewModel(job));
-        }
-
-        OnPropertyChanged(nameof(Jobs));
-    }
-
     #region Handle JobStore events
 
     // Transmit events emitted in the JobStore to the view
@@ -60,7 +57,7 @@ public class JobListingViewModel : ViewModelBase
         switch (e.PropertyName)
         {
             case nameof(JobStore.Jobs):
-                LoadJobs(); // LoadJobs calls OnPropertyChanged
+                LoadJobViewModels(); // LoadJobs calls OnPropertyChanged
                 break;
             case nameof(JobStore.JobFilePath):
                 OnPropertyChanged(nameof(JobFilePath));
@@ -73,6 +70,71 @@ public class JobListingViewModel : ViewModelBase
 
     #endregion
 
+    #region Handle JobViewModel events
+
+    private void OnJobViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(JobViewModel.IsSelected))
+        {
+            OnPropertyChanged(nameof(SelectJobIndices));
+        }
+    }
+
+    #endregion
+
+    #region Jobs
+
+    public List<int> SelectJobIndices
+    {
+        get
+        {
+            List<int> indices = [];
+            for (int i = 0; i < _jobs.Count; i++)
+            {
+                if (_jobs[i].IsSelected)
+                {
+                    indices.Add(i);
+                }
+            }
+
+            return indices;
+        }
+    }
+
+    /// <summary>
+    ///     Create and Load JobViewModels from the JobStore
+    /// </summary>
+    public void LoadJobViewModels()
+    {
+        DisposeJobViewModels();
+
+        foreach (Job job in _jobStore.Jobs)
+        {
+            JobViewModel jobViewModel = new(job);
+            jobViewModel.PropertyChanged += OnJobViewModelPropertyChanged;
+            _jobs.Add(jobViewModel);
+        }
+
+        OnPropertyChanged(nameof(SelectJobIndices));
+        OnPropertyChanged(nameof(Jobs));
+    }
+
+    /// <summary>
+    ///     Get rid of all JobViewModels
+    /// </summary>
+    private void DisposeJobViewModels()
+    {
+        foreach (JobViewModel jobViewModel in _jobs)
+        {
+            jobViewModel.PropertyChanged -= OnJobViewModelPropertyChanged;
+            jobViewModel.Dispose();
+        }
+
+        _jobs = [];
+    }
+
+    #endregion
+
     #region Commands
 
     // Loads jobs from the job file
@@ -80,6 +142,9 @@ public class JobListingViewModel : ViewModelBase
 
     // Save jobs to the job file
     public ICommand ExportJobsCommand { get; }
+
+    // Delete all jobs for which IsSelected is true
+    public ICommand DeleteSelectedJobsCommand { get; }
 
     #endregion
 

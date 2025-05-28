@@ -36,7 +36,7 @@ public class JobStore : INotifyPropertyChanged
         OnPropertyChanged(nameof(Jobs));
     }
 
-    public void RemoveJobsByIndex(HashSet<int> indices)
+    public void RemoveByIndices(HashSet<int> indices)
     {
         _jobManager.RemoveByIndices(indices);
         OnPropertyChanged(nameof(Jobs));

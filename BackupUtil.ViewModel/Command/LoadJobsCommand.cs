@@ -25,7 +25,7 @@ public class LoadJobsCommand : CommandBase
     {
         _jobManager.RemoveAll();
         _jobManager.LoadJobs();
-        _jobListingViewModel.LoadJobs();
+        _jobListingViewModel.LoadJobViewModels();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

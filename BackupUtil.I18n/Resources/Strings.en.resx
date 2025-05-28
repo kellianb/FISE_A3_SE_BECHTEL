@@ -177,4 +177,7 @@
     <data name="executingPriorityFileChanges" xml:space="preserve">
         <value>Copying priority files</value>
     </data>
+    <data name="removeJob" xml:space="preserve">
+        <value>Remove job(s)</value>
+    </data>
 </root>
