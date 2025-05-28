@@ -183,6 +183,9 @@
     <data name="encryptionKeyLabel" xml:space="preserve">
         <value>Clé de chiffrement</value>
     </data>
+    <data name="encryptionType" xml:space="preserve">
+        <value>Type de chiffrement</value>
+    </data>
     <data name="removeJob" xml:space="preserve">
         <value>Supprimer tâche(s)</value>
     </data>

@@ -69,6 +69,7 @@ public partial class CreateJobView : Window
         }
     }
 
+    //TODO: filemask
     public void SendJobData(object sender, RoutedEventArgs routedEventArgs)
     {
         _jobListingViewModel.AddJob(
@@ -76,7 +77,13 @@ public partial class CreateJobView : Window
             _targetPath,
             RecursiveInput.IsChecked ?? false,
             DifferentialInput.IsChecked ?? false,
-            NameInput.Text
+            NameInput.Text,
+            EncryptionTypeInput.SelectedItem.ToString() switch
+            {
+                "No Encryption" => null,
+                "Xor" =>  EncryptionType.Xor
+            },
+            _encryptionKeyInput.Text
         );
 
         Close();
@@ -89,11 +96,13 @@ public partial class CreateJobView : Window
             {
                 EncryptionPanel.Children.Add(_encryptionKeyLabel);
                 EncryptionPanel.Children.Add(_encryptionKeyInput);
+                Height = 400;
             }
             else if (selectedType == I18N.GetLocalizedMessage("noEncryption") && EncryptionPanel.Children.Contains(_encryptionKeyInput))
             {
                 EncryptionPanel.Children.Remove(_encryptionKeyInput);
                 EncryptionPanel.Children.Remove(_encryptionKeyLabel);
+                Height = 350;
             }
     }
 }

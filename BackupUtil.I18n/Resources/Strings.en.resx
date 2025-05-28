@@ -183,6 +183,9 @@
     <data name="encryptionKeyLabel" xml:space="preserve">
         <value>Encryption key</value>
     </data>
+    <data name="encryptionType" xml:space="preserve">
+        <value>Encryption Type</value>
+    </data>
     <data name="removeJob" xml:space="preserve">
         <value>Remove job(s)</value>
     </data>
