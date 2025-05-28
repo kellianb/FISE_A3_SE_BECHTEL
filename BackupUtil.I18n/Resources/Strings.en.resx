@@ -186,6 +186,18 @@
     <data name="encryptionType" xml:space="preserve">
         <value>Encryption Type</value>
     </data>
+    <data name="jobs" xml:space="preserve">
+        <value>Jobs</value>
+    </data>
+    <data name="transactions" xml:space="preserve">
+        <value>Transactions</value>
+    </data>
+    <data name="displayTransactions" xml:space="preserve">
+        <value>Display all transactions details</value>
+    </data>
+    <data name="displaySelectedTransaction" xml:space="preserve">
+        <value>Display selected transaction details</value>
+    </data>
     <data name="removeJob" xml:space="preserve">
         <value>Remove job(s)</value>
     </data>
