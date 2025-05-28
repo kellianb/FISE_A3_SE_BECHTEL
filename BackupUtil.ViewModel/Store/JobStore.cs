@@ -1,6 +1,7 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BackupUtil.Core.Command;
 using BackupUtil.Core.Job;
 
 namespace BackupUtil.ViewModel.Store;
@@ -23,6 +24,16 @@ public class JobStore : INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public BackupCommand RunByIndexes(HashSet<int> index)
+    {
+        return _jobManager.RunByIndices(index);
+    }
+
+    public BackupCommand RunAll()
+    {
+        return _jobManager.RunAll();
     }
 
     #region Jobs

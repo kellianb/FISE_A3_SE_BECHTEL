@@ -14,13 +14,11 @@ public class DisplaySelectedTransactionCommand : CommandBase
 
     public override bool CanExecute(object? parameter)
     {
-        return _jobListingViewModel.isSelectedRow && base.CanExecute(parameter);
+        return _jobListingViewModel.SelectJobIndices.Any() && base.CanExecute(parameter);
     }
 
     public override void Execute(object? parameter)
     {
-        //_jobListingViewModel.JobItems = parameter[0];
-        //_jobListingViewModel.SelectedJobItems = parameter[1];
         _jobListingViewModel.GetSelectedTransactionDetails();
     }
 }
