@@ -26,7 +26,7 @@ public class JobStore : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public BackupCommand RunByIndexes(HashSet<int> index)
+    public BackupCommand RunByIndices(HashSet<int> index)
     {
         return _jobManager.RunByIndices(index);
     }
