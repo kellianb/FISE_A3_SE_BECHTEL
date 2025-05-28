@@ -177,6 +177,9 @@
     <data name="executingPriorityFileChanges" xml:space="preserve">
         <value>Copie des fichiers prioritaires</value>
     </data>
+    <data name="noEncryption" xml:space="preserve">
+        <value>Pas de chiffrement</value>
+    </data>
     <data name="removeJob" xml:space="preserve">
         <value>Supprimer tâche(s)</value>
     </data>
