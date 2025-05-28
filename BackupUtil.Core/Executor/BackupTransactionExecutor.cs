@@ -1,3 +1,4 @@
+using BackupUtil.Core.Command;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.I18n;
@@ -8,7 +9,6 @@ namespace BackupUtil.Core.Executor;
 
 internal class BackupTransactionExecutor : IBackupTransactionExecutor
 {
-    // For backward compatibility
     public void Execute(BackupTransaction transaction)
     {
         ExecuteAsync(transaction).GetAwaiter().GetResult();
@@ -16,42 +16,48 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
 
     public async Task ExecuteAsync(BackupTransaction transaction,
         IProgress<BackupProgress>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        ProgramFilter? programFilter = null)
     {
         using IDisposable _ = Log.Logger.TimeOperation("Executing transaction: {@BackupTransaction}", transaction);
 
-        int totalOperations = transaction.DirectoryChanges.Count + transaction.FileChanges.Count;
-        int completedOperations = 0;
+        long totalOperationsSize = transaction.DirectoryChanges.Count
+                                   + transaction.FileChanges.Sum(x => x.FileSize);
+        long completedOperationsSize = 0;
 
+        // TODO pop changes from lists when done processing them
+        // to prevent duplicate changes when resuming a cancelled transaction
         // Process directory changes
         foreach (DirectoryChange change in transaction.DirectoryChanges)
         {
+            programFilter?.CheckForBannedPrograms();
             cancellationToken.ThrowIfCancellationRequested();
 
             ExecuteDirectoryChange(change);
 
-            Interlocked.Increment(ref completedOperations);
+            Interlocked.Increment(ref completedOperationsSize);
 
             if (progress != null)
             {
-                ReportProgress(progress, completedOperations, totalOperations, change.TargetPath,
-                    CurrentOperation.CreatingDirectories);
+                ReportProgress(progress, completedOperationsSize, totalOperationsSize, change.TargetPath,
+                    CurrentOperationType.CreatingDirectories);
             }
         }
 
         // Process file changes
         foreach (FileChange change in transaction.FileChanges)
         {
+            programFilter?.CheckForBannedPrograms();
             cancellationToken.ThrowIfCancellationRequested();
 
             await ExecuteFileChangeAsyncWithRetry(change, cancellationToken);
 
-            Interlocked.Increment(ref completedOperations);
+            Interlocked.Increment(ref completedOperationsSize);
 
             if (progress != null)
             {
-                ReportProgress(progress, completedOperations, totalOperations, change.TargetPath,
-                    CurrentOperation.CopyingFiles);
+                ReportProgress(progress, completedOperationsSize, totalOperationsSize, change.TargetPath,
+                    CurrentOperationType.CopyingFiles);
             }
         }
     }
@@ -71,6 +77,29 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    #endregion
+
+    #region Report progress
+
+    private static void ReportProgress(
+        IProgress<BackupProgress> progress,
+        long completedOperationsSize,
+        long totalOperationsSize,
+        string currentItem,
+        CurrentOperationType currentOperationType)
+    {
+        BackupProgress progressInfo = new()
+        {
+            CompletedOperationsSize = completedOperationsSize,
+            TotalOperationsSize = totalOperationsSize,
+            PercentComplete = (int)((float)completedOperationsSize / totalOperationsSize * 100),
+            CurrentItem = currentItem,
+            CurrentOperationType = currentOperationType
+        };
+
+        progress.Report(progressInfo);
     }
 
     #endregion
@@ -147,40 +176,23 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
     }
 
     #endregion
-
-    #region Report progress
-
-    private static void ReportProgress(IProgress<BackupProgress> progress, int completed, int total, string currentItem,
-        CurrentOperation currentOperation)
-    {
-        BackupProgress progressInfo = new()
-        {
-            CompletedOperations = completed,
-            TotalOperations = total,
-            PercentComplete = (int)((float)completed / total * 100),
-            CurrentItem = currentItem,
-            CurrentOperation = currentOperation
-        };
-
-        progress.Report(progressInfo);
-    }
 }
 
 // Progress reporting class
 public struct BackupProgress
 {
-    public int CompletedOperations { get; set; }
-    public int TotalOperations { get; set; }
+    public long CompletedOperationsSize { get; set; }
+    public long TotalOperationsSize { get; set; }
     public int PercentComplete { get; set; }
     public string CurrentItem { get; set; }
-    public CurrentOperation CurrentOperation { get; set; }
+    public CurrentOperationType CurrentOperationType { get; set; }
 }
 
-public enum CurrentOperation
+public enum CurrentOperationType
 {
     [I18NKey("executingDirectoryChanges")] CreatingDirectories,
-    [I18NKey("executingPriorityFileChanges")] CopyingPriorityFiles,
+
+    [I18NKey("executingPriorityFileChanges")]
+    CopyingPriorityFiles,
     [I18NKey("executingFileChanges")] CopyingFiles
 }
-
-#endregion

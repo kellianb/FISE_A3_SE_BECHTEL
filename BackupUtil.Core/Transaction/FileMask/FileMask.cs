@@ -66,5 +66,6 @@ internal class FileMask
 public enum FileMaskEffect
 {
     Copy,
-    Encrypt
+    Encrypt,
+    Prioritise
 }
