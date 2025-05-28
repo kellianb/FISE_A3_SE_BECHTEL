@@ -4,6 +4,7 @@ using BackupUtil.Core.Transaction.ChangeType;
 
 namespace BackupUtil.Core.Command;
 
+// TODO support pausing, and stopping if banned programs are running
 public class BackupCommand
 {
     private readonly IBackupTransactionExecutor _receiver;
@@ -20,6 +21,8 @@ public class BackupCommand
         _programFilter = programFilter;
     }
 
+    public BackupCommandState State { get; private set; } = BackupCommandState.NotStarted;
+
     public void SetProgramFilter(ProgramFilter? programFilter)
     {
         _programFilter = programFilter;
@@ -30,6 +33,37 @@ public class BackupCommand
         _programFilter?.CheckForBannedPrograms();
 
         _receiver.Execute(_transaction);
+    }
+
+    public Task ExecuteAsync(
+        IProgress<BackupProgress>? progress = null,
+        CancellationToken cancellationToken = default)
+    {
+        switch (State)
+        {
+            case BackupCommandState.Running:
+            case BackupCommandState.Finished:
+                return Task.CompletedTask;
+            case BackupCommandState.NotStarted:
+            case BackupCommandState.Paused:
+                State = BackupCommandState.Running;
+
+                try
+                {
+                    _receiver.ExecuteAsync(_transaction, progress, cancellationToken, _programFilter);
+                }
+                catch
+                {
+                    // TODO check if there are any changes left
+                    State = BackupCommandState.Paused;
+                    throw;
+                }
+
+                break;
+        }
+
+        State = BackupCommandState.Finished;
+        return Task.CompletedTask;
     }
 
     public long GetTotalCopiedFileSize()
@@ -56,4 +90,12 @@ public class BackupCommand
                 group => group.Select(change => change.TargetPath).ToArray()
             );
     }
+}
+
+public enum BackupCommandState
+{
+    NotStarted,
+    Running,
+    Paused,
+    Finished
 }
