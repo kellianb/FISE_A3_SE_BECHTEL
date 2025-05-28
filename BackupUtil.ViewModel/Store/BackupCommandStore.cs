@@ -5,6 +5,11 @@ using BackupUtil.Core.Command;
 
 namespace BackupUtil.ViewModel.Store;
 
+/// <summary>
+/// Represents a store for managing backup commands. This class provides an observable collection
+/// of <see cref="BackupCommand"/> objects and implements <see cref="INotifyPropertyChanged"/> to
+/// notify clients of property changes.
+/// </summary>
 public class BackupCommandStore : INotifyPropertyChanged
 {
     #region BackupCommands
