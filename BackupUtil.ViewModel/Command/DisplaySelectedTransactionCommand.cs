@@ -21,7 +21,8 @@ public class DisplaySelectedTransactionCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
+        _jobListingViewModel.JobItems = parameter[0];
+        _jobListingViewModel.SelectedJobItems = parameter[1];
         _jobListingViewModel.GetSelectedTransactionDetails();
     }
-
 }

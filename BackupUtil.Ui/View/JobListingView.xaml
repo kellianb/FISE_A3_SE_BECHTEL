@@ -53,60 +53,67 @@
             <!-- Display all transactions details -->
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[displayTransactions]}"
                     Command="{Binding DisplayAllTransactionsCommand}" />
+        <WrapPanel Orientation="Vertical">
         <WrapPanel Orientation="Vertical" Margin="0,25,0,0">
             <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobs]}" />
             <!-- Job list display -->
             <DataGrid AutoGenerateColumns="False" IsReadOnly="True"  Margin="0,25,0,10" SelectionMode="Extended"
                       ItemsSource="{Binding Jobs}" SelectionChanged="Selector_OnSelectionChanged">
-            <DataGrid.Columns>
-                <!-- Job name -->
-                <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
-                                    Binding="{Binding Name}"
-                                    Width="200" />
 
-                <!-- Target path -->
-                <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
-                    Binding="{Binding TargetPath}" Width="80" />
+                <DataGrid.Columns>
+                    <!-- Selection checkbox  -->
+                    <DataGridCheckBoxColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[selection]}"
+                        />
 
-                <!-- Source path -->
-                <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
-                    Binding="{Binding SourcePath}" Width="100" />
+                    <!-- Job name  -->
+                    <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
+                                        Binding="{Binding Name}"
+                                        Width="200" />
 
-                <!-- Recursive -->
-                <DataGridCheckBoxColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobRecursive]}"
-                    Binding="{Binding Recursive}" />
+                    <!-- Target path -->
+                    <DataGridTextColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
+                        Binding="{Binding TargetPath}" Width="80" />
 
-                <!-- Differential -->
-                <DataGridCheckBoxColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
-                    Binding="{Binding Differential}" />
+                    <!-- Source path -->
+                    <DataGridTextColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
+                        Binding="{Binding SourcePath}" Width="100" />
 
-                <!-- Encryption type -->
-                <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionType]}"
-                    Binding="{Binding EncryptionType}" />
+                    <!-- Recursive -->
+                    <DataGridCheckBoxColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[jobRecursive]}"
+                        Binding="{Binding Recursive}" />
 
-                <!-- Encryption key -->
-                <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
-                    Binding="{Binding EncryptionKey}" />
+                    <!-- Differential -->
+                    <DataGridCheckBoxColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
+                        Binding="{Binding Differential}" />
 
-                <!-- File mask -->
-                <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobFileMask]}"
-                    Binding="{Binding FileMask}" />
+                    <!-- Encryption type -->
+                    <DataGridTextColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionType]}"
+                        Binding="{Binding EncryptionType}" />
 
-            </DataGrid.Columns>
+                    <!-- Encryption key -->
+                    <DataGridTextColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
+                        Binding="{Binding EncryptionKey}" />
+
+                    <!-- File mask -->
+                    <DataGridTextColumn
+                        Header="{Binding Source={StaticResource LocalizationService}, Path=[jobFileMask]}"
+                        Binding="{Binding FileMask}" />
+
+                </DataGrid.Columns>
             </DataGrid>
         </WrapPanel>
         <WrapPanel Orientation="Vertical">
             <WrapPanel Orientation="Horizontal">
                 <!-- Transaction details (total file size) -->
                 <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[transactions]}" />
-                <TextBlock Text="filsize" Margin="5,0,0,0" />
+                <TextBlock Text="filesize" Margin="5,0,0,0" />
             </WrapPanel>
 
             <DataGrid>
@@ -117,6 +124,7 @@
                 </DataGrid.Columns>
 
             </DataGrid>
+        </WrapPanel>
         </WrapPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1">
