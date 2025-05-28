@@ -180,4 +180,7 @@
     <data name="removeJob" xml:space="preserve">
         <value>Remove job(s)</value>
     </data>
+    <data name="removeTransaction" xml:space="preserve">
+        <value>Remove transaction(s)</value>
+    </data>
 </root>

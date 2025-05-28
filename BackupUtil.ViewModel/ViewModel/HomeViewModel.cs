@@ -6,19 +6,20 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class HomeViewModel : ViewModelBase
 {
-    public HomeViewModel(JobListingViewModel jobListingViewModel, TransactionViewModel transactionViewModel,
+    public HomeViewModel(JobListingViewModel jobListingViewModel,
+        TransactionListingViewModel transactionListingViewModel,
         NavigationService<JobCreationViewModel> jobCreationNavigationService,
         NavigationService<SettingsViewModel> settingsNavigationService)
     {
         JobListingViewModel = jobListingViewModel;
-        TransactionViewModel = transactionViewModel;
+        TransactionListingViewModel = transactionListingViewModel;
 
         OpenJobCreationCommand = new NavigateCommand<JobCreationViewModel>(jobCreationNavigationService);
         OpenSettingsCommand = new NavigateCommand<SettingsViewModel>(settingsNavigationService);
     }
 
     public JobListingViewModel JobListingViewModel { get; }
-    public TransactionViewModel TransactionViewModel { get; }
+    public TransactionListingViewModel TransactionListingViewModel { get; }
 
     #region Commands
 

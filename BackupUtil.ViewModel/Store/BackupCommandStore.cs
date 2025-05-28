@@ -1,20 +1,35 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BackupUtil.Core.Command;
 
 namespace BackupUtil.ViewModel.Store;
 
 /// <summary>
-/// Represents a store for managing backup commands. This class provides an observable collection
-/// of <see cref="BackupCommand"/> objects and implements <see cref="INotifyPropertyChanged"/> to
-/// notify clients of property changes.
+///     Represents a store for managing backup commands. This class provides an observable collection
+///     of <see cref="BackupCommand" /> objects and implements <see cref="INotifyPropertyChanged" /> to
+///     notify clients of property changes.
 /// </summary>
 public class BackupCommandStore : INotifyPropertyChanged
 {
     #region BackupCommands
 
-    public ObservableCollection<BackupCommand> BackupCommands { get; } = [];
+    public List<BackupCommand> BackupCommands { get; } = [];
+
+    public void AddBackupCommand(BackupCommand backupCommand)
+    {
+        BackupCommands.Add(backupCommand);
+        OnPropertyChanged(nameof(BackupCommands));
+    }
+
+    public void RemoveByIndices(List<int> indices)
+    {
+        foreach (int index in indices.Distinct().OrderDescending())
+        {
+            BackupCommands.RemoveAt(index);
+        }
+
+        OnPropertyChanged(nameof(BackupCommands));
+    }
 
     #endregion
 

@@ -19,6 +19,7 @@ public partial class App : Application
 
         // Shared objects
         services.AddSingleton<JobStore>();
+        services.AddSingleton<BackupCommandStore>();
         services.AddSingleton<NavigationStore>();
         services.AddSingleton<ProgramFilterStore>();
 
@@ -70,14 +71,14 @@ public partial class App : Application
     private HomeViewModel CreateHomeViewModel(IServiceProvider serviceProvider)
     {
         return new HomeViewModel(CreateJobListingViewModel(serviceProvider),
-            CreateTransactionViewModel(serviceProvider),
+            CreateTransactionListingViewModel(serviceProvider),
             CreateNavigationService<JobCreationViewModel>(serviceProvider),
             CreateNavigationService<SettingsViewModel>(serviceProvider));
     }
 
-    private TransactionViewModel CreateTransactionViewModel(IServiceProvider serviceProvider)
+    private TransactionListingViewModel CreateTransactionListingViewModel(IServiceProvider serviceProvider)
     {
-        return new TransactionViewModel();
+        return new TransactionListingViewModel(serviceProvider.GetRequiredService<BackupCommandStore>());
     }
 
     private NavigationService<TViewModel> CreateNavigationService<TViewModel>(IServiceProvider serviceProvider)
