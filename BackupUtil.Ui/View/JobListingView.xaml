@@ -28,10 +28,10 @@
             <TextBox Width="600"
                      Text="{Binding JobFilePath, UpdateSourceTrigger=PropertyChanged}" />
         </WrapPanel>
-        <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Single"
-                  ItemsSource="{Binding Jobs}">
+        <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Extended"
+                  ItemsSource="{Binding Jobs}" SelectionChanged="Selector_OnSelectionChanged">
             <DataGrid.Columns>
-                <!-- Job name  -->
+                <!-- Job name -->
                 <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
                                     Binding="{Binding Name}"
                                     Width="200" />

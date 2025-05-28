@@ -4,6 +4,8 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobViewModel(Job job) : ViewModelBase
 {
+    #region Name
+
     public string Name
     {
         get => job.Name;
@@ -13,6 +15,10 @@ public class JobViewModel(Job job) : ViewModelBase
             OnPropertyChanged();
         }
     }
+
+    #endregion
+
+    #region SourcePath
 
     public string SourcePath
     {
@@ -24,6 +30,10 @@ public class JobViewModel(Job job) : ViewModelBase
         }
     }
 
+    #endregion
+
+    #region TargetPath
+
     public string TargetPath
     {
         get => job.TargetPath;
@@ -33,6 +43,10 @@ public class JobViewModel(Job job) : ViewModelBase
             OnPropertyChanged();
         }
     }
+
+    #endregion
+
+    #region Recursive
 
     public bool Recursive
     {
@@ -44,6 +58,10 @@ public class JobViewModel(Job job) : ViewModelBase
         }
     }
 
+    #endregion
+
+    #region Differential
+
     public bool Differential
     {
         get => job.Differential;
@@ -53,6 +71,10 @@ public class JobViewModel(Job job) : ViewModelBase
             OnPropertyChanged();
         }
     }
+
+    #endregion
+
+    #region EncryptionType
 
     public EncryptionTypeOptions EncryptionType
     {
@@ -64,6 +86,10 @@ public class JobViewModel(Job job) : ViewModelBase
         }
     }
 
+    #endregion
+
+    #region EncryptionKey
+
     public string EncryptionKey
     {
         get => job.EncryptionKey ?? "";
@@ -74,6 +100,10 @@ public class JobViewModel(Job job) : ViewModelBase
         }
     }
 
+    #endregion
+
+    #region FileMask
+
     public string FileMask
     {
         get => job.FileMask ?? "";
@@ -83,4 +113,22 @@ public class JobViewModel(Job job) : ViewModelBase
             OnPropertyChanged();
         }
     }
+
+    #endregion
+
+    #region IsSelected
+
+    private bool _isSelected;
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            _isSelected = value;
+            OnPropertyChanged();
+        }
+    }
+
+    #endregion
 }
