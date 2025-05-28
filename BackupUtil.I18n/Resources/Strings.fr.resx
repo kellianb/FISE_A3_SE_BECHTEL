@@ -177,14 +177,8 @@
     <data name="executingPriorityFileChanges" xml:space="preserve">
         <value>Copie des fichiers prioritaires</value>
     </data>
-    <data name="noEncryption" xml:space="preserve">
+    <data name="jobNoEncryption" xml:space="preserve">
         <value>Pas de chiffrement</value>
-    </data>
-    <data name="encryptionKeyLabel" xml:space="preserve">
-        <value>Clé de chiffrement</value>
-    </data>
-    <data name="encryptionType" xml:space="preserve">
-        <value>Type de chiffrement</value>
     </data>
     <data name="jobs" xml:space="preserve">
         <value>Tâches</value>
@@ -192,7 +186,7 @@
     <data name="transactions" xml:space="preserve">
         <value>Transactions</value>
     </data>
-    <data name="displayTransactions" xml:space="preserve">
+    <data name="displayAllTransactions" xml:space="preserve">
         <value>Afficher les détails de toutes les transactions</value>
     </data>
     <data name="displaySelectedTransaction" xml:space="preserve">
