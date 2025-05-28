@@ -6,10 +6,11 @@ namespace BackupUtil.ViewModel.Command;
 
 public class DeleteSelectedTransactionsCommand : CommandBase
 {
-    private readonly TransactionListingViewModel _transactionListingViewModel;
     private readonly BackupCommandStore _backupCommandStore;
+    private readonly TransactionListingViewModel _transactionListingViewModel;
 
-    public DeleteSelectedTransactionsCommand(TransactionListingViewModel transactionListingViewModel, BackupCommandStore backupCommandStore)
+    public DeleteSelectedTransactionsCommand(TransactionListingViewModel transactionListingViewModel,
+        BackupCommandStore backupCommandStore)
     {
         _backupCommandStore = backupCommandStore;
         _transactionListingViewModel = transactionListingViewModel;
@@ -18,7 +19,7 @@ public class DeleteSelectedTransactionsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _backupCommandStore.RemoveByIndices(_transactionListingViewModel.SelectTransactionIndices);;
+        _backupCommandStore.RemoveByIndices(_transactionListingViewModel.SelectTransactionIndices);
     }
 
     public override bool CanExecute(object? parameter)
