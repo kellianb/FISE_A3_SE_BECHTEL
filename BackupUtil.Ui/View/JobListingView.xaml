@@ -64,7 +64,7 @@
                     <!-- Selection checkbox  -->
                     <DataGridCheckBoxColumn
                         Header="{Binding Source={StaticResource LocalizationService}, Path=[selection]}"
-                        />
+                        IsReadOnly="False" />
 
                     <!-- Job name  -->
                     <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"

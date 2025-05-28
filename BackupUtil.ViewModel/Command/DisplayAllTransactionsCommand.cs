@@ -6,12 +6,10 @@ namespace BackupUtil.ViewModel.Command;
 public class DisplayAllTransactionsCommand : CommandBase
 {
     private readonly JobListingViewModel _jobListingViewModel;
-    private readonly JobManager _jobManager;
 
-    public DisplayAllTransactionsCommand(JobListingViewModel jobListingViewModel, JobManager jobManager)
+    public DisplayAllTransactionsCommand(JobListingViewModel jobListingViewModel)
     {
         _jobListingViewModel = jobListingViewModel;
-        _jobManager = jobManager;
     }
 
     public override bool CanExecute(object? parameter)

@@ -6,12 +6,10 @@ namespace BackupUtil.ViewModel.Command;
 public class DisplaySelectedTransactionCommand : CommandBase
 {
     private readonly JobListingViewModel _jobListingViewModel;
-    private readonly JobManager _jobManager;
 
-    public DisplaySelectedTransactionCommand(JobListingViewModel jobListingViewModel, JobManager jobManager)
+    public DisplaySelectedTransactionCommand(JobListingViewModel jobListingViewModel)
     {
         _jobListingViewModel = jobListingViewModel;
-        _jobManager = jobManager;
     }
 
     public override bool CanExecute(object? parameter)
@@ -21,8 +19,8 @@ public class DisplaySelectedTransactionCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobListingViewModel.JobItems = parameter[0];
-        _jobListingViewModel.SelectedJobItems = parameter[1];
+        //_jobListingViewModel.JobItems = parameter[0];
+        //_jobListingViewModel.SelectedJobItems = parameter[1];
         _jobListingViewModel.GetSelectedTransactionDetails();
     }
 }
