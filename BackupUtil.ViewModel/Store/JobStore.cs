@@ -11,7 +11,7 @@ public class JobStore : INotifyPropertyChanged
 
     public JobStore()
     {
-        _jobManager = new JobManager();
+        _jobManager = new JobManager().AddJobsFromFile();
         _jobFilePath = JobManager.DefaultJobFilePath;
     }
 

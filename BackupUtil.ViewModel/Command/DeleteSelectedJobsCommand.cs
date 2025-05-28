@@ -18,7 +18,7 @@ public class DeleteSelectedJobsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobStore.RemoveByIndices([.._jobListingViewModel.SelectJobIndices]);
+        _jobStore.RemoveByIndices(_jobListingViewModel.SelectJobIndices);
     }
 
     public override bool CanExecute(object? parameter)
