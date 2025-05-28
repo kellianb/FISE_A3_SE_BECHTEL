@@ -13,11 +13,24 @@ public partial class CreateJobView : Window
     private FileSystemInfo _sourcePath;
     private FileSystemInfo _targetPath;
     private readonly JobListingViewModel _jobListingViewModel;
+    private TextBlock _encryptionKeyLabel;
+    private TextBox _encryptionKeyInput;
 
     public CreateJobView(JobListingViewModel jobListingViewModel)
     {
         InitializeComponent();
         _jobListingViewModel = jobListingViewModel;
+        _encryptionKeyLabel = new()
+        {
+            Name = "EncryptionKeyLabel",
+            Text = I18N.GetLocalizedMessage("encryptionKeyLabel"),
+            Margin= new Thickness(0, 0, 0, 5)
+        };
+        _encryptionKeyInput = new()
+        {
+            Name = "EncryptionKeyInput",
+            HorizontalAlignment= HorizontalAlignment.Stretch
+        };
     }
 
     public void SelectSourcePath(object sender, RoutedEventArgs routedEventArgs)
@@ -72,26 +85,15 @@ public partial class CreateJobView : Window
     public void SelectEncryptionType(object sender, RoutedEventArgs routedEventArgs)
     {
             string? selectedType = EncryptionTypeInput.SelectedItem.ToString();
-            TextBlock encryptionKeyLabel = new()
+            if (selectedType != null && selectedType != I18N.GetLocalizedMessage("noEncryption") && !EncryptionPanel.Children.Contains(_encryptionKeyInput))
             {
-                Name = "EncryptionKeyLabel",
-                Text = I18N.GetLocalizedMessage("encryptionKeyLabel"),
-                Margin= new Thickness(0, 0, 0, 5)
-            };
-            TextBox encryptionKeyInput = new()
-            {
-                Name = "EncryptionKeyInput",
-                HorizontalAlignment= HorizontalAlignment.Stretch
-            };
-            if (selectedType != null && selectedType != I18N.GetLocalizedMessage("noEncryption") && !EncryptionPanel.Children.Contains(encryptionKeyInput))
-            {
-                EncryptionPanel.Children.Add(encryptionKeyLabel);
-                EncryptionPanel.Children.Add(encryptionKeyInput);
+                EncryptionPanel.Children.Add(_encryptionKeyLabel);
+                EncryptionPanel.Children.Add(_encryptionKeyInput);
             }
-            else if (selectedType == I18N.GetLocalizedMessage("noEncryption") && EncryptionPanel.Children.Contains(encryptionKeyInput))
+            else if (selectedType == I18N.GetLocalizedMessage("noEncryption") && EncryptionPanel.Children.Contains(_encryptionKeyInput))
             {
-                EncryptionPanel.Children.Remove(encryptionKeyInput);
-                EncryptionPanel.Children.Remove(encryptionKeyLabel);
+                EncryptionPanel.Children.Remove(_encryptionKeyInput);
+                EncryptionPanel.Children.Remove(_encryptionKeyLabel);
             }
     }
 }
