@@ -180,4 +180,7 @@
     <data name="removeJob" xml:space="preserve">
         <value>Supprimer tâche(s)</value>
     </data>
+    <data name="removeTransaction" xml:space="preserve">
+        <value>Supprimer transaction(s)</value>
+    </data>
 </root>

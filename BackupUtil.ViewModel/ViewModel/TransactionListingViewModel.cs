@@ -1,0 +1,112 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Input;
+using BackupUtil.Core.Command;
+using BackupUtil.ViewModel.Command;
+using BackupUtil.ViewModel.Store;
+
+namespace BackupUtil.ViewModel.ViewModel;
+
+public class TransactionListingViewModel : ViewModelBase
+{
+    private readonly BackupCommandStore _backupCommandStore;
+
+    public TransactionListingViewModel(BackupCommandStore backupCommandStore)
+    {
+        _backupCommandStore = backupCommandStore;
+
+        _backupCommandStore.PropertyChanged += OnBackupCommandStorePropertyChanged;
+
+        DeleteSelectedTransactionsCommand = new DeleteSelectedTransactionsCommand(this, _backupCommandStore);
+
+        LoadTransactionViewModels();
+    }
+
+    public override void Dispose()
+    {
+        DisposeTransactionViewModels();
+        _backupCommandStore.PropertyChanged -= OnBackupCommandStorePropertyChanged;
+        base.Dispose();
+    }
+
+    #region Commands
+
+    public ICommand DeleteSelectedTransactionsCommand { get; }
+
+    #endregion
+
+    #region Handle BackupCommandStore events
+
+    private void OnBackupCommandStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(BackupCommandStore.BackupCommands))
+        {
+            LoadTransactionViewModels();
+        }
+    }
+
+    #endregion
+
+    #region Handle TransactionViewModel events
+
+    private void OnTransactionViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(TransactionViewModel.IsSelected))
+        {
+            OnPropertyChanged(nameof(SelectTransactionIndices));
+        }
+    }
+
+    #endregion
+
+    #region TransactionViewModels
+
+    public ObservableCollection<TransactionViewModel> Transactions { get; } = [];
+
+    public List<int> SelectTransactionIndices
+    {
+        get
+        {
+            List<int> indices = [];
+            for (int i = 0; i < Transactions.Count; i++)
+            {
+                if (Transactions[i].IsSelected)
+                {
+                    indices.Add(i);
+                }
+            }
+
+            return indices;
+        }
+    }
+
+    private void LoadTransactionViewModels()
+    {
+        DisposeTransactionViewModels();
+
+        foreach (BackupCommand backupCommand in _backupCommandStore.BackupCommands)
+        {
+            TransactionViewModel transactionViewModel = new();
+            transactionViewModel.PropertyChanged += OnTransactionViewModelPropertyChanged;
+            Transactions.Add(transactionViewModel);
+        }
+
+        OnPropertyChanged(nameof(SelectTransactionIndices));
+    }
+
+    /// <summary>
+    ///     Get rid of all TransactionViewModels
+    /// </summary>
+    private void DisposeTransactionViewModels()
+    {
+        foreach (TransactionViewModel transactionViewModel in Transactions)
+        {
+            transactionViewModel.PropertyChanged -= OnTransactionViewModelPropertyChanged;
+            transactionViewModel.Dispose();
+        }
+
+        Transactions.Clear();
+    }
+
+    #endregion
+}

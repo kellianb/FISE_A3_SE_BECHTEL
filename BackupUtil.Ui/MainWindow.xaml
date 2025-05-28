@@ -20,11 +20,6 @@
                 <view:JobCreationView />
             </DataTemplate>
 
-            <!-- Transaction view -->
-            <DataTemplate DataType="{x:Type viewModel:TransactionViewModel}">
-                <view:TransactionView />
-            </DataTemplate>
-
             <!-- Settings -->
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <view:SettingsView />

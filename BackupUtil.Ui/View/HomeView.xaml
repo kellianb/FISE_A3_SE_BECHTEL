@@ -33,6 +33,6 @@
         </WrapPanel>
 
         <view:JobListingView Grid.Row="1" DataContext="{Binding JobListingViewModel}" />
-        <view:TransactionView Grid.Row="2" DataContext="{Binding TransactionViewModel}" />
+        <view:TransactionListingView Grid.Row="2" DataContext="{Binding TransactionListingViewModel}" />
     </Grid>
 </UserControl>

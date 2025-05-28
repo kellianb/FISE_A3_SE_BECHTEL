@@ -19,7 +19,7 @@
             <!-- Job listing view & Job file path -->
             <ColumnDefinition Width="*" />
             <!-- Job deletion & Transaction creation buttons -->
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -27,11 +27,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" >
+        <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- Export jobs to file -->
@@ -95,9 +95,11 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Delete Selected Jobs Button -->
-        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Top"
-                Content="{Binding Source={StaticResource LocalizationService}, Path=[removeJob]}"
-                Command="{Binding DeleteSelectedJobsCommand}"/>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <!-- Delete Selected Jobs Button -->
+            <Button
+                    Content="{Binding Source={StaticResource LocalizationService}, Path=[removeJob]}"
+                    Command="{Binding DeleteSelectedJobsCommand}" />
+        </StackPanel>
     </Grid>
 </UserControl>
