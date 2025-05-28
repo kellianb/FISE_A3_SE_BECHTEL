@@ -7,7 +7,7 @@ public class TransactionViewModel : ViewModelBase
     public TransactionViewModel(BackupCommand command)
     {
         JobNames = string.Join(", ", command.JobNames);
-        TotalCopiedFileSize = command.GetTotalCopiedFileSize();
+        TotalCopiedFileSize = command.TotalFileSize;
     }
 
     #region IsSelected
