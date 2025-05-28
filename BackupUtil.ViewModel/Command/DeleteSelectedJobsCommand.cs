@@ -18,17 +18,17 @@ public class DeleteSelectedJobsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobStore.RemoveByIndices(_jobListingViewModel.SelectJobIndices);
+        _jobStore.RemoveByIndices(_jobListingViewModel.SelectedJobIndices);
     }
 
     public override bool CanExecute(object? parameter)
     {
-        return _jobListingViewModel.SelectJobIndices.Count > 0 && base.CanExecute(parameter);
+        return _jobListingViewModel.SelectedJobIndices.Count > 0 && base.CanExecute(parameter);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_jobListingViewModel.SelectJobIndices))
+        if (e.PropertyName == nameof(_jobListingViewModel.SelectedJobIndices))
         {
             OnCanExecuteChanged();
         }

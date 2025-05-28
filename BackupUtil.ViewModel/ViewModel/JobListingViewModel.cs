@@ -74,7 +74,7 @@ public class JobListingViewModel : ViewModelBase
     {
         if (e.PropertyName == nameof(JobViewModel.IsSelected))
         {
-            OnPropertyChanged(nameof(SelectJobIndices));
+            OnPropertyChanged(nameof(SelectedJobIndices));
         }
     }
 
@@ -85,7 +85,7 @@ public class JobListingViewModel : ViewModelBase
     public ObservableCollection<JobViewModel> Jobs { get; } = [];
 
     // Determine the indices of selected JobViewModels
-    public HashSet<int> SelectJobIndices
+    public HashSet<int> SelectedJobIndices
     {
         get
         {
@@ -116,7 +116,7 @@ public class JobListingViewModel : ViewModelBase
             Jobs.Add(jobViewModel);
         }
 
-        OnPropertyChanged(nameof(SelectJobIndices));
+        OnPropertyChanged(nameof(SelectedJobIndices));
     }
 
     /// <summary>

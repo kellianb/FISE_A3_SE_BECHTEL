@@ -19,17 +19,17 @@ public class DeleteSelectedTransactionsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _backupCommandStore.RemoveByIndices(_transactionListingViewModel.SelectTransactionIndices);
+        _backupCommandStore.RemoveByIndices(_transactionListingViewModel.SelectedTransactionIndices);
     }
 
     public override bool CanExecute(object? parameter)
     {
-        return _transactionListingViewModel.SelectTransactionIndices.Count > 0 && base.CanExecute(parameter);
+        return _transactionListingViewModel.SelectedTransactionIndices.Count > 0 && base.CanExecute(parameter);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_transactionListingViewModel.SelectTransactionIndices))
+        if (e.PropertyName == nameof(_transactionListingViewModel.SelectedTransactionIndices))
         {
             OnCanExecuteChanged();
         }
