@@ -1,4 +1,5 @@
-﻿using BackupUtil.Core.Command;
+﻿using System.ComponentModel;
+using BackupUtil.Core.Command;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
@@ -13,9 +14,10 @@ public class CreateTransactionsForSelectedJobsCommand : CommandBase
     public CreateTransactionsForSelectedJobsCommand(JobListingViewModel jobListingViewModel, JobStore jobStore,
         BackupCommandStore backupCommandStore)
     {
-        _jobListingViewModel = jobListingViewModel;
         _jobStore = jobStore;
         _backupCommandStore = backupCommandStore;
+        _jobListingViewModel = jobListingViewModel;
+        _jobListingViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
     public override bool CanExecute(object? parameter)
@@ -27,5 +29,13 @@ public class CreateTransactionsForSelectedJobsCommand : CommandBase
     {
         BackupCommand backupCommand = _jobStore.RunByIndices(_jobListingViewModel.SelectedJobIndices);
         _backupCommandStore.AddBackupCommand(backupCommand);
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(_jobListingViewModel.SelectedJobIndices))
+        {
+            OnCanExecuteChanged();
+        }
     }
 }
