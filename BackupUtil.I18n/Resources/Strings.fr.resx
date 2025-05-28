@@ -186,11 +186,8 @@
     <data name="transactions" xml:space="preserve">
         <value>Transactions</value>
     </data>
-    <data name="displayAllTransactions" xml:space="preserve">
-        <value>Afficher les détails de toutes les transactions</value>
-    </data>
-    <data name="displaySelectedTransaction" xml:space="preserve">
-        <value>Afficher les détails de la transaction selectionée</value>
+    <data name="runJob" xml:space="preserve">
+        <value>Créer une transaction</value>
     </data>
     <data name="removeJob" xml:space="preserve">
         <value>Supprimer tâche(s)</value>

@@ -108,14 +108,10 @@
                 Content="{Binding Source={StaticResource LocalizationService}, Path=[removeJob]}"
                 Command="{Binding DeleteSelectedJobsCommand}" />
 
-            <!-- Display selected transaction details -->
+            <!-- Create transaction from selected jobs -->
             <Button
-                Content="{Binding Source={StaticResource LocalizationService}, Path=[displaySelectedTransaction]}"
+                Content="{Binding Source={StaticResource LocalizationService}, Path=[runJob]}"
                 Command="{Binding CreateTransactionsForSelectedJobsCommand}" />
-
-            <!-- Display all transactions details -->
-            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[displayAllTransactions]}"
-                    Command="{Binding CreateTransactionsForAllJobsCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>
