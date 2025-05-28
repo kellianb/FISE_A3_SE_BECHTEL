@@ -15,20 +15,41 @@
     </UserControl.Resources>
 
     <Grid>
-        <WrapPanel VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <!-- Job listing view & Job file path -->
+            <ColumnDefinition Width="*" />
+            <!-- Job deletion & Transaction creation buttons -->
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
             <!-- Export jobs to file -->
-            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[exportJobs]}"
+            <Button Grid.Column="0" Content="{Binding Source={StaticResource LocalizationService}, Path=[exportJobs]}"
                     Command="{Binding ExportJobsCommand}" />
 
             <!-- Load jobs from file -->
-            <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[loadJobs]}"
+            <Button Grid.Column="1" Content="{Binding Source={StaticResource LocalizationService}, Path=[loadJobs]}"
                     Command="{Binding LoadJobsCommand}" />
 
             <!-- Set the job file path -->
-            <TextBox Width="600"
+            <TextBox Grid.Column="2" HorizontalAlignment="Stretch"
                      Text="{Binding JobFilePath, UpdateSourceTrigger=PropertyChanged}" />
-        </WrapPanel>
-        <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,25,0,10" SelectionMode="Extended"
+        </Grid>
+
+        <!-- Job list display -->
+        <DataGrid Grid.Row="1" Grid.Column="0" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,0,0"
+                  SelectionMode="Extended"
                   ItemsSource="{Binding Jobs}" SelectionChanged="Selector_OnSelectionChanged">
             <DataGrid.Columns>
                 <!-- Job name -->
@@ -73,5 +94,10 @@
 
             </DataGrid.Columns>
         </DataGrid>
+
+        <!-- Delete Selected Jobs Button -->
+        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Top"
+                Content="{Binding Source={StaticResource LocalizationService}, Path=[removeJob]}"
+                Command="{Binding DeleteSelectedJobsCommand}"/>
     </Grid>
 </UserControl>
