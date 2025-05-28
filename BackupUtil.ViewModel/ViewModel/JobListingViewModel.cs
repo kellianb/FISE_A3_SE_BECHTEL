@@ -12,18 +12,21 @@ namespace BackupUtil.ViewModel.ViewModel;
 public class JobListingViewModel : ViewModelBase
 {
     private readonly JobStore _jobStore;
+    private readonly BackupCommandStore _backupCommandStore;
+    private ObservableCollection<JobViewModel> _jobs = [];
 
-    public JobListingViewModel(JobStore jobStore)
+    public JobListingViewModel(JobStore jobStore, BackupCommandStore backupCommandStore)
     {
         _jobStore = jobStore;
+        _backupCommandStore = backupCommandStore;
 
         _jobStore.PropertyChanged += OnJobStorePropertyChanged;
 
         LoadJobsCommand = new LoadJobsCommand(this, _jobStore);
         ExportJobsCommand = new ExportJobsCommand(this, _jobStore);
         DeleteSelectedJobsCommand = new DeleteSelectedJobsCommand(this, _jobStore);
-        DisplayAllTransactionsCommand = new DisplayAllTransactionsCommand(this);
-        DisplaySelectedTransactionCommand = new DisplaySelectedTransactionCommand(this);
+        CreateAllTransactionsCommand = new CreateAllTransactionsCommand(this, _jobStore, _backupCommandStore);
+        CreateSelectedTransactionsCommand = new CreateSelectedTransactionsCommand(this, _jobStore, _backupCommandStore);
 
         LoadJobViewModels();
     }
@@ -145,9 +148,9 @@ public class JobListingViewModel : ViewModelBase
     // Save jobs to the job file
     public ICommand ExportJobsCommand { get; }
 
-    public ICommand DisplayAllTransactionsCommand { get; }
+    public ICommand CreateAllTransactionsCommand { get; }
 
-    public ICommand DisplaySelectedTransactionCommand { get; }
+    public ICommand CreateSelectedTransactionsCommand { get; }
 
     // Delete all jobs for which IsSelected is true
     public ICommand DeleteSelectedJobsCommand { get; }
