@@ -41,8 +41,8 @@
         <StackPanel Grid.Column="1">
             <!-- Delete Selected Transaction Button -->
             <Button
-                    Content="{Binding Source={StaticResource LocalizationService}, Path=[removeTransaction]}"
-                    Command="{Binding DeleteSelectedTransactionsCommand}" />
+                Content="{Binding Source={StaticResource LocalizationService}, Path=[removeTransaction]}"
+                Command="{Binding DeleteSelectedTransactionsCommand}" />
         </StackPanel>
 
     </Grid>

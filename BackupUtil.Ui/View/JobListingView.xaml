@@ -54,8 +54,8 @@
             <DataGrid.Columns>
                 <!-- Job name -->
                 <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
-                                    Binding="{Binding Name}"
-                                    Width="200" />
+                    Binding="{Binding Name}"
+                    Width="200" />
 
                 <!-- Target path -->
                 <DataGridTextColumn
@@ -95,11 +95,22 @@
             </DataGrid.Columns>
         </DataGrid>
 
+
+        <!-- Jobs header -->
+        <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold"
+                   Text="{Binding Source={StaticResource LocalizationService}, Path=[jobs]}"
+                   HorizontalAlignment="Center" />
+
         <StackPanel Grid.Row="1" Grid.Column="1">
             <!-- Delete Selected Jobs Button -->
             <Button
-                    Content="{Binding Source={StaticResource LocalizationService}, Path=[removeJob]}"
-                    Command="{Binding DeleteSelectedJobsCommand}" />
+                Content="{Binding Source={StaticResource LocalizationService}, Path=[removeJob]}"
+                Command="{Binding DeleteSelectedJobsCommand}" />
+
+            <!-- Create transaction from selected jobs -->
+            <Button
+                Content="{Binding Source={StaticResource LocalizationService}, Path=[runJob]}"
+                Command="{Binding CreateTransactionsForSelectedJobsCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

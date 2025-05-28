@@ -177,6 +177,18 @@
     <data name="executingPriorityFileChanges" xml:space="preserve">
         <value>Copying priority files</value>
     </data>
+    <data name="jobNoEncryption" xml:space="preserve">
+        <value>No encryption</value>
+    </data>
+    <data name="jobs" xml:space="preserve">
+        <value>Jobs</value>
+    </data>
+    <data name="transactions" xml:space="preserve">
+        <value>Transactions</value>
+    </data>
+    <data name="runJob" xml:space="preserve">
+        <value>Create a transaction</value>
+    </data>
     <data name="removeJob" xml:space="preserve">
         <value>Remove job(s)</value>
     </data>

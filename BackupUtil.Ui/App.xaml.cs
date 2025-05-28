@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
@@ -53,7 +53,8 @@ public partial class App : Application
 
     private JobListingViewModel CreateJobListingViewModel(IServiceProvider serviceProvider)
     {
-        return new JobListingViewModel(serviceProvider.GetRequiredService<JobStore>());
+        return new JobListingViewModel(serviceProvider.GetRequiredService<JobStore>(),
+            serviceProvider.GetRequiredService<BackupCommandStore>());
     }
 
     private JobCreationViewModel CreateJobCreationViewModel(IServiceProvider serviceProvider)
