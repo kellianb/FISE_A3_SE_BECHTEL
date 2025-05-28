@@ -25,8 +25,8 @@ public class JobListingViewModel : ViewModelBase
         LoadJobsCommand = new LoadJobsCommand(this, _jobStore);
         ExportJobsCommand = new ExportJobsCommand(this, _jobStore);
         DeleteSelectedJobsCommand = new DeleteSelectedJobsCommand(this, _jobStore);
-        CreateAllTransactionsCommand = new CreateAllTransactionsCommand(this, _jobStore, _backupCommandStore);
-        CreateSelectedTransactionsCommand = new CreateSelectedTransactionsCommand(this, _jobStore, _backupCommandStore);
+        CreateTransactionsForAllJobsCommand = new CreateTransactionForAllJobsCommand(this, _jobStore, _backupCommandStore);
+        CreateTransactionsForSelectedJobsCommand = new CreateTransactionsForSelectedJobsCommand(this, _jobStore, _backupCommandStore);
 
         LoadJobViewModels();
     }
@@ -148,9 +148,9 @@ public class JobListingViewModel : ViewModelBase
     // Save jobs to the job file
     public ICommand ExportJobsCommand { get; }
 
-    public ICommand CreateAllTransactionsCommand { get; }
+    public ICommand CreateTransactionsForAllJobsCommand { get; }
 
-    public ICommand CreateSelectedTransactionsCommand { get; }
+    public ICommand CreateTransactionsForSelectedJobsCommand { get; }
 
     // Delete all jobs for which IsSelected is true
     public ICommand DeleteSelectedJobsCommand { get; }

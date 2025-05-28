@@ -48,11 +48,11 @@
 
             <!-- Display selected transaction details -->
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[displaySelectedTransaction]}"
-                    Command="{Binding CreateSelectedTransactionsCommand}" />
+                    Command="{Binding CreateTransactionsForSelectedJobsCommand}" />
 
             <!-- Display all transactions details -->
             <Button Content="{Binding Source={StaticResource LocalizationService}, Path=[displayTransactions]}"
-                    Command="{Binding CreateAllTransactionsCommand}" />
+                    Command="{Binding CreateTransactionsForAllJobsCommand}" />
         <WrapPanel Orientation="Vertical">
         <WrapPanel Orientation="Vertical" Margin="0,25,0,0">
             <TextBlock Text="{Binding Source={StaticResource LocalizationService}, Path=[jobs]}" />
