@@ -195,4 +195,13 @@
     <data name="removeTransaction" xml:space="preserve">
         <value>Supprimer transaction(s)</value>
     </data>
+    <data name="transactionJobNames" xml:space="preserve">
+        <value>Noms des tâches</value>
+    </data>
+    <data name="transactionTotalCopiedFileSize" xml:space="preserve">
+        <value>Taille totale</value>
+    </data>
+    <data name="transactionState" xml:space="preserve">
+        <value>Statut</value>
+    </data>
 </root>

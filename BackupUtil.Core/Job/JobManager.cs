@@ -126,14 +126,16 @@ public class JobManager
     {
         BackupTransaction transaction = _transactionBuilder.Build(concernedJobs);
 
-        return new BackupCommand(_transactionExecutor, transaction);
+        List<string> concernedJobNames = concernedJobs.Select(j => j.Name).ToList();
+
+        return new BackupCommand(_transactionExecutor, transaction, concernedJobNames);
     }
 
     private BackupCommand BuildBackupCommand(Job concernedJob)
     {
         BackupTransaction transaction = _transactionBuilder.Build(concernedJob);
 
-        return new BackupCommand(_transactionExecutor, transaction);
+        return new BackupCommand(_transactionExecutor, transaction, [concernedJob.Name]);
     }
 
     #endregion

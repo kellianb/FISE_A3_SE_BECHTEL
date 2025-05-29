@@ -9,12 +9,14 @@ public class BackupCommand
     private readonly IBackupTransactionExecutor _receiver;
     private readonly BackupTransaction _transaction;
     private ProgramFilter? _programFilter;
+    public readonly List<string> JobNames;
 
-    internal BackupCommand(IBackupTransactionExecutor receiver, BackupTransaction transaction,
+    internal BackupCommand(IBackupTransactionExecutor receiver, BackupTransaction transaction, List<string> jobNames,
         ProgramFilter? programFilter = null)
     {
         _receiver = receiver;
         _transaction = transaction;
+        JobNames = jobNames;
         _programFilter = programFilter;
     }
 
