@@ -26,19 +26,28 @@
                   ItemsSource="{Binding Transactions}" SelectionChanged="Selector_OnSelectionChanged">
             <DataGrid.Columns>
                 <!-- Job names -->
-                <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
+                <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionJobNames]}"
                                     Binding="{Binding JobNames}"
                                     Width="200" />
 
-                <!-- Target path -->
+                <!-- TODO Command state -->
                 <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
-                    Binding="{Binding TotalCopiedFileSize}" Width="80" />
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionState]}"
+                    Binding="{Binding CommandState}" Width="80" />
 
+                <!-- Total copied file size -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionTotalCopiedFileSize]}"
+                    Binding="{Binding TotalCopiedFileSize}" Width="80" />
             </DataGrid.Columns>
         </DataGrid>
 
         <StackPanel Grid.Column="1">
+            <!-- Transaction header -->
+            <TextBlock FontWeight="Bold" Margin="0 0 0 9"
+                       Text="{Binding Source={StaticResource LocalizationService}, Path=[transactions]}"
+                       HorizontalAlignment="Center" />
+
             <!-- Delete Selected Transaction Button -->
             <Button
                 Content="{Binding Source={StaticResource LocalizationService}, Path=[removeTransaction]}"

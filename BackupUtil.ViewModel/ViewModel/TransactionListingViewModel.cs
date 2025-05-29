@@ -86,7 +86,7 @@ public class TransactionListingViewModel : ViewModelBase
 
         foreach (BackupCommand backupCommand in _backupCommandStore.BackupCommands)
         {
-            TransactionViewModel transactionViewModel = new();
+            TransactionViewModel transactionViewModel = new(backupCommand);
             transactionViewModel.PropertyChanged += OnTransactionViewModelPropertyChanged;
             Transactions.Add(transactionViewModel);
         }

@@ -1,7 +1,15 @@
+using BackupUtil.Core.Command;
+
 namespace BackupUtil.ViewModel.ViewModel;
 
 public class TransactionViewModel : ViewModelBase
 {
+    public TransactionViewModel(BackupCommand command)
+    {
+        JobNames = string.Join(", ", command.JobNames);
+        TotalCopiedFileSize = command.GetTotalCopiedFileSize();
+    }
+
     #region IsSelected
 
     private bool _isSelected;
@@ -50,7 +58,7 @@ public class TransactionViewModel : ViewModelBase
 
     #endregion
 
-    #region CommandStatus
+    #region CommandState
 
     // TODO add backup command status
 
