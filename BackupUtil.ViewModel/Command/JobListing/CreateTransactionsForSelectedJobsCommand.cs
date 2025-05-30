@@ -2,35 +2,33 @@
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
-namespace BackupUtil.ViewModel.Command;
+namespace BackupUtil.ViewModel.Command.JobListing;
 
-public class LoadJobsCommand : CommandBase
+public class CreateTransactionsForSelectedJobsCommand : CommandBase
 {
     private readonly JobListingViewModel _jobListingViewModel;
-    private readonly JobStore _jobManager;
+    private readonly JobStore _jobStore;
 
-    public LoadJobsCommand(JobListingViewModel jobListingViewModel, JobStore jobManager)
+    public CreateTransactionsForSelectedJobsCommand(JobListingViewModel jobListingViewModel, JobStore jobStore)
     {
-        _jobManager = jobManager;
+        _jobStore = jobStore;
         _jobListingViewModel = jobListingViewModel;
         _jobListingViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
     public override bool CanExecute(object? parameter)
     {
-        return _jobListingViewModel.CanAccessJobFile && base.CanExecute(parameter);
+        return _jobListingViewModel.SelectedJobIndices.Count > 0 && base.CanExecute(parameter);
     }
 
     public override void Execute(object? parameter)
     {
-        _jobManager.RemoveAll();
-        _jobManager.LoadJobs();
-        _jobListingViewModel.LoadJobViewModels();
+        _jobStore.RunByIndices(_jobListingViewModel.SelectedJobIndices);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_jobListingViewModel.CanAccessJobFile))
+        if (e.PropertyName == nameof(_jobListingViewModel.SelectedJobIndices))
         {
             OnCanExecuteChanged();
         }

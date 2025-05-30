@@ -10,7 +10,7 @@ public sealed class BackupCommand : IDisposable
     private readonly Progress<BackupProgress> _progress;
     private readonly BackupTransaction _transaction;
     public readonly List<string> JobNames;
-    private readonly IProgress<BackupProgress> progressReport;
+    private readonly IProgress<BackupProgress> _progressReport;
 
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -36,7 +36,7 @@ public sealed class BackupCommand : IDisposable
 
         // Instantiate progress reporting types
         _progress = new Progress<BackupProgress>();
-        progressReport = _progress;
+        _progressReport = _progress;
     }
 
     public BackupCommandState State { get; private set; } = BackupCommandState.NotStarted;
@@ -177,7 +177,7 @@ public sealed class BackupCommand : IDisposable
             CurrentItem = currentItem
         };
 
-        progressReport.Report(progress);
+        _progressReport.Report(progress);
     }
 
     #endregion

@@ -54,8 +54,8 @@
             <DataGrid.Columns>
                 <!-- Job name -->
                 <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
-                    Binding="{Binding Name}"
-                    Width="200" />
+                                    Binding="{Binding Name}"
+                                    Width="200" />
 
                 <!-- Target path -->
                 <DataGridTextColumn

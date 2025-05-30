@@ -2,7 +2,7 @@
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
-namespace BackupUtil.ViewModel.Command;
+namespace BackupUtil.ViewModel.Command.JobListing;
 
 public class ExportJobsCommand : CommandBase
 {

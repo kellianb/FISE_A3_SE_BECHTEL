@@ -2,7 +2,7 @@ using System.ComponentModel;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
-namespace BackupUtil.ViewModel.Command;
+namespace BackupUtil.ViewModel.Command.TransactionListing;
 
 public class DeleteSelectedTransactionsCommand : CommandBase
 {
