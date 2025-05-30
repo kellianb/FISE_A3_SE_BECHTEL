@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using BackupUtil.Core.Command;
-using BackupUtil.ViewModel.Command;
+using BackupUtil.ViewModel.Command.TransactionListing;
 using BackupUtil.ViewModel.Store;
 
 namespace BackupUtil.ViewModel.ViewModel;

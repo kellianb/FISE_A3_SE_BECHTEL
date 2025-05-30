@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Input;
 using BackupUtil.ViewModel.Command;
+using BackupUtil.ViewModel.Command.Settings;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 

@@ -5,6 +5,7 @@ using System.Windows.Input;
 using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Crypto;
 using BackupUtil.ViewModel.Command;
+using BackupUtil.ViewModel.Command.CreateJob;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 

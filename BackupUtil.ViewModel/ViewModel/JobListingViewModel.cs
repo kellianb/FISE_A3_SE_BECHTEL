@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using BackupUtil.Core.Job;
-using BackupUtil.ViewModel.Command;
+using BackupUtil.ViewModel.Command.JobListing;
 using BackupUtil.ViewModel.Store;
 
 namespace BackupUtil.ViewModel.ViewModel;

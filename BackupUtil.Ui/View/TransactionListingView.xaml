@@ -26,9 +26,10 @@
                   ItemsSource="{Binding Transactions}" SelectionChanged="Selector_OnSelectionChanged">
             <DataGrid.Columns>
                 <!-- Job names -->
-                <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionJobNames]}"
-                                    Binding="{Binding JobNames}"
-                                    Width="200" />
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionJobNames]}"
+                    Binding="{Binding JobNames}"
+                    Width="200" />
 
                 <!-- TODO Command state -->
                 <DataGridTextColumn
