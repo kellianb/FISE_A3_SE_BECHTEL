@@ -65,8 +65,6 @@ public sealed class BackupCommand : IDisposable
         }
 
         // If the Command is not running or paused, execute it
-        State = BackupCommandState.Running;
-
         Task.Run(ExecuteAsync);
     }
 
@@ -97,6 +95,7 @@ public sealed class BackupCommand : IDisposable
         if (disposing)
         {
             _cancellationTokenSource.Dispose();
+            _semaphore?.Dispose();
         }
 
         _disposed = true;
@@ -114,12 +113,21 @@ public sealed class BackupCommand : IDisposable
         _executor.Execute(_transaction);
     }
 
+
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
+
     /// <summary>
     ///     Execute this backup asynchronously
     /// </summary>
     /// <returns></returns>
     private async Task ExecuteAsync()
     {
+        if (!await _semaphore.WaitAsync(0))
+            // There should never be two executors running at the same time
+            return;
+
+        State = BackupCommandState.Running;
+
         try
         {
             await _executor.ExecuteAsync(_transaction, ShouldCancel, UpdateProgress, _cancellationTokenSource.Token);
@@ -135,6 +143,10 @@ public sealed class BackupCommand : IDisposable
             State = BackupCommandState.PausedBannedProgram;
             UpdateProgress("");
             return;
+        }
+        finally
+        {
+            _semaphore.Release();
         }
 
         State = _transaction.DirectoryChanges.Count + _transaction.FileChanges.Count == 0
