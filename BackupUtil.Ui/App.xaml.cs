@@ -18,8 +18,8 @@ public partial class App : Application
         IServiceCollection services = new ServiceCollection();
 
         // Shared objects
-        services.AddSingleton<JobStore>();
-        services.AddSingleton<BackupCommandStore>();
+        services.AddSingleton(CreateJobStore);
+        services.AddSingleton(CreateBackupCommandStore);
         services.AddSingleton<NavigationStore>();
         services.AddSingleton<ProgramFilterStore>();
 
@@ -46,6 +46,8 @@ public partial class App : Application
         base.OnStartup(e);
     }
 
+    #region Create ViewModels
+
     private MainViewModel CreateMainViewModel(IServiceProvider serviceProvider)
     {
         return new MainViewModel(serviceProvider.GetRequiredService<NavigationStore>());
@@ -53,8 +55,7 @@ public partial class App : Application
 
     private JobListingViewModel CreateJobListingViewModel(IServiceProvider serviceProvider)
     {
-        return new JobListingViewModel(serviceProvider.GetRequiredService<JobStore>(),
-            serviceProvider.GetRequiredService<BackupCommandStore>());
+        return new JobListingViewModel(serviceProvider.GetRequiredService<JobStore>());
     }
 
     private JobCreationViewModel CreateJobCreationViewModel(IServiceProvider serviceProvider)
@@ -82,10 +83,26 @@ public partial class App : Application
         return new TransactionListingViewModel(serviceProvider.GetRequiredService<BackupCommandStore>());
     }
 
+    #endregion
+
+    #region Create stores
+
     private NavigationService<TViewModel> CreateNavigationService<TViewModel>(IServiceProvider serviceProvider)
         where TViewModel : ViewModelBase
     {
         return new NavigationService<TViewModel>(serviceProvider.GetRequiredService<NavigationStore>(),
             serviceProvider.GetRequiredService<TViewModel>);
     }
+
+    private JobStore CreateJobStore(IServiceProvider serviceProvider)
+    {
+        return new JobStore(serviceProvider.GetRequiredService<BackupCommandStore>());
+    }
+
+    private BackupCommandStore CreateBackupCommandStore(IServiceProvider serviceProvider)
+    {
+        return new BackupCommandStore(serviceProvider.GetRequiredService<ProgramFilterStore>());
+    }
+
+    #endregion
 }
