@@ -11,6 +11,13 @@ namespace BackupUtil.ViewModel.Store;
 /// </summary>
 public class BackupCommandStore : INotifyPropertyChanged
 {
+    private readonly ProgramFilterStore _programFilterStore;
+
+    public BackupCommandStore(ProgramFilterStore _programFilterStore)
+    {
+        this._programFilterStore = _programFilterStore;
+    }
+
     #region BackupCommands
 
     public List<BackupCommand> BackupCommands { get; } = [];

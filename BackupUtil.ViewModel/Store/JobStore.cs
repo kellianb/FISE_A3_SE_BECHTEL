@@ -1,17 +1,18 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using BackupUtil.Core.Command;
 using BackupUtil.Core.Job;
 
 namespace BackupUtil.ViewModel.Store;
 
 public class JobStore : INotifyPropertyChanged
 {
+    private readonly BackupCommandStore _backupCommandStore;
     private readonly JobManager _jobManager;
 
-    public JobStore()
+    public JobStore(BackupCommandStore backupCommandStore)
     {
+        _backupCommandStore = backupCommandStore;
         _jobManager = new JobManager();
         _jobFilePath = JobManager.DefaultJobFilePath;
     }
@@ -26,14 +27,14 @@ public class JobStore : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public BackupCommand RunByIndices(HashSet<int> index)
+    public void RunByIndices(HashSet<int> index)
     {
-        return _jobManager.RunByIndices(index);
+        _backupCommandStore.AddBackupCommand(_jobManager.RunByIndices(index));
     }
 
-    public BackupCommand RunAll()
+    public void RunAll()
     {
-        return _jobManager.RunAll();
+        _backupCommandStore.AddBackupCommand(_jobManager.RunAll());
     }
 
     #region Jobs

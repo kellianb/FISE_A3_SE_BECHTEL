@@ -11,13 +11,11 @@ namespace BackupUtil.ViewModel.ViewModel;
 
 public class JobListingViewModel : ViewModelBase
 {
-    private readonly BackupCommandStore _backupCommandStore;
     private readonly JobStore _jobStore;
 
-    public JobListingViewModel(JobStore jobStore, BackupCommandStore backupCommandStore)
+    public JobListingViewModel(JobStore jobStore)
     {
         _jobStore = jobStore;
-        _backupCommandStore = backupCommandStore;
 
         _jobStore.PropertyChanged += OnJobStorePropertyChanged;
 
@@ -25,7 +23,7 @@ public class JobListingViewModel : ViewModelBase
         ExportJobsCommand = new ExportJobsCommand(this, _jobStore);
         DeleteSelectedJobsCommand = new DeleteSelectedJobsCommand(this, _jobStore);
         CreateTransactionsForSelectedJobsCommand =
-            new CreateTransactionsForSelectedJobsCommand(this, _jobStore, _backupCommandStore);
+            new CreateTransactionsForSelectedJobsCommand(this, _jobStore);
 
         LoadJobViewModels();
     }
