@@ -67,19 +67,19 @@ internal class BackupTransactionBuilder : IBackupTransactionBuilder
             throw new ArgumentException("errorSameSourceTarget");
         }
 
-        if (job.TargetPath.StartsWith(job.SourcePath))
+        if (job.TargetPath.StartsWith(job.SourcePath + Path.DirectorySeparatorChar))
         {
             throw new ArgumentException("errorTargetInSource");
         }
 
-        if (job.SourcePath.StartsWith(job.TargetPath))
+        if (job.SourcePath.StartsWith(job.TargetPath + Path.DirectorySeparatorChar))
         {
             throw new ArgumentException("errorSourceInTarget");
         }
 
         if (File.Exists(job.SourcePath))
         {
-            if (job.TargetPath.EndsWith('\\'))
+            if (job.TargetPath.EndsWith(Path.DirectorySeparatorChar))
             {
                 throw new ArgumentException("errorTargetPathEnd");
             }

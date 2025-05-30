@@ -77,7 +77,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
     private bool SourcePathExists => Directory.Exists(SourcePath) || File.Exists(SourcePath);
 
     private bool SourcePathOutsideOfTargetPath =>
-        !SourcePath.StartsWith(TargetPath, StringComparison.OrdinalIgnoreCase);
+        !SourcePath.StartsWith(TargetPath + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
 
     public string SourcePath
     {
@@ -114,7 +114,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
         !string.Equals(SourcePath, TargetPath, StringComparison.OrdinalIgnoreCase);
 
     private bool TargetPathOutsideOfSourcePath =>
-        !TargetPath.StartsWith(SourcePath, StringComparison.OrdinalIgnoreCase);
+        !TargetPath.StartsWith(SourcePath + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
 
     // Source and target both have to be either files or directories
     private bool TargetPathSameTypeAsSourcePath => File.Exists(SourcePath)
