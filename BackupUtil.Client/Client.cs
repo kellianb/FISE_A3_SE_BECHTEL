@@ -2,11 +2,14 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 
 namespace WS_Socket.Client;
 
 class Client
 {
+    private static List<Dictionary<string, string>> _jsonJobs;
+
     /* Example of implementation:
     static async Task Main(string[] args)
     {
@@ -32,17 +35,18 @@ class Client
         byte[] buffer = new byte[1024];
         while (true)
         {
-            Console.Write("Client: ");
-            string message = Console.ReadLine();
-            clientSocket.Send(Encoding.UTF8.GetBytes(message));
-
-            if (message.ToLower() == "exit")
-                break;
-
             int received = clientSocket.Receive(buffer);
             string response = Encoding.UTF8.GetString(buffer, 0, received);
             Console.WriteLine($"Server: {response}");
+            _jsonJobs = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(response);
         }
+    }
+
+    private static void Send(Socket socket, string message)
+    {
+        byte[] data = Encoding.UTF8.GetBytes(message);
+        socket.Send(data);
+        Console.WriteLine($"Sent: {message}");
     }
 
     private static void Disconnect(Socket socket)
