@@ -15,9 +15,9 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <!-- Transaction listing view -->
+            <!-- Transaction listing -->
             <ColumnDefinition Width="*" />
-            <!-- Transaction deletion -->
+            <!-- Transaction sidebar -->
             <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
 
@@ -28,18 +28,64 @@
                 <!-- Job names -->
                 <DataGridTextColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionJobNames]}"
-                    Binding="{Binding JobNames}"
-                    Width="200" />
+                    Binding="{Binding JobNames, Mode=OneWay}"
+                    Width="100" />
 
-                <!-- TODO Command state -->
+                <!-- Progress percentage -->
+                <DataGridTemplateColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionPercentageProgress]}"
+                    Width="85">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ProgressBar Value="{Binding CompletedPercentage, Mode=OneWay}"
+                                         Minimum="0"
+                                         Maximum="{Binding TotalPercentage, Mode=OneWay}"
+                                         Height="16"
+                                         Margin="2" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Command state -->
                 <DataGridTextColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionState]}"
-                    Binding="{Binding CommandState}" Width="80" />
+                    Binding="{Binding State, Mode=OneWay}" Width="70" />
 
-                <!-- Total copied file size -->
+                <!-- Current item -->
                 <DataGridTextColumn
-                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionTotalCopiedFileSize]}"
-                    Binding="{Binding TotalCopiedFileSize}" Width="80" />
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionCurrentItem]}"
+                    Binding="{Binding CurrentItem, Mode=OneWay}" Width="70" />
+
+                <!-- File size -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionFileSize]}"
+                    Binding="{Binding FileSizeProgress, Mode=OneWay}" Width="80" />
+
+                <!-- File count -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionFileCount]}"
+                    Binding="{Binding FileCountProgress, Mode=OneWay}" Width="100" />
+
+                <!-- Directory count -->
+                <DataGridTextColumn
+                    Header="{Binding Source={StaticResource LocalizationService}, Path=[transactionDirectoryCount]}"
+                    Binding="{Binding DirectoryCountProgress, Mode=OneWay}" Width="120" />
+
+                <!-- Actions -->
+                <DataGridTemplateColumn Header="Actions">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Run"
+                                        Command="{Binding RunTransactionCommand}"
+                                        Margin="2" />
+                                <Button Content="Pause"
+                                        Command="{Binding PauseTransactionCommand}"
+                                        Margin="2" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 

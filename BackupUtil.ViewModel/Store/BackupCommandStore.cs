@@ -18,15 +18,40 @@ public class BackupCommandStore : INotifyPropertyChanged
         this._programFilterStore = _programFilterStore;
     }
 
-    #region BackupCommands
 
     public List<BackupCommand> BackupCommands { get; } = [];
+
+    #region Add BackupCommands
 
     public void AddBackupCommand(BackupCommand backupCommand)
     {
         BackupCommands.Add(backupCommand);
         OnPropertyChanged(nameof(BackupCommands));
     }
+
+    #endregion
+
+    #region Run BackupCommands
+
+    public void RunByIndex(int index)
+    {
+        BackupCommands[index]
+            .SetProgramFilter(_programFilterStore.ProgramFilter)
+            .Start();
+    }
+
+    #endregion
+
+    #region Pause BackupCommands
+
+    public void PauseByIndex(int index)
+    {
+        BackupCommands[index].Pause();
+    }
+
+    #endregion
+
+    #region Remove BackupCommands
 
     public void RemoveByIndices(List<int> indices)
     {

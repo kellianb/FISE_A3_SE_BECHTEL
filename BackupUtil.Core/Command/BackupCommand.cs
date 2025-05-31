@@ -8,9 +8,9 @@ public sealed class BackupCommand : IDisposable
 {
     private readonly IBackupTransactionExecutor _executor;
     private readonly Progress<BackupProgress> _progress;
+    private readonly IProgress<BackupProgress> _progressReport;
     private readonly BackupTransaction _transaction;
     public readonly List<string> JobNames;
-    private readonly IProgress<BackupProgress> _progressReport;
 
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -32,7 +32,7 @@ public sealed class BackupCommand : IDisposable
         // Set totals
         TotalFileSize = RemainingFileSize;
         TotalFileCount = RemainingFileCount;
-        TotalDirectoriesCount = RemainingDirectoriesCount;
+        TotalDirectoryCount = RemainingDirectoryCount;
 
         // Instantiate progress reporting types
         _progress = new Progress<BackupProgress>();
@@ -47,9 +47,10 @@ public sealed class BackupCommand : IDisposable
         remove => _progress.ProgressChanged -= value;
     }
 
-    public void SetProgramFilter(ProgramFilter? programFilter)
+    public BackupCommand SetProgramFilter(ProgramFilter? programFilter)
     {
         _programFilter = programFilter;
+        return this;
     }
 
     #region Control ongoing backup
@@ -124,7 +125,9 @@ public sealed class BackupCommand : IDisposable
     {
         if (!await _semaphore.WaitAsync(0))
             // There should never be two executors running at the same time
+        {
             return;
+        }
 
         State = BackupCommandState.Running;
 
@@ -173,7 +176,11 @@ public sealed class BackupCommand : IDisposable
             Type = currentOperationType,
             TotalFileSize = TotalFileSize,
             CompletedFileSize = TotalFileSize - RemainingFileSize,
-            PercentComplete = TotalFileSize > 0 ? 100 * (TotalFileSize - RemainingFileSize) / TotalFileSize : 0,
+            TotalDirectoryCount = TotalDirectoryCount,
+            CompletedDirectoryCount = TotalDirectoryCount - RemainingDirectoryCount,
+            TotalFileCount = TotalFileCount,
+            CompletedFileCount = TotalFileCount - RemainingFileCount,
+            CompletedPercentage = TotalFileSize > 0 ? 100 * (TotalFileSize - RemainingFileSize) / TotalFileSize : 0,
             CurrentItem = currentItem
         };
 
@@ -195,9 +202,9 @@ public sealed class BackupCommand : IDisposable
     public long RemainingFileCount => _transaction.FileChanges.Count;
 
     // Number of directories which will be copied
-    public long TotalDirectoriesCount { get; }
+    public long TotalDirectoryCount { get; }
 
-    public long RemainingDirectoriesCount => _transaction.DirectoryChanges.Count;
+    public long RemainingDirectoryCount => _transaction.DirectoryChanges.Count;
 
     #endregion
 
@@ -239,9 +246,22 @@ public struct BackupProgress
 {
     public BackupCommandState State { get; set; }
     public CurrentOperationType? Type { get; set; }
+
+    // File size
     public long TotalFileSize { get; set; }
     public long CompletedFileSize { get; set; }
-    public long PercentComplete { get; set; }
 
+    // Directory count
+    public long TotalDirectoryCount { get; set; }
+    public long CompletedDirectoryCount { get; set; }
+
+    // File count
+    public long TotalFileCount { get; set; }
+    public long CompletedFileCount { get; set; }
+
+    // Completion percentage
+    public long CompletedPercentage { get; set; }
+
+    // Current item
     public string CurrentItem { get; set; }
 }

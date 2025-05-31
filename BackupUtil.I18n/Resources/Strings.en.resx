@@ -201,7 +201,19 @@
     <data name="transactionState" xml:space="preserve">
         <value>State</value>
     </data>
-    <data name="transactionTotalCopiedFileSize" xml:space="preserve">
-        <value>Total file size</value>
+    <data name="transactionFileSize" xml:space="preserve">
+        <value>Copied file size</value>
+    </data>
+    <data name="transactionFileCount" xml:space="preserve">
+        <value>Copied file count</value>
+    </data>
+    <data name="transactionDirectoryCount" xml:space="preserve">
+        <value>Copied directory count</value>
+    </data>
+    <data name="transactionPercentageProgress" xml:space="preserve">
+        <value>Completion %</value>
+    </data>
+    <data name="transactionCurrentItem" xml:space="preserve">
+        <value>Current item</value>
     </data>
 </root>

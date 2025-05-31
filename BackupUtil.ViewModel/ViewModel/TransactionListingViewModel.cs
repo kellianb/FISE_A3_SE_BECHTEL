@@ -84,9 +84,16 @@ public class TransactionListingViewModel : ViewModelBase
     {
         DisposeTransactionViewModels();
 
-        foreach (BackupCommand backupCommand in _backupCommandStore.BackupCommands)
+        for (int i = 0; i < _backupCommandStore.BackupCommands.Count; i++)
         {
-            TransactionViewModel transactionViewModel = new(backupCommand);
+            BackupCommand backupCommand = _backupCommandStore.BackupCommands[i];
+
+            int idx = i;
+
+            TransactionViewModel transactionViewModel = new(backupCommand,
+                () => _backupCommandStore.RunByIndex(idx),
+                () => _backupCommandStore.PauseByIndex(idx));
+
             transactionViewModel.PropertyChanged += OnTransactionViewModelPropertyChanged;
             Transactions.Add(transactionViewModel);
         }
