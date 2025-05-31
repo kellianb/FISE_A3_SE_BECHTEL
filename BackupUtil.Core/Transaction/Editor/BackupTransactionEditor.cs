@@ -75,13 +75,15 @@ internal class BackupTransactionEditor
 
     public BackupTransactionEditor AddFileCreation(FileInfo sourceFile, string targetFilePath)
     {
-        if (!_fileMask.ShouldCopy(sourceFile))
+        FileMaskEffect effects = _fileMask.GetEffects(sourceFile);
+
+        if (!effects.HasFlag(FileMaskEffect.Copy))
         {
             return this;
         }
 
         // Only encrypt if the file should be encrypted and the encryptor is not null
-        IEncryptor? encryptor = _encryptor is null || _fileMask.ShouldEncrypt(sourceFile)
+        IEncryptor? encryptor = _encryptor is null || effects.HasFlag(FileMaskEffect.Encrypt)
             ? _encryptor
             : null;
 
@@ -97,13 +99,15 @@ internal class BackupTransactionEditor
 
     public BackupTransactionEditor AddFileUpdate(FileInfo sourceFile, FileInfo targetFile)
     {
-        if (!_fileMask.ShouldCopy(sourceFile))
+        FileMaskEffect effects = _fileMask.GetEffects(sourceFile);
+
+        if (!effects.HasFlag(FileMaskEffect.Copy))
         {
             return this;
         }
 
         // Only encrypt if the file should be encrypted and the encryptor is not null
-        IEncryptor? encryptor = _encryptor is null || _fileMask.ShouldEncrypt(sourceFile)
+        IEncryptor? encryptor = _encryptor is null || effects.HasFlag(FileMaskEffect.Encrypt)
             ? _encryptor
             : null;
 

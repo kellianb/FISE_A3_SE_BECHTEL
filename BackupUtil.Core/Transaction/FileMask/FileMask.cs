@@ -39,23 +39,23 @@ internal class FileMask
     }
 
     /// <summary>
-    ///     Determine whether a file should be copied
+    ///     Determine the effects which apply to a file
     /// </summary>
-    /// <param name="file">File to check</param>
-    /// <returns><c>true</c> if the file is allowed, <c>false</c> otherwise</returns>
-    public bool ShouldCopy(FileInfo file)
+    /// <param name="fileInfo">File to check</param>
+    /// <returns>The effects the file is subject to</returns>
+    public FileMaskEffect GetEffects(FileInfo fileInfo)
     {
-        return ApplyMask(FileMaskEffect.Copy, file);
-    }
+        FileMaskEffect combined = 0;
 
-    /// <summary>
-    ///     Determine whether a file should be encrypted
-    /// </summary>
-    /// <param name="file">File to check</param>
-    /// <returns><c>true</c> if the file is allowed, <c>false</c> otherwise</returns>
-    public bool ShouldEncrypt(FileInfo file)
-    {
-        return ApplyMask(FileMaskEffect.Encrypt, file);
+        foreach (FileMaskEffect value in Enum.GetValues<FileMaskEffect>())
+        {
+            if (ApplyMask(value, fileInfo))
+            {
+                combined |= value;
+            }
+        }
+
+        return combined;
     }
 }
 
@@ -63,9 +63,26 @@ internal class FileMask
 ///     Effect of a file mask.
 ///     If no associated strategies return false, the effect is applied.
 /// </summary>
+[Flags]
 public enum FileMaskEffect
 {
-    Copy,
-    Encrypt,
-    Prioritise
+    /// <summary>
+    ///     The file will be copied.
+    /// </summary>
+    Copy = 1,
+
+    /// <summary>
+    ///     The file will be encrypted.
+    /// </summary>
+    Encrypt = 2,
+
+    /// <summary>
+    ///     Files with this effect will be copied before all other files.
+    /// </summary>
+    Prioritise = 4,
+
+    /// <summary>
+    ///     Files with this effect will be copied concurrently
+    /// </summary>
+    Parallelize = 8
 }
