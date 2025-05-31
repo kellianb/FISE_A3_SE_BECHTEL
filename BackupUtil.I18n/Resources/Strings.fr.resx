@@ -214,6 +214,6 @@
         <value>% de complétion</value>
     </data>
     <data name="transactionCurrentItem" xml:space="preserve">
-        <value>Élement actuel</value>
+        <value>Élément actuel</value>
     </data>
 </root>
