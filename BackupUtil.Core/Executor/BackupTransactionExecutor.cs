@@ -1,4 +1,3 @@
-using BackupUtil.Core.Command;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.I18n;
@@ -18,8 +17,8 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
     }
 
     public async Task ExecuteAsync(BackupTransaction transaction,
-        Action shouldCancel,
-        Action<string, CurrentOperationType?> updateProgress,
+        IBackupTransactionExecutor.CancelCallback shouldCancel,
+        IBackupTransactionExecutor.ProgressCallback updateProgress,
         CancellationToken cancellationToken = default)
     {
         using IDisposable _ = Log.Logger.TimeOperation("Executing transaction: {@BackupTransaction}", transaction);
@@ -147,6 +146,8 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
 public enum CurrentOperationType
 {
     [I18NKey("executingDirectoryChanges")] CreatingDirectories,
-    [I18NKey("executingPriorityFileChanges")] CopyingPriorityFiles,
+
+    [I18NKey("executingPriorityFileChanges")]
+    CopyingPriorityFiles,
     [I18NKey("executingFileChanges")] CopyingFiles
 }
