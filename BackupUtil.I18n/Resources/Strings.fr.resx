@@ -198,10 +198,22 @@
     <data name="transactionJobNames" xml:space="preserve">
         <value>Noms des tâches</value>
     </data>
-    <data name="transactionTotalCopiedFileSize" xml:space="preserve">
-        <value>Taille totale</value>
-    </data>
     <data name="transactionState" xml:space="preserve">
         <value>Statut</value>
+    </data>
+    <data name="transactionFileSize" xml:space="preserve">
+        <value>Taille des fichiers copiés</value>
+    </data>
+    <data name="transactionFileCount" xml:space="preserve">
+        <value>Nombre de fichiers copiés</value>
+    </data>
+    <data name="transactionDirectoryCount" xml:space="preserve">
+        <value>Nombre de dossiers copiés</value>
+    </data>
+    <data name="transactionPercentageProgress" xml:space="preserve">
+        <value>% de complétion</value>
+    </data>
+    <data name="transactionCurrentItem" xml:space="preserve">
+        <value>Élement actuel</value>
     </data>
 </root>
