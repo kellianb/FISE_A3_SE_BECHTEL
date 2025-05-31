@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using BackupUtil.Core.Util;
 
 namespace BackupUtil.Ui;
 
@@ -9,6 +10,8 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
+        Title = Config.AppName;
+
         InitializeComponent();
     }
 }

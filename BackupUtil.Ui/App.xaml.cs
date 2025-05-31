@@ -1,4 +1,5 @@
 using System.Windows;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
@@ -12,6 +13,7 @@ namespace BackupUtil.Ui;
 public partial class App : Application
 {
     private readonly IServiceProvider _serviceProvider;
+    private Mutex? _mutex;
 
     public App()
     {
@@ -34,8 +36,18 @@ public partial class App : Application
     }
 
 
+    #region App lifetime functions
+
     protected override void OnStartup(StartupEventArgs e)
     {
+        if (!SingleInstance())
+        {
+            MessageBox.Show("Another instance of the application is already running.", Config.AppName);
+            Environment.Exit(0);
+        }
+
+        Logging.Init();
+
         _serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
             _serviceProvider.GetRequiredService<HomeViewModel>();
 
@@ -45,6 +57,21 @@ public partial class App : Application
 
         base.OnStartup(e);
     }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        _mutex?.ReleaseMutex();
+        base.OnExit(e);
+    }
+
+    private bool SingleInstance()
+    {
+        _mutex = new Mutex(true, Config.AppName + "SingleInstance", out bool createdNew);
+
+        return createdNew;
+    }
+
+    #endregion
 
     #region Create ViewModels
 
