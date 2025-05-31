@@ -142,6 +142,153 @@ sequenceDiagram
 classDiagram
 
 class Job {
++string Name
++string SourcePath
++string TargetPath
++bool Recursive
++bool Differential
+}
+
+class FileSystemChange {
++string TargetPath
+}
+
+class FileChange {
++string? SourcePath
++long FileSize
++FileChangeType ChangeType
+}
+
+class DirectoryChange {
++DirectoryChangeType ChangeType
+}
+
+class BackupTransaction {
++List~FileChange~ FileChanges
++List~DirectoryChange~ DirectoryChanges
++string[] GetConcernedFolders(DirectoryChangeType)
+-BackupTransaction AddDirectoryChange(DirectoryChange)
++BackupTransaction AddDirectoryCreation(string)
++BackupTransaction AddDirectoryDeletion(DirectoryInfo)
++long GetTotalCopiedFileSize()
++string[] GetConcernedFiles(FileChangeType)
+-BackupTransaction AddFileChange(FileChange)
++BackupTransaction AddFileCreation(FileInfo, string)
++BackupTransaction AddFileUpdate(FileInfo, FileInfo)
++BackupTransaction AddFileDeletion(FileInfo)
+}
+
+class IBackupTransactionBuilder {
+<<interface>>
++BackupTransaction Build(Job)
++BackupTransaction Build(Job[])
+}
+
+class BackupTransactionBuilder {
++BackupTransaction Build(Job)
++BackupTransaction Build(Job[])
+}
+
+class JobManager {
+-IBackupTransactionBuilder _transactionBuilder
+-IBackupTransactionExecutor _transactionExecutor
++List~Job~ Jobs
++JobManager LoadJobsFromFile(string)
++BackupCommand GetBackupCommandForIndexes(HashSet~int~)
++BackupCommand BuildBackupCommand(List~Job~)
++BackupCommand BuildBackupCommand(Job concernedJobs)
+}
+
+class IBackupTransactionExecutor {
+<<interface>>
++Execute(BackupTransaction)
++Task ExecuteAsync(BackupTransaction, CancelCallback, ProgressCallback, CancellationToken)
+}
+
+class BackupTransactionExecutor {
++void Execute(BackupTransaction)
++Task ExecuteAsync(BackupTransaction, CancelCallback, ProgressCallback, CancellationToken)
+}
+
+class BackupCommand {
+-IBackupTransactionExecutor Receiver
+-BackupTransaction Transaction
++void Execute()
++void Start()
++void Pause()
++long GetTotalCopiedFileSize()
++Dictionary~FileChangeType, string[]~ GetConcernedFiles()
++Dictionary~DirectoryChangeType, string[]~ GetConcernedDirectories()
+}
+
+class BackupCommandStore {
++List~BackupCommand~ BackupCommands
++void AddBackupCommand(BackupCommand)
++void RunByIndex(int)
++void PauseByIndex(int)
++void RemoveByIndices(List~int~)
+}
+
+class ProgramFilterStore {
++ProgramFilter ProgramFilter
+}
+
+class ProgramFilter {
++void ThrowIfBannedProgramDetected()
+}
+
+class JobFileLoader {
++List~Job~ LoadJobsFromFile(string)
+}
+
+class JsonDeserializer {
+List~Job~ Deserialize(TextReader reader)
+}
+
+class JobFileExporter {
++void ExportJobsToFile(List~Job~, string?)
+}
+
+class JsonSerializer {
+string Serialize(List~Job~ jobs)
+}
+
+JobManager *-- Job
+FileChange --|> FileSystemChange
+DirectoryChange --|> FileSystemChange
+BackupTransaction *-- FileChange
+BackupTransaction *-- DirectoryChange
+BackupTransactionExecutor --|> IBackupTransactionExecutor
+
+BackupTransactionBuilder --|> IBackupTransactionBuilder
+BackupTransactionBuilder ..> BackupTransaction : instantiate
+
+JobManager *--IBackupTransactionBuilder
+JobManager *--IBackupTransactionExecutor
+BackupCommand *-- BackupTransaction
+BackupCommand *-- IBackupTransactionExecutor
+
+BackupCommandStore *-- BackupCommand
+BackupCommandStore *-- ProgramFilterStore
+ProgramFilterStore *-- ProgramFilter
+
+JobManager ..> BackupCommand : instantiate
+
+JobManager ..> JobFileLoader
+
+JobFileLoader ..> Job : instantiate
+JobFileLoader ..> JsonDeserializer
+
+JobManager ..JobFileExporter
+
+JobFileExporter ..> JsonSerializer
+```
+
+
+```mermaid
+classDiagram
+
+class Job {
     +string Name
     +string SourcePath
     +string TargetPath
