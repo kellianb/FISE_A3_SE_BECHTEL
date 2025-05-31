@@ -6,7 +6,7 @@
         xmlns:view="clr-namespace:BackupUtil.Ui.View"
         xmlns:viewModel="clr-namespace:BackupUtil.ViewModel.ViewModel;assembly=BackupUtil.ViewModel"
         mc:Ignorable="d"
-        Title="EasySave" Height="600" Width="800">
+        Title="EasySave" Height="600" Width="1000">
 
     <Grid>
         <Grid.Resources>
