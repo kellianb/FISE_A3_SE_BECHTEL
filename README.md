@@ -63,100 +63,50 @@ Commands:
 
 ### Sequence Diagram
 
-#### Create and run a single job
+#### Run a job
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant CLI
-    participant jobManager
+    participant GUI
+    participant RunTransactionCommand
+    participant _backupCommandStore
     participant #58;BackupCommand
     participant Filesystem
 
     activate User
-    User->>+CLI: Enters command: run <source-path> <target> ...
-
-        CLI->>+jobManager: Build backup command
-        jobManager-->>-CLI: Return backup command
-        CLI-->>User: Ask for confirmation of changes
-        alt user confirms changes
-            User->>CLI: Confirm changes
-            CLI->>+#58;BackupCommand: Execute backup command
-            #58;BackupCommand->>+Filesystem: Execute file changes
-            Filesystem-->>-#58;BackupCommand: Respond with success
-            #58;BackupCommand-->>CLI: Confirmation
-            CLI-->>User: Confirmation
-        else user cancels changes
-            User->>CLI: Cancel changes
-            CLI-->>User: Confirmation
-        end
+    User->>+GUI: Click on run
+    GUI->>+RunTransactionCommand: Check form validity
+    RunTransactionCommand->>_backupCommandStore: Run by index
+    _backupCommandStore->>+#58;BackupCommand: Run job
+    #58;BackupCommand->>+Filesystem: Execute file changes
+    Filesystem-->>-#58;BackupCommand: Respond with success
+    #58;BackupCommand-->>GUI: Confirmation
+    GUI-->>User: Confirmation
     deactivate User
 ```
 
-#### Run job(s) from JSON file
+#### Create a new Job
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant CLI
-    participant jobManager
-    participant #58;BackupCommand
-    participant Filesystem
+    participant GUI
+    participant SubmitCommand
+    participant _jobCreationViewModel
+    participant _jobStore
+    participant _jobManager
 
     activate User
-    User->>+CLI: Enters command: load <path> ...
-
-        CLI->>+jobManager: Load jobs from JSON file
-        jobManager->>+ Filesystem: Read JSON file
-        Filesystem-->>-jobManager: Return JSON file contents
-        jobManager-->>CLI: Confirmation
-        CLI->>jobManager: Get jobs list
-        jobManager-->>CLI: Return jobs list
-        CLI-->>User: Display job list and ask for which jobs to run
-        User->>CLI: Select jobs to run
-        CLI->>jobManager: Build backup command from selected jobs
-        jobManager-->>-CLI: Return backup command
-        CLI-->>User: Ask for confirmation of changes
-        alt user confirms changes
-            User->>CLI: Confirm changes
-            CLI->>+#58;BackupCommand: Execute backup command
-            #58;BackupCommand->>+Filesystem: Execute file changes
-            Filesystem-->>-#58;BackupCommand: Respond with success
-            #58;BackupCommand-->>CLI: Confirmation
-            CLI-->>User: Confirmation
-        else user cancels changes
-            User->>CLI: Cancel changes
-            CLI-->>User: Confirmation
-
-end
-
-    deactivate User
-```
-
-#### Create and save a Job to a JSON file
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant CLI
-    participant jobManager
-    participant Filesystem
-
-    activate User
-    User->>+CLI: Enters command: create -o <path> ...
-        CLI->>+jobManager: Load jobs from JSON file
-        jobManager->>+ Filesystem: Read JSON file
-        Filesystem-->>-jobManager: Return JSON file contents
-        jobManager-->>CLI: Confirmation
-        CLI->>jobManager: Add new job from user
-        jobManager-->>CLI: Confirmation
-        CLI->>+jobManager: Save all jobs to JSON file
-        jobManager->>+ Filesystem: Write JSON to file
-        Filesystem-->>-jobManager: Confirmation
-        jobManager-->>CLI: Confirmation
-        CLI-->>User: Confirmation
-
-
+    User->>+GUI: Click on add new job and fill in form
+        GUI->>+SubmitCommand: Check form validity
+        SubmitCommand->>_jobCreationViewModel: Retrieve form data
+        _jobCreationViewModel-->>SubmitCommand: Instantiate job with data
+        SubmitCommand->>_jobStore: Add job
+        _jobStore-->>_jobManager: Add job to jobs list
+        _jobManager-->>_jobStore: Confirmation
+        _jobStore-->>GUI: Trigger jobs list update
+        GUI-->>-User: Display updated jobs list
     deactivate User
 ```
 
@@ -165,18 +115,22 @@ sequenceDiagram
 ```mermaid
     sequenceDiagram
         actor User
-        participant CLI
+        participant GUI
+        participant ApplyCommand
+        participant _localizationService
         participant I18n
 
         activate User
         activate I18n
-        User->>+CLI: Enters command with a language option
-        CLI->>I18n: Set selected language
-        I18n-->>CLI: Confirmation
-        loop For each message
-            CLI->>I18n: Get message with selected language
-            I18n-->>CLI: Return message
-            CLI-->>-User: Display message in selected language
+        User->>+GUI: Select language
+        GUI->>ApplyCommand: Check validity
+        ApplyCommand->>_localizationService: Set culture
+        _localizationService->>I18n: Set culture
+        _localizationService-->>GUI: Trigger language change
+        loop For each label
+            GUI->>I18n: Get label with selected language
+            I18n-->>GUI: Return label
+            GUI-->>-User: Display label in selected language
         end
         deactivate I18n
         deactivate User
