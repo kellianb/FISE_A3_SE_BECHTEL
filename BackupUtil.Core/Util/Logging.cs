@@ -8,14 +8,14 @@ namespace BackupUtil.Core.Util;
 
 public static class Logging
 {
-    public static void Init()
-    {
-        Log.Logger = GetLogger();
+    public static readonly Lazy<ILogger> DailyLog = new(GetDailyLogger);
+    public static readonly Lazy<ILogger> StatusLog = new(GetStatusLogger) ;
 
-        Log.Debug("Logging to: {string}", Path.Join(Config.LoggingDirectory, $"{DateTime.Now:yyyy-MM-dd}.json"));
-    }
-
-    private static ILogger GetLogger()
+    /// <summary>
+    /// Get the logger for the daily log file
+    /// </summary>
+    /// <returns></returns>
+    private static ILogger GetDailyLogger()
     {
         return new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -29,5 +29,27 @@ public static class Logging
                 restrictedToMinimumLevel: LogEventLevel.Information
             )
             .CreateLogger();
+        // TODO add Xml logging
+    }
+
+
+    /// <summary>
+    /// Get the logger for the status log file
+    /// </summary>
+    /// <returns></returns>
+    private static ILogger GetStatusLogger()
+    {
+        return new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .Destructure.ByTransforming<BackupTransaction>(t =>
+                JsonSerializer.Serialize(t, JsonBackupUtilSerializerContext.Default.BackupTransaction))
+            .WriteTo.Console(LogEventLevel.Warning)
+            .WriteTo.File(
+                path: Path.Join(Config.LoggingDirectory, "status.json"),
+                formatter: new JsonFormatter(),
+                restrictedToMinimumLevel: LogEventLevel.Information
+            )
+            .CreateLogger();
+        // TODO add Xml logging
     }
 }
