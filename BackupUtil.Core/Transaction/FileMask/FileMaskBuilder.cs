@@ -60,7 +60,7 @@ public class FileMaskBuilder
 
     public string BuildSerialized()
     {
-        return JsonSerializer.Serialize(Build(), new JsonSerializerOptions());
+        return JsonSerializer.Serialize(Build());
     }
 
     /// <summary>
