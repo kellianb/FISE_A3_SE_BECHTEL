@@ -28,8 +28,13 @@ public static class Logging
                 formatter: new JsonFormatter(),
                 restrictedToMinimumLevel: LogEventLevel.Information
             )
+            .WriteTo.File(
+                path: Path.Join(Config.LoggingDirectory, "log-.xml"),
+                rollingInterval: RollingInterval.Day,
+                formatter: new XmlLogFormatter(),
+                restrictedToMinimumLevel: LogEventLevel.Information
+                )
             .CreateLogger();
-        // TODO add Xml logging
     }
 
 
@@ -49,7 +54,11 @@ public static class Logging
                 formatter: new JsonFormatter(),
                 restrictedToMinimumLevel: LogEventLevel.Information
             )
+            .WriteTo.File(
+                path: Path.Join(Config.LoggingDirectory, "status.xml"),
+                formatter: new XmlLogFormatter(),
+                restrictedToMinimumLevel: LogEventLevel.Information
+            )
             .CreateLogger();
-        // TODO add Xml logging
     }
 }

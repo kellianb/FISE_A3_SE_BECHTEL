@@ -248,7 +248,7 @@ public class JobCreationViewModel : ViewModelBase, INotifyDataErrorInfo
 
     #region FileMask
 
-    private string _fileMask = FileMaskBuilder.New().BuildSerialized();
+    private string _fileMask = FileMaskBuilder.Default().BuildSerialized();
 
     private bool ValidFileMask => string.IsNullOrWhiteSpace(FileMask) || FileMaskBuilder.ValidateSerialized(FileMask);
 

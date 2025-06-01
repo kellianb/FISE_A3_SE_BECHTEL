@@ -118,7 +118,7 @@
         <value>Select Backup Jobs File</value>
     </data>
     <data name="addJob" xml:space="preserve">
-        <value>Add new job</value>
+        <value>Create a new job</value>
     </data>
     <data name="changeJobFile" xml:space="preserve">
         <value>Change jobs file</value>

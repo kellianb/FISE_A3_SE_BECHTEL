@@ -214,10 +214,10 @@
         <value>% de complétion</value>
     </data>
     <data name="transactionCurrentItem" xml:space="preserve">
-        <value>Élément actuel</value>
+        <value>Elément actuel</value>
     </data>
     <data name="transactionActionExecute" xml:space="preserve">
-        <value>Éxécuter</value>
+        <value>Exécuter</value>
     </data>
     <data name="transactionActionPause" xml:space="preserve">
         <value>Mettre en pause</value>
