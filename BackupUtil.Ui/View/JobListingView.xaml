@@ -54,43 +54,43 @@
             <DataGrid.Columns>
                 <!-- Job name -->
                 <DataGridTextColumn Header="{Binding Source={StaticResource LocalizationService}, Path=[jobName]}"
-                                    Binding="{Binding Name}"
+                                    Binding="{Binding Name, Mode=OneWay}"
                                     Width="200" />
 
                 <!-- Target path -->
                 <DataGridTextColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobTargetPath]}"
-                    Binding="{Binding TargetPath}" Width="80" />
+                    Binding="{Binding TargetPath, Mode=OneWay}" Width="80" />
 
                 <!-- Source path -->
                 <DataGridTextColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobSourcePath]}"
-                    Binding="{Binding SourcePath}" Width="100" />
+                    Binding="{Binding SourcePath, Mode=OneWay}" Width="100" />
 
                 <!-- Recursive -->
                 <DataGridCheckBoxColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobRecursive]}"
-                    Binding="{Binding Recursive}" />
+                    Binding="{Binding Recursive, Mode=OneWay}" />
 
                 <!-- Differential -->
                 <DataGridCheckBoxColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobDifferential]}"
-                    Binding="{Binding Differential}" />
+                    Binding="{Binding Differential, Mode=OneWay}" />
 
                 <!-- Encryption type -->
                 <DataGridTextColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionType]}"
-                    Binding="{Binding EncryptionType}" />
+                    Binding="{Binding EncryptionType, Mode=OneWay}" />
 
                 <!-- Encryption key -->
                 <DataGridTextColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobEncryptionKey]}"
-                    Binding="{Binding EncryptionKey}" />
+                    Binding="{Binding EncryptionKey, Mode=OneWay}" />
 
                 <!-- File mask -->
                 <DataGridTextColumn
                     Header="{Binding Source={StaticResource LocalizationService}, Path=[jobFileMask]}"
-                    Binding="{Binding FileMask}" />
+                    Binding="{Binding FileMask, Mode=OneWay}" />
 
             </DataGrid.Columns>
         </DataGrid>

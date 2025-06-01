@@ -76,12 +76,18 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="Run"
-                                        Command="{Binding RunTransactionCommand}"
-                                        Margin="2" />
-                                <Button Content="Pause"
-                                        Command="{Binding PauseTransactionCommand}"
-                                        Margin="2" />
+                                <Button
+                                    Content="{Binding Source={StaticResource LocalizationService}, Path=[transactionActionExecute]}"
+                                    Command="{Binding RunTransactionCommand}"
+                                    Margin="2" />
+                                <Button
+                                    Content="{Binding Source={StaticResource LocalizationService}, Path=[transactionActionPause]}"
+                                    Command="{Binding PauseTransactionCommand}"
+                                    Margin="2" />
+                                <Button
+                                    Content="{Binding Source={StaticResource LocalizationService}, Path=[transactionActionStop]}"
+                                    Command="{Binding StopTransactionCommand}"
+                                    Margin="2" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

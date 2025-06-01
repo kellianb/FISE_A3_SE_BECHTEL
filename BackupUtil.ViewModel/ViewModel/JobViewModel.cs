@@ -9,7 +9,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public string Name
     {
         get => job.Name;
-        set
+        private set
         {
             job.Name = value;
             OnPropertyChanged();
@@ -23,7 +23,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public string SourcePath
     {
         get => job.SourcePath;
-        set
+        private set
         {
             job.SourcePath = value;
             OnPropertyChanged();
@@ -37,7 +37,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public string TargetPath
     {
         get => job.TargetPath;
-        set
+        private set
         {
             job.TargetPath = value;
             OnPropertyChanged();
@@ -51,7 +51,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public bool Recursive
     {
         get => job.Recursive;
-        set
+        private set
         {
             job.Recursive = value;
             OnPropertyChanged();
@@ -65,7 +65,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public bool Differential
     {
         get => job.Differential;
-        set
+        private set
         {
             job.Differential = value;
             OnPropertyChanged();
@@ -79,7 +79,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public EncryptionTypeOptions EncryptionType
     {
         get => EncryptionTypeOptionsUtils.From(job.EncryptionType);
-        set
+        private set
         {
             job.EncryptionType = EncryptionTypeOptionsUtils.To(value);
             OnPropertyChanged();
@@ -93,7 +93,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public string EncryptionKey
     {
         get => job.EncryptionKey ?? "";
-        set
+        private set
         {
             job.EncryptionKey = value;
             OnPropertyChanged();
@@ -107,7 +107,7 @@ public class JobViewModel(Job job) : ViewModelBase
     public string FileMask
     {
         get => job.FileMask ?? "";
-        set
+        private set
         {
             job.FileMask = value;
             OnPropertyChanged();

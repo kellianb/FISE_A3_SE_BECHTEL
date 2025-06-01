@@ -216,4 +216,13 @@
     <data name="transactionCurrentItem" xml:space="preserve">
         <value>Élément actuel</value>
     </data>
+    <data name="transactionActionExecute" xml:space="preserve">
+        <value>Éxécuter</value>
+    </data>
+    <data name="transactionActionPause" xml:space="preserve">
+        <value>Mettre en pause</value>
+    </data>
+    <data name="transactionActionStop" xml:space="preserve">
+        <value>Arrêter</value>
+    </data>
 </root>

@@ -238,7 +238,7 @@ public sealed class BackupCommand : IDisposable
             CompletedDirectoryCount = TotalDirectoryCount - RemainingDirectoryCount,
             TotalFileCount = TotalFileCount,
             CompletedFileCount = TotalFileCount - RemainingFileCount,
-            CompletedPercentage = TotalFileSize > 0 ? 100 * (TotalFileSize - RemainingFileSize) / TotalFileSize : 0,
+            CompletedPercentage = CompletedPercentage,
             CurrentItem = currentItem
         };
 
@@ -263,6 +263,10 @@ public sealed class BackupCommand : IDisposable
     public long TotalDirectoryCount => _changeQueue.TotalDirectoryCount;
 
     public long RemainingDirectoryCount => _changeQueue.RemainingDirectoryCount;
+
+
+    public long CompletedPercentage =>
+        TotalFileSize > 0 ? 100 * (TotalFileSize - RemainingFileSize) / TotalFileSize : 0;
 
     #endregion
 

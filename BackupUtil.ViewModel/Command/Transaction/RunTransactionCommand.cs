@@ -29,6 +29,8 @@ public class RunTransactionCommand : CommandBase
         return _transactionViewModel.State
                    is BackupCommandState.NotStarted
                    or BackupCommandState.Paused
+                   or BackupCommandState.PausedError
+                   or BackupCommandState.PausedBannedProgram
                && base.CanExecute(parameter);
     }
 

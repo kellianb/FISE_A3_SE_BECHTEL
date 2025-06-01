@@ -92,7 +92,8 @@ public class TransactionListingViewModel : ViewModelBase
 
             TransactionViewModel transactionViewModel = new(backupCommand,
                 () => _backupCommandStore.RunByIndex(idx),
-                () => _backupCommandStore.PauseByIndex(idx));
+                () => _backupCommandStore.PauseByIndex(idx),
+                () => _backupCommandStore.StopByIndex(idx));
 
             transactionViewModel.PropertyChanged += OnTransactionViewModelPropertyChanged;
             Transactions.Add(transactionViewModel);

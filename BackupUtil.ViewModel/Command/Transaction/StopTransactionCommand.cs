@@ -4,14 +4,14 @@ using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command.Transaction;
 
-public class PauseTransactionCommand : CommandBase
+public class StopTransactionCommand : CommandBase
 {
-    private readonly Action _pause;
+    private readonly Action _stop;
     private readonly TransactionViewModel _transactionViewModel;
 
-    public PauseTransactionCommand(TransactionViewModel transactionViewModel, Action pause)
+    public StopTransactionCommand(TransactionViewModel transactionViewModel, Action stop)
     {
-        _pause = pause;
+        _stop = stop;
         _transactionViewModel = transactionViewModel;
         _transactionViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
@@ -32,6 +32,6 @@ public class PauseTransactionCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _pause();
+        _stop();
     }
 }
