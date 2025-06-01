@@ -90,7 +90,8 @@ internal class BackupTransactionEditor
         FileChange change = FileChange.Creation(sourceFile.FullName,
             targetFilePath,
             sourceFile.Length,
-            encryptor);
+            encryptor,
+            effects);
 
         _transaction.AddFileChange(change);
 
@@ -114,7 +115,8 @@ internal class BackupTransactionEditor
         FileChange change = FileChange.Modification(sourceFile.FullName,
             targetFile.FullName,
             sourceFile.Length,
-            encryptor);
+            encryptor,
+            effects);
 
         _transaction.AddFileChange(change);
 

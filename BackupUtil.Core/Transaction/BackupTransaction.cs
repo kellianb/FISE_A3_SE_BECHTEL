@@ -5,8 +5,8 @@ namespace BackupUtil.Core.Transaction;
 // Class to hold all the changes that need to be applied
 internal class BackupTransaction
 {
-    public List<FileChange> FileChanges { get; set; } = [];
-    public List<DirectoryChange> DirectoryChanges { get; set; } = [];
+    public List<FileChange> FileChanges { get; } = [];
+    public List<DirectoryChange> DirectoryChanges { get; } = [];
 
     public BackupTransaction AddDirectoryChange(DirectoryChange change)
     {

@@ -2,6 +2,7 @@ using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
 using BackupUtil.Core.Transaction.Compare;
 using BackupUtil.Core.Transaction.Editor;
+using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Tests.Transaction.Compare;
@@ -69,7 +70,7 @@ public class SingleFileCompareTest
 
         // Expected file change
         FileChange expectedFileChange =
-            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length, null, effects: FileMaskEffect.Copy);
 
         // Expected folder change
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(targetSubFolder);
@@ -115,7 +116,7 @@ public class SingleFileCompareTest
 
         // Expected file change
         FileChange expectedFileChange =
-            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length, null, effects: FileMaskEffect.Copy);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare());
@@ -150,7 +151,7 @@ public class SingleFileCompareTest
 
         // Expected file change
         FileChange expectedFileChange =
-            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length, null, effects: FileMaskEffect.Copy);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare());
@@ -191,7 +192,7 @@ public class SingleFileCompareTest
 
         // Expected file change
         FileChange expectedFileChange =
-            FileChange.Modification(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+            FileChange.Modification(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length, null, effects: FileMaskEffect.Copy);
 
         // Create compare object
         SingleFileCompare compare = new(new FileInfo(sourceFilePath), targetFilePath, true, new FileCompare());
@@ -227,7 +228,7 @@ public class SingleFileCompareTest
 
         // Expected file change
         FileChange expectedFileChange =
-            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length, null, effects: FileMaskEffect.Copy);
 
         // Expected folder change
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);
@@ -301,7 +302,8 @@ public class SingleFileCompareTest
 
         // Expected file change
         FileChange expectedFileChange =
-            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length);
+            FileChange.Creation(sourceFilePath, targetFilePath, new FileInfo(sourceFilePath).Length, null,
+                effects: FileMaskEffect.Copy);
 
         // Expected folder change
         DirectoryChange expectedDirectoryChange = DirectoryChange.Creation(_targetFolder);

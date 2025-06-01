@@ -33,8 +33,6 @@ public class XorEncryptorTests
     [TestCaseSource(nameof(TestCases))]
     public void Encrypt_WhenGivenInput_ShouldReturnExpectedResult(string input, string key, string expected)
     {
-        Console.WriteLine($"Input: {input}, key: {key}, expected: {expected}");
-
         XorEncryptor encryptor = new(key);
 
         // Act

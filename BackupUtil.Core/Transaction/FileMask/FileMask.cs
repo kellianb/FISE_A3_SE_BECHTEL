@@ -79,7 +79,7 @@ public enum FileMaskEffect
     /// <summary>
     ///     Files with this effect will be copied before all other files.
     /// </summary>
-    Prioritise = 4,
+    Prioritize = 4,
 
     /// <summary>
     ///     Files with this effect will be copied concurrently

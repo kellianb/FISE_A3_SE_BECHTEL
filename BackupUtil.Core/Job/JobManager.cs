@@ -11,15 +11,12 @@ public class JobManager
 {
     private readonly IBackupTransactionBuilder _transactionBuilder;
 
-    private readonly IBackupTransactionExecutor _transactionExecutor;
-
     internal JobManager(
         IBackupTransactionExecutor transactionExecutor,
         IBackupTransactionBuilder transactionBuilder,
         uint? maxJobs = null)
     {
         _transactionBuilder = transactionBuilder;
-        _transactionExecutor = transactionExecutor;
         MaxJobs = maxJobs is > 0 ? maxJobs.Value : Config.DefaultMaxJobCount;
     }
 
@@ -27,7 +24,6 @@ public class JobManager
     public JobManager()
     {
         _transactionBuilder = new BackupTransactionBuilder();
-        _transactionExecutor = new BackupTransactionExecutor();
 
         MaxJobs = Config.DefaultMaxJobCount;
     }
@@ -128,14 +124,14 @@ public class JobManager
 
         List<string> concernedJobNames = concernedJobs.Select(j => j.Name).ToList();
 
-        return new BackupCommand(_transactionExecutor, transaction, concernedJobNames);
+        return new BackupCommand(transaction, concernedJobNames);
     }
 
     private BackupCommand BuildBackupCommand(Job concernedJob)
     {
         BackupTransaction transaction = _transactionBuilder.Build(concernedJob);
 
-        return new BackupCommand(_transactionExecutor, transaction, [concernedJob.Name]);
+        return new BackupCommand(transaction, [concernedJob.Name]);
     }
 
     #endregion
