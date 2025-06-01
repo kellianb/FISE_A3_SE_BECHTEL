@@ -13,9 +13,9 @@ public class BackupCommandStore : INotifyPropertyChanged
 {
     private readonly ProgramFilterStore _programFilterStore;
 
-    public BackupCommandStore(ProgramFilterStore _programFilterStore)
+    public BackupCommandStore(ProgramFilterStore programFilterStore)
     {
-        this._programFilterStore = _programFilterStore;
+        _programFilterStore = programFilterStore;
     }
 
 
@@ -35,9 +35,9 @@ public class BackupCommandStore : INotifyPropertyChanged
 
     public void RunByIndex(int index)
     {
-        BackupCommands[index]
-            .SetProgramFilter(_programFilterStore.ProgramFilter)
-            .Start();
+        BackupCommand command = BackupCommands[index];
+        command.ProgramFilter = _programFilterStore.ProgramFilter;
+        command.Start();
     }
 
     #endregion
@@ -47,6 +47,15 @@ public class BackupCommandStore : INotifyPropertyChanged
     public void PauseByIndex(int index)
     {
         BackupCommands[index].Pause();
+    }
+
+    #endregion
+
+    #region Stop BackupCommands
+
+    public void StopByIndex(int index)
+    {
+        BackupCommands[index].Stop();
     }
 
     #endregion

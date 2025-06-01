@@ -1,55 +1,55 @@
-using BackupUtil.Core.Transaction;
+using System.Collections.Concurrent;
+using BackupUtil.Core.Command;
 using BackupUtil.Core.Transaction.ChangeType;
+using BackupUtil.Core.Util;
 using BackupUtil.I18n;
-using Serilog;
 using SerilogTimings.Extensions;
 
 namespace BackupUtil.Core.Executor;
 
-internal class BackupTransactionExecutor : IBackupTransactionExecutor
+internal class BackupTransactionExecutor(
+    BackupTransactionChangeQueue changes,
+    IBackupTransactionExecutor.CancelCallback? shouldCancel,
+    IBackupTransactionExecutor.ProgressCallback? updateProgress)
+    : IBackupTransactionExecutor
 {
-    public void Execute(BackupTransaction transaction)
+    private readonly IBackupTransactionExecutor.CancelCallback _shouldCancel = shouldCancel ?? (() => { });
+    private readonly IBackupTransactionExecutor.ProgressCallback _updateProgress = updateProgress ?? ((_, _) => { });
+
+    public void Execute()
     {
-        ExecuteAsync(transaction,
-                () => { },
-                (_, _) => { })
-            .GetAwaiter().GetResult();
+        ExecuteAsync().GetAwaiter().GetResult();
     }
 
-    public async Task ExecuteAsync(BackupTransaction transaction,
-        IBackupTransactionExecutor.CancelCallback shouldCancel,
-        IBackupTransactionExecutor.ProgressCallback updateProgress,
-        CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
         using IDisposable _ = Logging.StatusLog.Value.TimeOperation("Executing transaction");
 
         _shouldCancel();
 
         // Process directory changes
-        while (transaction.DirectoryChanges.Count > 0)
+        while (changes.DirectoryChanges.TryDequeue(out DirectoryChange? change))
         {
-            shouldCancel();
-            DirectoryChange change = transaction.DirectoryChanges[0];
-
             ExecuteDirectoryChange(change);
 
-            transaction.DirectoryChanges.RemoveAt(0);
-
-            updateProgress(change.TargetPath, CurrentOperationType.CreatingDirectories);
+            _updateProgress(change.TargetPath, CurrentOperationType.CreatingDirectories);
+            _shouldCancel();
         }
+
+        // Process prioritized file changes
+        await ProcessFileChangesSequentially(changes.PrioritizedFileChanges, CurrentOperationType.CopyingPriorityFiles,
+            cancellationToken);
+
+        // Process prioritized parallel file changes
+        await ProcessFileChangesConcurrently(changes.PrioritizedParallelFileChanges,
+            CurrentOperationType.CopyingPriorityFiles, cancellationToken);
 
         // Process file changes
-        while (transaction.FileChanges.Count > 0)
-        {
-            shouldCancel();
-            FileChange change = transaction.FileChanges[0];
+        await ProcessFileChangesSequentially(changes.FileChanges, CurrentOperationType.CopyingFiles, cancellationToken);
 
-            await ExecuteFileChangeAsyncWithRetry(change, cancellationToken);
-
-            transaction.FileChanges.RemoveAt(0);
-
-            updateProgress(change.TargetPath, CurrentOperationType.CopyingFiles);
-        }
+        // Process parallel file changes
+        await ProcessFileChangesConcurrently(changes.ParallelFileChanges, CurrentOperationType.CopyingFiles,
+            cancellationToken);
     }
 
     #region Directory changes
@@ -71,7 +71,63 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
 
     #endregion
 
-    #region File changes
+
+    #region Process lists of file changes
+
+    private async Task ProcessFileChangesSequentially(ConcurrentQueue<FileChange> fileChanges,
+        CurrentOperationType type, CancellationToken cancellationToken)
+    {
+        while (fileChanges.TryDequeue(out FileChange? change))
+        {
+            await ExecuteFileChangeAsyncWithRetry(change, cancellationToken);
+
+            changes.ReportFileProcessed(change);
+
+            _updateProgress(change.TargetPath, type);
+            _shouldCancel();
+        }
+    }
+
+    private async Task ProcessFileChangesConcurrently(ConcurrentQueue<FileChange> fileChanges,
+        CurrentOperationType type, CancellationToken cancellationToken)
+    {
+        List<Task> processingTasks = [];
+        const int maxParallelTasks = 4;
+
+        while (!fileChanges.IsEmpty || processingTasks.Count > 0)
+        {
+            // Start new tasks if we have capacity and items to process
+            while (processingTasks.Count < maxParallelTasks && fileChanges.TryDequeue(out FileChange? change))
+            {
+                Task task = ProcessSingleFileChangeAsync(change, type, cancellationToken);
+                processingTasks.Add(task);
+            }
+
+            if (processingTasks.Count <= 0)
+            {
+                continue;
+            }
+
+            Task completedTask = await Task.WhenAny(processingTasks);
+            await completedTask;
+            processingTasks.Remove(completedTask);
+            _shouldCancel();
+        }
+    }
+
+    private async Task ProcessSingleFileChangeAsync(FileChange change, CurrentOperationType type,
+        CancellationToken cancellationToken)
+    {
+        await ExecuteFileChangeAsyncWithRetry(change, cancellationToken);
+
+        changes.ReportFileProcessed(change);
+
+        _updateProgress(change.TargetPath, type);
+    }
+
+    #endregion
+
+    #region Execute file changes
 
     private static async Task ExecuteFileChangeAsyncWithRetry(FileChange change, CancellationToken cancellationToken)
     {

@@ -1,3 +1,4 @@
+using BackupUtil.Core.Transaction.FileMask;
 using BackupUtil.Crypto.Encryptor;
 using BackupUtil.I18n;
 
@@ -35,12 +36,14 @@ internal class FileChange : FileSystemChange,
         FileChangeType changeType,
         string? sourcePath = null,
         long fileSize = 0,
-        IEncryptor? encryptor = null) : base(targetPath)
+        IEncryptor? encryptor = null,
+        FileMaskEffect effects = 0) : base(targetPath)
     {
         ChangeType = changeType;
         FileSize = fileSize;
         SourcePath = sourcePath;
         Encryptor = encryptor;
+        Effects = effects;
     }
 
     public FileChangeType ChangeType { get; }
@@ -49,15 +52,16 @@ internal class FileChange : FileSystemChange,
 
     public IEncryptor? Encryptor { get; }
 
-    public static FileChange Creation(string sourcePath, string targetPath, long fileSize, IEncryptor? encryptor = null)
+    public FileMaskEffect Effects { get; }
+
+    public static FileChange Creation(string sourcePath, string targetPath, long fileSize, IEncryptor? encryptor, FileMaskEffect effects)
     {
-        return new FileChange(targetPath, FileChangeType.Create, sourcePath, fileSize, encryptor);
+        return new FileChange(targetPath, FileChangeType.Create, sourcePath, fileSize, encryptor, effects);
     }
 
-    public static FileChange Modification(string sourcePath, string targetPath, long fileSize,
-        IEncryptor? encryptor = null)
+    public static FileChange Modification(string sourcePath, string targetPath, long fileSize, IEncryptor? encryptor, FileMaskEffect effects)
     {
-        return new FileChange(targetPath, FileChangeType.Modify, sourcePath, fileSize, encryptor);
+        return new FileChange(targetPath, FileChangeType.Modify, sourcePath, fileSize, encryptor, effects);
     }
 
     public static FileChange Deletion(string targetPath)

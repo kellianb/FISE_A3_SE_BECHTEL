@@ -6,40 +6,27 @@ namespace BackupUtil.Core.Command;
 
 public sealed class BackupCommand : IDisposable
 {
-    private readonly IBackupTransactionExecutor _executor;
+    private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly Progress<BackupProgress> _progress;
     private readonly IProgress<BackupProgress> _progressReport;
-    private readonly BackupTransaction _transaction;
     public readonly List<string> JobNames;
 
-    private CancellationTokenSource _cancellationTokenSource;
-
     private bool _disposed;
-    private ProgramFilter? _programFilter;
 
 
-    internal BackupCommand(IBackupTransactionExecutor executor, BackupTransaction transaction, List<string> jobNames,
-        ProgramFilter? programFilter = null)
+    internal BackupCommand(BackupTransaction transaction, List<string> jobNames)
     {
-        _executor = executor;
-        _transaction = transaction;
         JobNames = jobNames;
-        _programFilter = programFilter;
+        _changeQueue = new BackupTransactionChangeQueue(transaction);
+        _transaction = transaction;
 
         // Create initial cancellation token
         _cancellationTokenSource = new CancellationTokenSource();
-
-        // Set totals
-        TotalFileSize = RemainingFileSize;
-        TotalFileCount = RemainingFileCount;
-        TotalDirectoryCount = RemainingDirectoryCount;
 
         // Instantiate progress reporting types
         _progress = new Progress<BackupProgress>();
         _progressReport = _progress;
     }
-
-    public BackupCommandState State { get; private set; } = BackupCommandState.NotStarted;
 
     public event EventHandler<BackupProgress>? ProgressChanged
     {
@@ -47,11 +34,65 @@ public sealed class BackupCommand : IDisposable
         remove => _progress.ProgressChanged -= value;
     }
 
-    public BackupCommand SetProgramFilter(ProgramFilter? programFilter)
+    #region BackupTransaction
+
+    private readonly BackupTransaction _transaction;
+
+    private readonly BackupTransactionChangeQueue _changeQueue;
+
+    #endregion
+
+    #region Program filter
+
+    private readonly Lock _programFilterLock = new();
+
+    private ProgramFilter? _programFilter;
+
+    public ProgramFilter? ProgramFilter
     {
-        _programFilter = programFilter;
-        return this;
+        get
+        {
+            lock (_programFilterLock)
+            {
+                return _programFilter;
+            }
+        }
+        set
+        {
+            lock (_programFilterLock)
+            {
+                _programFilter = value;
+            }
+        }
     }
+
+    #endregion
+
+    #region Command state
+
+    private readonly Lock _stateLock = new();
+
+    private BackupCommandState _state = BackupCommandState.NotStarted;
+
+    public BackupCommandState State
+    {
+        get
+        {
+            lock (_stateLock)
+            {
+                return _state;
+            }
+        }
+        private set
+        {
+            lock (_stateLock)
+            {
+                _state = value;
+            }
+        }
+    }
+
+    #endregion
 
     #region Control ongoing backup
 
@@ -60,6 +101,7 @@ public sealed class BackupCommand : IDisposable
         // If the command is already running, finished or paused because of a banned program, do nothing
         if (State is BackupCommandState.Running
             or BackupCommandState.Finished
+            or BackupCommandState.Stopped
             or BackupCommandState.PausedBannedProgram)
         {
             return;
@@ -71,10 +113,13 @@ public sealed class BackupCommand : IDisposable
 
     public void Pause()
     {
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
-        _cancellationTokenSource = new CancellationTokenSource();
         State = BackupCommandState.Paused;
+    }
+
+    public void Stop()
+    {
+        _cancellationTokenSource.Cancel();
+        State = BackupCommandState.Stopped;
     }
 
     #endregion
@@ -104,14 +149,16 @@ public sealed class BackupCommand : IDisposable
 
     #endregion
 
-    #region Start backup
+    #region Run backup
 
     /// <summary>
-    ///     Execute this backup synchronously
+    ///     Execute this backup without cancellation, pausing or progress reporting
     /// </summary>
     public void Execute()
     {
-        _executor.Execute(_transaction);
+        BackupTransactionExecutor executor = new(_changeQueue, () => { }, (_, _) => { });
+
+        executor.Execute();
     }
 
 
@@ -123,8 +170,8 @@ public sealed class BackupCommand : IDisposable
     /// <returns></returns>
     private async Task ExecuteAsync()
     {
+        // There should never be two executors running at the same time for the same BackupCommand
         if (!await _semaphore.WaitAsync(0))
-            // There should never be two executors running at the same time
         {
             return;
         }
@@ -133,11 +180,12 @@ public sealed class BackupCommand : IDisposable
 
         try
         {
-            await _executor.ExecuteAsync(_transaction, ShouldCancel, UpdateProgress, _cancellationTokenSource.Token);
+            BackupTransactionExecutor executor = new(_changeQueue, ShouldCancel, UpdateProgress);
+
+            await executor.ExecuteAsync(_cancellationTokenSource.Token);
         }
         catch (OperationCanceledException)
         {
-            State = BackupCommandState.Paused;
             UpdateProgress("");
             return;
         }
@@ -147,12 +195,18 @@ public sealed class BackupCommand : IDisposable
             UpdateProgress("");
             return;
         }
+        catch (Exception e)
+        {
+            State = BackupCommandState.PausedError;
+            UpdateProgress("");
+            throw;
+        }
         finally
         {
             _semaphore.Release();
         }
 
-        State = _transaction.DirectoryChanges.Count + _transaction.FileChanges.Count == 0
+        State = RemainingDirectoryCount + RemainingFileCount == 0
             ? BackupCommandState.Finished
             : BackupCommandState.Paused;
         UpdateProgress("");
@@ -160,6 +214,11 @@ public sealed class BackupCommand : IDisposable
 
     private void ShouldCancel()
     {
+        if (State == BackupCommandState.Paused)
+        {
+            throw new OperationCanceledException();
+        }
+
         _cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
         _programFilter?.ThrowIfBannedProgramDetected();
@@ -192,19 +251,19 @@ public sealed class BackupCommand : IDisposable
     #region Statistics
 
     // Size of files that will be copied
-    public long TotalFileSize { get; }
+    public long TotalFileSize => _changeQueue.TotalFileSize;
 
-    public long RemainingFileSize => _transaction.GetTotalCopiedFileSize();
+    public long RemainingFileSize => _changeQueue.RemainingFileSize;
 
     // Number of files which will be copied
-    public long TotalFileCount { get; }
+    public long TotalFileCount => _changeQueue.TotalFileCount;
 
-    public long RemainingFileCount => _transaction.FileChanges.Count;
+    public long RemainingFileCount => _changeQueue.RemainingFileCount;
 
     // Number of directories which will be copied
-    public long TotalDirectoryCount { get; }
+    public long TotalDirectoryCount => _changeQueue.TotalDirectoryCount;
 
-    public long RemainingDirectoryCount => _transaction.DirectoryChanges.Count;
+    public long RemainingDirectoryCount => _changeQueue.RemainingDirectoryCount;
 
     #endregion
 
@@ -235,33 +294,62 @@ public sealed class BackupCommand : IDisposable
 
 public enum BackupCommandState
 {
+    /// <summary>
+    ///     The Backup command has not been started
+    /// </summary>
     NotStarted,
+
+    /// <summary>
+    ///     The Backup command is running
+    /// </summary>
     Running,
+
+    /// <summary>
+    ///     The Backup command was manually paused
+    /// </summary>
     Paused,
+
+    /// <summary>
+    ///     The Backup command was paused because a banned program is running
+    /// </summary>
     PausedBannedProgram,
+
+    /// <summary>
+    ///     The Backup command was paused because it encountered an error while executing
+    /// </summary>
+    PausedError,
+
+    /// <summary>
+    ///     The Backup command was manually stopped
+    /// </summary>
+    Stopped,
+
+    /// <summary>
+    ///     The Backup command has run to completion
+    /// </summary>
     Finished
 }
 
 public struct BackupProgress
 {
-    public BackupCommandState State { get; set; }
-    public CurrentOperationType? Type { get; set; }
+    public BackupCommandState State { get; init; }
+    public CurrentOperationType? Type { get; init; }
 
     // File size
-    public long TotalFileSize { get; set; }
-    public long CompletedFileSize { get; set; }
+    public long TotalFileSize { get; init; }
+    public long CompletedFileSize { get; init; }
 
     // Directory count
-    public long TotalDirectoryCount { get; set; }
-    public long CompletedDirectoryCount { get; set; }
+    public long TotalDirectoryCount { get; init; }
+    public long CompletedDirectoryCount { get; init; }
 
     // File count
-    public long TotalFileCount { get; set; }
-    public long CompletedFileCount { get; set; }
+    public long TotalFileCount { get; init; }
+    public long CompletedFileCount { get; init; }
 
     // Completion percentage
-    public long CompletedPercentage { get; set; }
+    public long CompletedPercentage { get; init; }
 
     // Current item
-    public string CurrentItem { get; set; }
+    public string CurrentItem { get; init; }
 }
