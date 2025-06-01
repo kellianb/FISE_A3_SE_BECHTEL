@@ -15,7 +15,8 @@ public class TransactionViewModel : ViewModelBase
     /// <param name="command">BackupCommand object</param>
     /// <param name="run">Callback to run the command</param>
     /// <param name="pause">Callback to pause the command</param>
-    public TransactionViewModel(BackupCommand command, Action run, Action pause)
+    /// <param name="stop">Callback to stop the command</param>
+    public TransactionViewModel(BackupCommand command, Action run, Action pause, Action stop)
     {
         _command = command;
         JobNames = string.Join(", ", command.JobNames);
@@ -23,6 +24,9 @@ public class TransactionViewModel : ViewModelBase
         // File size
         TotalFileSize = command.TotalFileSize;
         CompletedFileSize = command.TotalFileSize - command.RemainingFileSize;
+
+        // Completed percentage
+        CompletedPercentage = command.CompletedPercentage;
 
         // Directory count
         TotalDirectoryCount = command.TotalDirectoryCount;
@@ -32,11 +36,16 @@ public class TransactionViewModel : ViewModelBase
         TotalFileCount = command.TotalFileCount;
         CompletedFileCount = command.TotalFileCount - command.RemainingFileCount;
 
+        // State
+        State = command.State;
+
         // Listen to progress changes
         command.ProgressChanged += OnBackupCommandProgressChanged;
 
+        // Commands
         RunTransactionCommand = new RunTransactionCommand(this, run);
         PauseTransactionCommand = new PauseTransactionCommand(this, pause);
+        StopTransactionCommand = new StopTransactionCommand(this, stop);
     }
 
     public override void Dispose()
@@ -65,6 +74,8 @@ public class TransactionViewModel : ViewModelBase
     public ICommand RunTransactionCommand { get; }
 
     public ICommand PauseTransactionCommand { get; }
+
+    public ICommand StopTransactionCommand { get; }
 
     #endregion
 
