@@ -101,8 +101,7 @@ public sealed class BackupCommand : IDisposable
         // If the command is already running, finished or paused because of a banned program, do nothing
         if (State is BackupCommandState.Running
             or BackupCommandState.Finished
-            or BackupCommandState.Stopped
-            or BackupCommandState.PausedBannedProgram)
+            or BackupCommandState.Stopped)
         {
             return;
         }
@@ -195,7 +194,7 @@ public sealed class BackupCommand : IDisposable
             UpdateProgress("");
             return;
         }
-        catch (Exception e)
+        catch
         {
             State = BackupCommandState.PausedError;
             UpdateProgress("");
