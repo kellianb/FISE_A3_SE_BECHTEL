@@ -1,6 +1,7 @@
 using BackupUtil.Core.Executor;
 using BackupUtil.Core.Transaction;
 using BackupUtil.Core.Transaction.ChangeType;
+using BackupUtil.Core.Util;
 
 namespace BackupUtil.Core.Command;
 
@@ -188,14 +189,16 @@ public sealed class BackupCommand : IDisposable
             UpdateProgress("");
             return;
         }
-        catch (BannedProgramRunningException)
+        catch (BannedProgramRunningException e)
         {
+            Logging.StatusLog.Value.Information("Stopped execution of backup because banned program '{@string}' is running", e.BannedProgramName);
             State = BackupCommandState.PausedBannedProgram;
             UpdateProgress("");
             return;
         }
-        catch
+        catch (Exception e)
         {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
             State = BackupCommandState.PausedError;
             UpdateProgress("");
             throw;

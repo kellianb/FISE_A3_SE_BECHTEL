@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
@@ -23,9 +24,16 @@ public class LoadJobsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobManager.RemoveAll();
-        _jobManager.LoadJobs();
-        _jobListingViewModel.LoadJobViewModels();
+        try
+        {
+            _jobManager.RemoveAll();
+            _jobManager.LoadJobs();
+            _jobListingViewModel.LoadJobViewModels();
+        }
+        catch (Exception e)
+        {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
+        }
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

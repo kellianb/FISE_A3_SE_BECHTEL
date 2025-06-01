@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
@@ -7,6 +8,7 @@ namespace BackupUtil.ViewModel.Command.Settings;
 
 public class ApplySettingsCommand<TViewModel> : CommandBase where TViewModel : ViewModelBase
 {
+    private readonly AppSettingsStore _appSettingsStore;
     private readonly LocalizationService _localizationService;
     private readonly NavigationService<TViewModel> _navigationService;
     private readonly ProgramFilterStore _programFilterStore;
@@ -16,9 +18,11 @@ public class ApplySettingsCommand<TViewModel> : CommandBase where TViewModel : V
         SettingsViewModel settingsViewModel,
         LocalizationService localizationService,
         ProgramFilterStore programFilterStore,
-        NavigationService<TViewModel> navigationService)
+        NavigationService<TViewModel> navigationService,
+        AppSettingsStore appSettingsStore)
     {
         _navigationService = navigationService;
+        _appSettingsStore = appSettingsStore;
         _localizationService = localizationService;
         _programFilterStore = programFilterStore;
         _settingsViewModel = settingsViewModel;
@@ -40,14 +44,25 @@ public class ApplySettingsCommand<TViewModel> : CommandBase where TViewModel : V
 
     public override void Execute(object? parameter)
     {
-        // Set language
-        _localizationService.SetCulture(_settingsViewModel.SelectedLanguage);
+        try
+        {
+            // Set language
+            _localizationService.SetCulture(_settingsViewModel.SelectedLanguage);
 
-        // Set banned programs
-        _programFilterStore.BannedPrograms =
-        [
-            .._settingsViewModel.BannedPrograms.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-        ];
+            // Set banned programs
+            _programFilterStore.BannedPrograms =
+            [
+                .._settingsViewModel.BannedPrograms.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+            ];
+
+            _appSettingsStore.BannedPrograms = _programFilterStore.BannedPrograms;
+            _appSettingsStore.Culture = _settingsViewModel.SelectedLanguage.Name;
+            _appSettingsStore.SaveToJsonFile(Config.SettingsFilePath);
+        }
+        catch (Exception e)
+        {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
+        }
 
         _navigationService.Navigate();
     }

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using BackupUtil.Core.Command;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.ViewModel;
 
 namespace BackupUtil.ViewModel.Command.Transaction;
@@ -36,6 +37,13 @@ public class RunTransactionCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _run();
+        try
+        {
+            _run();
+        }
+        catch (Exception e)
+        {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
+        }
     }
 }
