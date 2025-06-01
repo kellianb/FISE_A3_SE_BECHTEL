@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
@@ -18,7 +19,14 @@ public class DeleteSelectedJobsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobStore.RemoveByIndices(_jobListingViewModel.SelectedJobIndices);
+        try
+        {
+            _jobStore.RemoveByIndices(_jobListingViewModel.SelectedJobIndices);
+        }
+        catch (Exception e)
+        {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
+        }
     }
 
     public override bool CanExecute(object? parameter)

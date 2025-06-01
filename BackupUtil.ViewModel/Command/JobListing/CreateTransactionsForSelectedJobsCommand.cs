@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
@@ -23,7 +24,14 @@ public class CreateTransactionsForSelectedJobsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _jobStore.RunByIndices(_jobListingViewModel.SelectedJobIndices);
+        try
+        {
+            _jobStore.RunByIndices(_jobListingViewModel.SelectedJobIndices);
+        }
+        catch (Exception e)
+        {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
+        }
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

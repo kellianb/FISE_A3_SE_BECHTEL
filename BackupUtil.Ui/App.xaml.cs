@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Windows;
 using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Service;
@@ -21,6 +22,7 @@ public partial class App : Application
 
         // Shared objects
         services.AddSingleton(CreateJobStore);
+        services.AddSingleton(CreateAppSettingsStore);
         services.AddSingleton(CreateBackupCommandStore);
         services.AddSingleton<NavigationStore>();
         services.AddSingleton<ProgramFilterStore>();
@@ -45,6 +47,9 @@ public partial class App : Application
             MessageBox.Show("Another instance of the application is already running.", Config.AppName);
             Environment.Exit(0);
         }
+
+        // Get app settings to load and initialize
+        _serviceProvider.GetRequiredService<AppSettingsStore>();
 
         _serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
             _serviceProvider.GetRequiredService<HomeViewModel>();
@@ -92,7 +97,8 @@ public partial class App : Application
     private SettingsViewModel CreateSettingsViewModel(IServiceProvider serviceProvider)
     {
         return new SettingsViewModel(serviceProvider.GetRequiredService<ProgramFilterStore>(),
-            CreateNavigationService<HomeViewModel>(serviceProvider));
+            CreateNavigationService<HomeViewModel>(serviceProvider),
+            serviceProvider.GetRequiredService<AppSettingsStore>());
     }
 
     private HomeViewModel CreateHomeViewModel(IServiceProvider serviceProvider)
@@ -111,6 +117,29 @@ public partial class App : Application
     #endregion
 
     #region Create stores
+
+    private AppSettingsStore CreateAppSettingsStore(IServiceProvider serviceProvider)
+    {
+        AppSettingsStore appSettings = AppSettingsStore.LoadFromJsonFile(Config.SettingsFilePath);
+
+        // Apply ProgramFilter from settings
+        List<string>? bannedPrograms = appSettings.BannedPrograms;
+
+        if (bannedPrograms != null)
+        {
+            serviceProvider.GetRequiredService<ProgramFilterStore>().BannedPrograms = bannedPrograms;
+        }
+
+        // Apply Locale from settings
+        CultureInfo? culture = appSettings.GetCulture();
+
+        if (culture != null)
+        {
+            LocalizationService.Instance.SetCulture(culture);
+        }
+
+        return appSettings;
+    }
 
     private NavigationService<TViewModel> CreateNavigationService<TViewModel>(IServiceProvider serviceProvider)
         where TViewModel : ViewModelBase

@@ -15,10 +15,13 @@ public class SettingsViewModel : ViewModelBase
 
     private readonly ProgramFilterStore _programFilterStore;
 
+    private readonly AppSettingsStore _appSettingsStore;
+
     public SettingsViewModel(ProgramFilterStore programFilterStore,
-        NavigationService<HomeViewModel> navigationService)
+        NavigationService<HomeViewModel> navigationService, AppSettingsStore appSettingsStore)
     {
         _programFilterStore = programFilterStore;
+        _appSettingsStore = appSettingsStore;
 
         // Fetch selected languages
         _selectedLanguage = _localizationService.GetCurrentCulture();
@@ -29,7 +32,8 @@ public class SettingsViewModel : ViewModelBase
         ApplyCommand = new ApplySettingsCommand<HomeViewModel>(this,
             _localizationService,
             _programFilterStore,
-            navigationService);
+            navigationService,
+            _appSettingsStore);
 
         CancelCommand = new NavigateCommand<HomeViewModel>(navigationService);
     }

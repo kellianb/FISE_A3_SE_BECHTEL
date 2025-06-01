@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using BackupUtil.Core.Job;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Service;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
@@ -28,16 +29,24 @@ public class CreateJobCommand<TViewModel> : CommandBase where TViewModel : ViewM
 
     public override void Execute(object? parameter)
     {
-        Job job = new(_jobCreationViewModel.SourcePath,
-            _jobCreationViewModel.TargetPath,
-            _jobCreationViewModel.Recursive,
-            _jobCreationViewModel.Differential,
-            _jobCreationViewModel.Name,
-            EncryptionTypeOptionsUtils.To(_jobCreationViewModel.EncryptionType),
-            _jobCreationViewModel.EncryptionKey,
-            _jobCreationViewModel.FileMask);
+        try
+        {
+            Job job = new(_jobCreationViewModel.SourcePath,
+                _jobCreationViewModel.TargetPath,
+                _jobCreationViewModel.Recursive,
+                _jobCreationViewModel.Differential,
+                _jobCreationViewModel.Name,
+                EncryptionTypeOptionsUtils.To(_jobCreationViewModel.EncryptionType),
+                _jobCreationViewModel.EncryptionKey,
+                _jobCreationViewModel.FileMask);
 
-        _jobStore.AddJob(job);
+            _jobStore.AddJob(job);
+        }
+        catch (Exception e)
+        {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
+        }
+
         _navigationService.Navigate();
     }
 

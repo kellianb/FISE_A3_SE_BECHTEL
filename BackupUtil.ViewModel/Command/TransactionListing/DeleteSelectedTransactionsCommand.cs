@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using BackupUtil.Core.Util;
 using BackupUtil.ViewModel.Store;
 using BackupUtil.ViewModel.ViewModel;
 
@@ -19,7 +20,14 @@ public class DeleteSelectedTransactionsCommand : CommandBase
 
     public override void Execute(object? parameter)
     {
-        _backupCommandStore.RemoveByIndices(_transactionListingViewModel.SelectedTransactionIndices);
+        try
+        {
+            _backupCommandStore.RemoveByIndices(_transactionListingViewModel.SelectedTransactionIndices);
+        }
+        catch (Exception e)
+        {
+            Logging.StatusLog.Value.Error("Encountered exception in {@string}: {@Exception}", GetType().Name, e);
+        }
     }
 
     public override bool CanExecute(object? parameter)

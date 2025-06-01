@@ -28,7 +28,7 @@ public static class Config
     /// <summary>
     ///     Settings file path
     /// </summary>
-    public static string SettingsFilePath { get; } = Path.Combine(AppDir, "Settings");
+    public static string SettingsFilePath { get; } = Path.Combine(AppDir, "Settings", "settings.json");
 
     /// <summary>
     ///     Logging directory
