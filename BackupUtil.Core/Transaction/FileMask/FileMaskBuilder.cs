@@ -23,6 +23,12 @@ public class FileMaskBuilder
         return new FileMaskBuilder();
     }
 
+    public static FileMaskBuilder Default()
+    {
+        return new FileMaskBuilder()
+            .MaxFileSize(500000000, FileMaskEffect.Parallelize);
+    }
+
     internal static FileMaskBuilder From(FileMask mask)
     {
         return new FileMaskBuilder(mask);
@@ -54,7 +60,7 @@ public class FileMaskBuilder
 
     public string BuildSerialized()
     {
-        return JsonSerializer.Serialize(Build());
+        return JsonSerializer.Serialize(Build(), new JsonSerializerOptions());
     }
 
     /// <summary>
