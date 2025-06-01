@@ -46,8 +46,6 @@ public partial class App : Application
             Environment.Exit(0);
         }
 
-        Logging.Init();
-
         _serviceProvider.GetRequiredService<NavigationStore>().CurrentViewModel =
             _serviceProvider.GetRequiredService<HomeViewModel>();
 

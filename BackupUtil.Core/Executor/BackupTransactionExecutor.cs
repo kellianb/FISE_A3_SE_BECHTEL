@@ -21,7 +21,9 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
         IBackupTransactionExecutor.ProgressCallback updateProgress,
         CancellationToken cancellationToken = default)
     {
-        using IDisposable _ = Log.Logger.TimeOperation("Executing transaction: {@BackupTransaction}", transaction);
+        using IDisposable _ = Logging.StatusLog.Value.TimeOperation("Executing transaction");
+
+        _shouldCancel();
 
         // Process directory changes
         while (transaction.DirectoryChanges.Count > 0)
@@ -74,8 +76,8 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
     private static async Task ExecuteFileChangeAsyncWithRetry(FileChange change, CancellationToken cancellationToken)
     {
         using IDisposable _ = change.Encryptor is null
-            ? Log.Logger.TimeOperation("Copying file: {@string}", change.SourcePath ?? "")
-            : Log.Logger.TimeOperation("Copying and encrypting file: {@string}", change.SourcePath ?? "");
+            ? Logging.DailyLog.Value.TimeOperation("Copying file: {@string}", change.SourcePath ?? "")
+            : Logging.DailyLog.Value.TimeOperation("Copying and encrypting file: {@string}", change.SourcePath ?? "");
 
         const int maxRetries = 3;
         const int delayMs = 500;
@@ -90,7 +92,7 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
             catch (IOException ex) when (retry < maxRetries - 1)
             {
                 // Log the retry attempt
-                Log.Warning("File access error. Retrying ({Attempt}/{MaxRetries}): {Message}",
+                Logging.DailyLog.Value.Warning("File access error. Retrying ({Attempt}/{MaxRetries}): {Message}",
                     retry + 1, maxRetries, ex.Message);
 
                 // Wait before retrying
@@ -98,9 +100,12 @@ internal class BackupTransactionExecutor : IBackupTransactionExecutor
             }
         }
 
-        // If we get here, all retries failed - throw the exception
-        throw new IOException($"Could not access file after {maxRetries} attempts: " +
-                              (change.ChangeType == FileChangeType.Delete ? change.TargetPath : change.SourcePath));
+        // If we get here, all retries failed - log and throw an exception
+        string? filePath = change.ChangeType == FileChangeType.Delete ? change.TargetPath : change.SourcePath ?? "";
+
+        Logging.DailyLog.Value.Warning("Failed to access file after {@int} attempts: {@string}", maxRetries, filePath);
+
+        throw new IOException($"Could not access file after {maxRetries} attempts: {filePath}");
     }
 
     private static async Task ExecuteFileChangeAsync(FileChange change, CancellationToken cancellationToken)
