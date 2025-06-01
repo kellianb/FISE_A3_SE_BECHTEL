@@ -44,11 +44,11 @@ internal class BackupTransactionChangeQueue
             // Handle non-prioritized files
             if (fileChange.Effects.HasFlag(FileMaskEffect.Parallelize))
             {
-                FileChanges.Enqueue(fileChange);
+                ParallelFileChanges.Enqueue(fileChange);
                 continue;
             }
 
-            ParallelFileChanges.Enqueue(fileChange);
+            FileChanges.Enqueue(fileChange);
         }
     }
 
