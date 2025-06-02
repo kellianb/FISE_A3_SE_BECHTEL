@@ -1098,7 +1098,7 @@ classDiagram
         }
 
     XorEncryptor ..|> IEncryptor
-    EncryptorBuilder *--> IEncryptor
+    EncryptorBuilder *-- IEncryptor
     EncryptorBuilder *-- XorEncryptor
     EncryptorBuilder ..> EncryptionType
     XorEncryptor -- EncryptionType
