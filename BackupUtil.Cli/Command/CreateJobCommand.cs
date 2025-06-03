@@ -14,7 +14,7 @@ internal static class CreateJobCommand
         Option<string> name = new(["--name", "-n"], "Name of the job");
         Option<bool> recursive = new(["--recursive", "-r"], "Make the backup recursive");
         Option<bool> differential = new(["--differential", "-d"], "Make the backup differential.");
-        Option<EncryptionType> encryptionType = new(["--encryption-type", "-e"], "Type of encryption to use");
+        Option<EncryptionType?> encryptionType = new(["--encryption-type", "-e"], "Type of encryption to use");
         Option<string> encryptionKey = new(["--encryption-key", "-k"], "Encryption key");
 
         // Path of the job file
@@ -45,10 +45,24 @@ internal static class CreateJobCommand
         return command;
     }
 
-    private static void CommandHandler(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive,
-        bool differential, string? name = null, FileSystemInfo? jobFilePath = null, EncryptionType? encryptionType = null, string? encryptionKey = null)
+    private static void CommandHandler(
+        FileSystemInfo sourcePath,
+        FileSystemInfo targetPath,
+        bool recursive,
+        bool differential,
+        string? name = null,
+        FileSystemInfo? jobFilePath = null,
+        EncryptionType? encryptionType = null,
+        string? encryptionKey = null)
     {
-        Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential, name);
+        Job job = new (sourcePath.FullName,
+                targetPath.FullName,
+                recursive,
+                differential,
+                name,
+                encryptionType,
+                encryptionKey);
+
 
         try
         {
