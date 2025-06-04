@@ -2,6 +2,7 @@ using System.CommandLine;
 using BackupUtil.Cli.Util;
 using BackupUtil.Core.Command;
 using BackupUtil.Core.Job;
+using BackupUtil.Crypto;
 using BackupUtil.I18n;
 
 namespace BackupUtil.Cli.Command;
@@ -14,6 +15,8 @@ internal static class RunJobCommand
         Argument<FileSystemInfo> targetPath = new("target-path", "Target path of the backup");
         Option<bool> recursive = new(["--recursive", "-r"], "Make the backup recursive");
         Option<bool> differential = new(["--differential", "-d"], "Make the backup differential.");
+        Option<EncryptionType?> encryptionType = new(["--encryption-type", "-e"], "Type of encryption to use");
+        Option<string> encryptionKey = new(["--encryption-key", "-k"], "Encryption key");
 
         System.CommandLine.Command command = new("run", "Run a backup job");
 
@@ -21,21 +24,25 @@ internal static class RunJobCommand
         command.AddArgument(targetPath);
         command.AddOption(recursive);
         command.AddOption(differential);
+        command.AddOption(encryptionType);
+        command.AddOption(encryptionKey);
 
         command.SetHandler(CommandHandler,
             sourcePath,
             targetPath,
             recursive,
-            differential
+            differential,
+            encryptionType,
+            encryptionKey
         );
 
         return command;
     }
 
     private static void CommandHandler(FileSystemInfo sourcePath, FileSystemInfo targetPath, bool recursive,
-        bool differential)
+        bool differential, EncryptionType? encryptionType = null, string? encryptionKey = null)
     {
-        Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential);
+        Job job = new(sourcePath.FullName, targetPath.FullName, recursive, differential, encryptionType: encryptionType, encryptionKey: encryptionKey);
 
         try
         {
