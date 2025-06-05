@@ -1,4 +1,4 @@
-﻿using System.Windows;
+﻿using MahApps.Metro.Controls; // ✅ Import MahApps.Metro
 using BackupUtil.Core.Util;
 
 namespace BackupUtil.Ui;
@@ -6,7 +6,7 @@ namespace BackupUtil.Ui;
 /// <summary>
 ///     Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow : MetroWindow // ✅ Change Window -> MetroWindow
 {
     public MainWindow()
     {
